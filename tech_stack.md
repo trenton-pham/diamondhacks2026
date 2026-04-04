@@ -17,7 +17,20 @@
   - Session manager (message cap, retry cap, timeout/dead-letter handling)
   - Policy engine adapter (inbound/outbound privacy checks + redaction)
   - Audit log writer (reason-coded decisions + config snapshots)
+  - Asynchronous stage worker pool with bounded queue and per-stage concurrency limits
+  - Idempotency coalescer for duplicate `session_id:turn_index:stage` requests
 - **Deployment**: Render
+
+#### Orchestrator Optimization Controls
+- **Queue/backpressure policy**:
+  - Bounded queue depth (`max_depth=200` default)
+  - On threshold breach, emit WS event with `reason_code=queue_backpressure_degraded_mode`
+  - Degraded behavior: switch to summary-only mode until queue recovers
+- **Global session guards**:
+  - Hard `max_session_duration_minutes=120`
+  - Max concurrent sessions per user: 3 (`max_concurrent_sessions_reached` on reject)
+- **Duplicate suppression**:
+  - Coalesce duplicate idempotency keys to existing in-flight/finalized result
 
 #### Multi-Model Agent Runtime (Non-Fetch)
 - **Pattern**: app-level orchestration of 4 LLM roles, each with role-specific prompts
@@ -41,6 +54,9 @@
   - Privacy: stricter model configuration (lower temperature)
   - Summary: higher-quality model
 - **Fallback order**: provider A -> provider B -> fail-closed
+- **Fallback quality floor**:
+  - fallback allowed only if role/provider eval score >= 0.78
+  - else emit `fallback_quality_floor_not_met` and fail-closed for that stage
 - **Circuit breaker**:
   - trip after rolling error threshold
   - cooldown window before re-enable
@@ -96,6 +112,26 @@
 - **Frontend**: Vercel
 - **API/Orchestrator**: Render
 - **Database/Auth**: Supabase
+
+#### Contract-First Client Generation
+- **Schema authority**: backend OpenAPI/JSON Schema is canonical
+- **Versioning**:
+  - include `schema_version` in REST responses and WS events
+  - frontend rejects unsupported versions with safe UI fallback and logs `schema_version_mismatch`
+- **Type generation**:
+  - generate TypeScript API/event types from canonical schema and consume in frontend service layer
+
+#### Caching Plan
+- **Evaluator cache key**: `post_id + preference_snapshot_hash`
+- **Summary cache key**: `transcript_hash + config_snapshot_hash`
+- **Invalidation rules**:
+  - invalidate evaluator cache on preference/policy/version changes
+  - invalidate summary cache on transcript change, policy change, schema change, or model/prompt snapshot change
+
+#### Connection Reliability
+- **WebSocket reconnect**: exponential backoff + jitter
+- **Heartbeat**: ping/pong every 15s with stale session cutoff at 45s
+- **Recovery behavior**: resume from last acknowledged `event_id`; if resume fails, request server-side replay window
 
 #### Performance Budgets (MVP Defaults)
 - **Latency (p95)**:

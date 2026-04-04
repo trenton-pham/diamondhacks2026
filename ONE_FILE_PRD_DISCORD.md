@@ -121,6 +121,10 @@ Lifecycle rules:
 - `safety_uncertain_review_required`
 - `retry_exhausted_drop`
 - `session_limit_reached`
+- `max_concurrent_sessions_reached`
+- `queue_backpressure_degraded_mode`
+- `fallback_quality_floor_not_met`
+- `schema_version_mismatch`
 - `timeout_stage_<stage_name>`
 - `idempotency_conflict`
 
@@ -212,6 +216,33 @@ Token budgets (per turn):
 Caching policy:
 - Evaluator score cache for unchanged post + preference snapshot.
 - Summary recompute cache keyed by transcript hash + config snapshot.
+
+## 10A. Theoretical Optimization Constraints (Required)
+### Latency budget policy
+- Hard per-turn budget: 9000ms p95 across all stages; breach triggers degraded mode.
+- Stage budgets remain enforced as listed above; stage timeout emits `timeout_stage_<stage_name>`.
+- Short-circuit path: skip Texting stage when evaluator returns `decision=skip` or `evaluator_confidence < 0.45`.
+- Summary batching: run `summary_update` every 3 approved turns unless a handoff trigger event occurs.
+
+### Schema authority policy
+- Backend owns canonical JSON Schema/OpenAPI contracts for all REST and WebSocket payloads.
+- Every event/API response must include `schema_version` and `snapshot_hash`.
+- Frontend must reject unknown enum values (`stage`, `status`, `reason_code`) into safe fallback UI and emit `schema_version_mismatch`.
+
+### Backpressure and global timeout policy
+- `max_session_duration_minutes = 120` is a hard server stop.
+- Max concurrent sessions per user: 3; exceeding requests return `max_concurrent_sessions_reached`.
+- Queue depth threshold: when worker queue depth > 200, system enters summary-only degraded mode and emits `queue_backpressure_degraded_mode`.
+
+### Provider fallback quality floor
+- Fallback provider usage is allowed only if role/provider eval score >= 0.78 quality floor on the current eval suite.
+- If floor is not met, system fails closed for the role and emits `fallback_quality_floor_not_met`.
+- Degraded mode must be surfaced to UI and included in summary metadata.
+
+### Model calibration policy
+- Confidence shown to users must be post-calibration confidence, not raw model certainty.
+- Recommendation tier is capped by calibrated confidence band.
+- If calibration artifacts are stale or missing, recommendations must be capped to `Proceed with caution-positive`.
 
 ## 11. Platform Data Contracts
 Required tables/entities:

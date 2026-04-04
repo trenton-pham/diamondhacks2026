@@ -41,6 +41,10 @@ It replaces legacy protocol-signature assumptions with app-level orchestration c
 - `safety_uncertain_review_required`
 - `retry_exhausted_drop`
 - `session_limit_reached`
+- `max_concurrent_sessions_reached`
+- `queue_backpressure_degraded_mode`
+- `fallback_quality_floor_not_met`
+- `schema_version_mismatch`
 - `timeout_stage_<stage_name>`
 - `idempotency_conflict`
 
@@ -67,10 +71,26 @@ Rules:
 - `overall_score = 100 * sum(W_d * adjusted_dim_d) / sum(W_d)`
 - `confidence = 0.4*evidence + 0.35*consistency + 0.25*(1-uncertainty)`
 
+### Confidence calibration method
+- Confidence exposed to users must be calibrated on a held-out set, not raw model certainty.
+- Calibration artifact must include reliability diagram and calibration mapping version hash.
+- Expected calibration error (ECE) threshold: `<= 0.05` before promotion to production/default demo config.
+- If ECE exceeds threshold, recommendation tier must be capped to `Proceed with caution-positive`.
+
 ### Recommendation bands
 - `Strong fit`: score >= 75 and confidence >= 0.70
 - `Proceed with caution-positive`: score 60-74 or confidence 0.55-0.69
 - `Low confidence/mismatch risk`: score < 60 or confidence < 0.55
+
+### Uncertainty guardrails
+- High variance clamp is mandatory: if inter-dimension variance exceeds threshold, downgrade recommendation by one tier.
+- `Strong fit` is disallowed when `support_count_d < support_threshold_d` for any critical dimension.
+- If evidence sufficiency gate fails, return uncertainty-first output regardless of raw score.
+
+### Fallback impact policy
+- On provider/model fallback, mark result metadata with `degraded_confidence=true`.
+- If calibration parity for fallback model is unverified, cap recommendation one tier lower.
+- If fallback quality floor is not met, fail closed and emit `fallback_quality_floor_not_met`.
 
 ### Reproducibility and stability
 - same transcript + same config snapshot must produce same recommendation tier
@@ -112,6 +132,15 @@ Rules:
   - Agent Logic Team: evaluator/texting evals
   - Privacy/Safety Team: policy and violation evals
   - Summary/Scoring Team: summary/scoring stability evals
+
+### Drift monitoring and rollback
+- Track per-role drift dashboards for evaluator precision/recall, privacy catch rate, summary tier agreement, and confidence calibration error.
+- Trigger rollback when:
+  - evaluator precision drops below 0.75,
+  - privacy catch rate drops below 0.97,
+  - summary tier agreement drops below 0.88,
+  - ECE rises above 0.06.
+- Rollback target is last passing config snapshot hash.
 
 ## 7. Test Additions (Required)
 - Cross-doc consistency test: no active spec references deprecated Fetch runtime.
