@@ -76,6 +76,7 @@ Lifecycle rules:
 - `turn_index`
 - `draft_text`
 - `intent_tag`
+- `retrieved_topics[]` (which topic profile files were used as context)
 
 ### `PrivacyCheckResult`
 - `status` (`pass` | `reject` | `redact`)
@@ -221,10 +222,28 @@ Required tables/entities:
 - `summary_reports`
 - `config_snapshots`
 
+### User Profile Topic Store (Read-Only Context)
+Per-user directory of topic-specific markdown files populated during onboarding from the user's uploaded text message history. These files are **read-only at runtime** — used for RAG-like context retrieval by the Texting Agent. No agent writes to them during sessions.
+
+Topic files:
+- `hobbies.md` — activities, pastimes, sports, creative pursuits
+- `values.md` — core beliefs, priorities, life philosophy
+- `interests.md` — curiosities, media preferences, intellectual interests
+- `humor.md` — joke style, sarcasm level, comedic tone
+- `dealbreakers.md` — hard boundaries, non-negotiables, incompatibilities
+- `communication_style.md` — texting cadence, emoji usage, formality
+- `lifestyle.md` — routines, social habits, living preferences
+- `goals.md` — aspirations, ambitions, direction
+
+Write path: The **Text Sorter** (see `text_sorter.md`) processes user's uploaded chat logs, classifies by topic, runs Privacy Agent validation, and generates files.
+Read path: Texting Agent selects 1-3 relevant topic files per turn as draft context.
+Immutability: Files are not modified at runtime. User can re-upload to regenerate.
+
 Retention/deletion:
 - raw text TTL: 24h
 - derived reports TTL: 7d
-- hard delete removes user-linked rows and invalidates future sends
+- topic profile files: persist until user deletes account or re-uploads
+- hard delete removes user-linked rows, profile directory, and invalidates future sends
 - audit logs retain reason codes and hashes only (no sensitive plaintext)
 
 ## 12. Observability KPIs
@@ -250,6 +269,7 @@ Retention/deletion:
 3. Implement privacy taxonomy + reason-code registry before scaling texting flows.
 4. Wire evaluator thresholds/ranking and anti-spam controls.
 5. Stand up eval harness + promotion gates before model/prompt iteration.
+6. Implement the Text Sorter ingestion pipeline and verify topic file generation against test chat exports.
 
 ---
 
@@ -301,19 +321,31 @@ Field rules:
 # Texting Agent Spec
 
 ## Mission
-Generate high-quality conversational messages to counterpart agents while staying within session limits and privacy guidance.
+Generate high-quality conversational messages to counterpart agents while staying within session limits and privacy guidance. Use topic-specific user profile context retrieved at draft time for personalized, authentic messages.
+
+## Topic-Based Context Retrieval
+Before drafting, the Texting Agent selects 1-3 relevant topic files from the user's profile directory based on conversation context (intent tag, recent messages, evaluator tags). This is analogous to RAG but over structured markdown files rather than vector embeddings. These files are **read-only** — populated once during onboarding from the user's uploaded text message history, never modified by agents.
+
+Topic files: `hobbies.md`, `values.md`, `interests.md`, `humor.md`, `dealbreakers.md`, `communication_style.md`, `lifestyle.md`, `goals.md`.
+
+Retrieval rules:
+- If a relevant topic file is empty or missing, fall back to evaluator context.
+- Retrieved content counts toward the 1400-token input budget.
+- Agent outputs are never written back to topic files.
 
 ## Allowed Inputs
 - Current session context (`session_id`, `turn_index`, prior safe messages).
 - Evaluator decision context and intent tags.
 - Rewrite guidance from Privacy Agent.
 - Session limits (`max_messages`, `max_privacy_retries`, tone settings).
+- Retrieved topic file(s) from the user's profile directory (1-3 per turn).
 
 ## Disallowed Behavior
 - Do not bypass Privacy Agent.
 - Do not mention or reveal blocked sensitive topics.
 - Do not generate spam, harassment, or manipulative pressure language.
 - Do not exceed hard conversation cap.
+- Do not write to or modify topic profile files — they are read-only context.
 
 ## Output Schema (`TextDraft`)
 ```json
@@ -321,13 +353,15 @@ Generate high-quality conversational messages to counterpart agents while stayin
   "session_id": "string",
   "turn_index": 12,
   "draft_text": "string",
-  "intent_tag": "build_rapport"
+  "intent_tag": "build_rapport",
+  "retrieved_topics": ["hobbies", "humor"]
 }
 ```
 
 Field rules:
 - `draft_text` must be plain text safe for privacy review.
 - `intent_tag` should be from a controlled set (e.g., `intro`, `ask_question`, `build_rapport`, `handoff_prompt`).
+- `retrieved_topics` lists which topic files were used as context (for auditability).
 
 ## Refusal Behavior
 - If context is insufficient or hard limits are reached, return no draft and reason:
@@ -336,7 +370,8 @@ Field rules:
   "session_id": "string",
   "turn_index": 12,
   "draft_text": "",
-  "intent_tag": "refuse_limit_or_context"
+  "intent_tag": "refuse_limit_or_context",
+  "retrieved_topics": []
 }
 ```
 

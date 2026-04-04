@@ -64,6 +64,30 @@
   - encrypted at rest
   - no sensitive plaintext in audit logs
 
+#### User Profile Topic Store (Read-Only Context)
+- **Format**: Per-user directory of topic-specific markdown files
+- **Storage**: File-based (Supabase Storage or local filesystem), one directory per `user_id`
+- **Directory structure**:
+  ```
+  profiles/{user_id}/
+    hobbies.md
+    values.md
+    interests.md
+    humor.md
+    dealbreakers.md
+    communication_style.md
+    lifestyle.md
+    goals.md
+  ```
+- **Write path (ingestion only)**: During onboarding, the user uploads their text message history (iMessage, WhatsApp, SMS backup, etc.). The **Text Sorter** (`text_sorter.md`) parses, classifies, summarizes, and privacy-reviews the chat logs, then generates the corresponding markdown files. **No agent writes to these files at runtime.**
+- **Read path**: The Texting Agent retrieves 1-3 topic files per turn based on conversation context (RAG-like selection) to use as grounding context for draft generation
+- **Constraints**:
+  - Files are immutable after ingestion (read-only at runtime)
+  - Each file includes metadata: `generated_at`, `source_message_count`
+  - Topic files are subject to the same retention/deletion TTLs as other user data
+  - Hard delete of a user removes their entire profile directory
+  - User can re-upload chat logs to regenerate topic files
+
 #### Auth
 - **Provider**: Supabase Auth
 - **Policy**: session creation and privacy policy changes require authenticated user context
