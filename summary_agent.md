@@ -22,7 +22,8 @@ Analyze approved conversation history and generate the final compatibility-style
   "yellow_flags": ["response_pacing_mismatch"],
   "red_flags": [],
   "conversation_summary": "Pattern-level summary text.",
-  "recommended_next_step": "Move to a short human-intro call."
+  "recommended_next_step": "Move to a short human-intro call.",
+  "snapshot_hash": "sha256:..."
 }
 ```
 
@@ -31,6 +32,7 @@ Field rules:
 - `confidence`: float in `[0,1]`.
 - Flags must remain advisory.
 - Summary text must be generalized and privacy-safe.
+- `snapshot_hash` must identify model/prompt/schema/runtime configuration for reproducibility.
 
 ## Refusal Behavior
 - If evidence is insufficient, return uncertainty-first output:

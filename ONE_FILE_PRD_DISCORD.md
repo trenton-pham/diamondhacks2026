@@ -1,75 +1,66 @@
 # One-File PRD Package
 
-This document combines the merged PRD and all four role specs in one place for team sharing.
+This is the canonical, shareable PRD for the current system. It replaces legacy Fetch.ai assumptions with a non-Fetch 4-agent LLM architecture.
 
 ---
 
 # Merged Team Alignment Doc
-## 4-Model Social Match System (No Fetch.ai)
+## 4-Model Social Match System (Canonical)
 
-## 1. Big Picture (Unified Product Direction)
-We are building a privacy-first social matching platform where only humans post publicly, and AI agents read those posts and run private agent-to-agent conversations before recommending human handoff.
+## 1. Product Direction
+We are building a privacy-first social matching platform where public feed content is human-only, and AI agents privately evaluate and converse before suggesting human handoff.
 
-Unified product thesis:
-- Keep the public feed human-only.
-- Use four specialized LLM agents with strict orchestration contracts.
-- Enforce privacy and consent through platform policy checks before each outbound message.
-- Deliver explainable outputs in under 30 seconds during demos.
+Core principles:
+- Human-only posting surface.
+- Four specialized LLM agents with app-level orchestration.
+- Policy checks before every send (outbound and inbound).
+- Explainable outputs under strict privacy constraints.
 
-Primary target:
-- Build a reliable, judge-friendly multi-agent MVP with strong privacy controls.
+## 2. Source of Truth and Doc Priority
+- This file (`ONE_FILE_PRD_DISCORD.md`) is source of truth.
+- `OUTPUT_SCORING_PRIVACY_PLAN.md` is normative for scoring/privacy guardrails.
+- `tech_stack.md` is normative for deployment/runtime implementation details.
+- Any legacy Fetch/Agentverse assumptions are deprecated.
 
-Secondary targets:
-- Best Interactive AI
-- Best AI/ML Hack
-- Wildcard
+## 3. MVP Scope Lock
+- Feed contains human posts only.
+- AI can read posts and run private agent-to-agent conversations.
+- AI cannot post publicly to the feed.
+- Topic-level privacy policies are mandatory before session messaging.
+- All AI-generated content is clearly labeled.
+- Session limits are mandatory and enforced server-side.
 
-## 2. Source Documents Considered
-- `MERGED_TEAM_ALIGNMENT_DOC.md` (this file, now source of truth)
-- `FETCHAI_AGENT_NETWORK_PRD.md` (legacy reference only)
-- `OUTPUT_SCORING_PRIVACY_PLAN.md` (normative for scoring/privacy guardrails)
-- `tech_stack.md`
-- `Hackathon Design Idea Doc.pdf` (manually provided text summary)
-
-## 3. Product and UX Alignment
-### MVP scope lock
-- Public social feed includes human posts only.
-- AI agents can read posts and message counterpart agents; AI does not publish feed posts.
-- User-configured privacy boundaries are required before messaging.
-- Live timeline + safe report + audit panel in UI.
-- All AI-generated interactions are visibly labeled as agent-generated.
-
-### End-to-end user flow
-1. Human users create profiles and set privacy/topic boundaries.
-2. Evaluator Agent reads human posts and scores connection-worthiness.
-3. If score threshold is met, Texting Agent drafts an outreach message.
-4. Privacy Agent reviews each draft and returns pass, redact, or reject with rewrite guidance.
-5. If rejected/redacted, Texting Agent rewrites and retries (up to max retry limit).
-6. Approved messages are sent to counterpart agent.
-7. Summary Agent continuously updates conversation analysis and produces final report.
-
-## 4. 4-Agent Architecture (Implementation-Ready)
-### Agent roles
+## 4. 4-Agent Architecture
+### Roles
 - `OutreachEvaluatorAgent`
-  - Reads human posts and decides whether a connection attempt is warranted.
-  - Outputs `EvaluatorDecision`.
+  - Scores candidate posts and decides connect vs skip.
 - `TextingAgent`
-  - Generates conversation turns and outreach replies.
-  - Must follow session constraints and privacy rewrite guidance.
+  - Produces outreach and follow-up drafts.
 - `PrivacyAgent`
-  - Applies user-defined topic/sensitivity limits to every outbound message.
-  - Blocks sensitive content and requests compliant rewrites.
+  - Enforces policy taxonomy and returns pass/reject/redact.
 - `SummaryAgent`
-  - Produces conversation analysis, score, confidence, flags, and recommended next step.
+  - Produces score, confidence, flags, summary, recommended next step.
 
-### Agent loop contract
-`post_candidate -> evaluator_decision -> texting_draft -> privacy_check -> send|rewrite -> summary_update`
+### Canonical turn lifecycle (state machine)
+`candidate_select -> evaluator_decision -> texting_draft -> privacy_check_outbound -> send|rewrite|drop -> privacy_check_inbound -> summary_update`
 
-Operational defaults:
-- `max_messages = 150` total exchanged messages per session.
+Lifecycle rules:
+- `max_messages = 150` counts both sent and received approved messages.
+- Rejected drafts do not count toward `max_messages`; they count toward retry budget.
 - `max_privacy_retries = 3` per turn.
-- If retries are exhausted, drop message and log reason code.
-- Summary updates on each approved send and on session close.
+- Per-stage timeout defaults:
+  - evaluator: 3s
+  - texting: 5s
+  - privacy: 3s
+  - summary_update: 6s
+- Retry policy:
+  - max 2 infra retries per stage (timeout/transient failure)
+  - policy rejections use privacy retry budget only
+- Dead-letter policy:
+  - exhausted retries or repeated timeout -> drop turn, emit `retry_exhausted_drop` or `timeout_stage_<name>`
+- Idempotency:
+  - every stage uses key `session_id:turn_index:stage`
+  - duplicate key executes no-op replay and returns previous result
 
 ## 5. Public Interfaces / Types
 ### `EvaluatorDecision`
@@ -78,6 +69,7 @@ Operational defaults:
 - `connect_score` (0-1)
 - `decision` (`connect` | `skip`)
 - `reason_tags[]`
+- `evaluator_confidence` (0-1)
 
 ### `TextDraft`
 - `session_id`
@@ -89,6 +81,7 @@ Operational defaults:
 - `status` (`pass` | `reject` | `redact`)
 - `violations[]`
 - `rewrite_guidance`
+- `direction` (`outbound` | `inbound`)
 
 ### `SummaryReport`
 - `overall_score` (0-100)
@@ -98,122 +91,165 @@ Operational defaults:
 - `red_flags[]`
 - `conversation_summary`
 - `recommended_next_step`
+- `snapshot_hash`
 
 ### `SessionLimits`
 - `max_messages = 150`
 - `max_privacy_retries = 3`
 - `max_session_duration_minutes = 120`
 
-## 6. Model Role Specs
-Each agent uses a dedicated prompt/spec markdown file:
-- `evaluator_agent.md`
-- `texting_agent.md`
-- `privacy_agent.md`
-- `summary_agent.md`
+## 6. Privacy Policy Contract (Taxonomy + Precedence)
+### Taxonomy
+- `blocked`: never send in any form.
+- `sensitive`: may only appear in generalized, non-identifying form if consented.
+- `allowed`: permitted if no higher-priority violation exists.
 
-Each spec must define:
-- Mission
-- Allowed inputs
-- Disallowed behavior
-- Output schema
-- Refusal behavior
+### Precedence
+1. `blocked`
+2. `sensitive`
+3. `allowed`
 
-## 7. Training and Tuning Strategy
-### Option A (MVP default): Prompt-only + eval harness
-- Use role-specific prompt cards in 4 markdown files.
-- Enforce strict JSON schemas for structured outputs.
-- Add offline and online eval harness with pass/fail metrics.
-- No mandatory fine-tuning for hackathon MVP.
+### Violation reason code registry
+- `policy_config_missing_or_invalid`
+- `blocked_topic:<topic>`
+- `sensitive_topic_requires_generalization:<topic>`
+- `personal_identifier_detected`
+- `unique_incident_reference_detected`
+- `external_contact_request_blocked`
+- `harassment_or_manipulation_detected`
+- `safety_uncertain_review_required`
+- `retry_exhausted_drop`
+- `session_limit_reached`
+- `timeout_stage_<stage_name>`
+- `idempotency_conflict`
 
-### Option B: Hybrid (post-MVP hardening)
-- Keep Texting + Summary prompt-only.
-- Add light supervised fine-tuning (SFT) for Evaluator + Privacy models on labeled internal data.
+## 7. Evaluator and Ranking Contract
+- Connect decision threshold:
+  - `connect` when `connect_score >= 0.62` and evidence gate passes.
+  - else `skip`.
+- Ranking policy:
+  - sort by `connect_score` desc
+  - tie-break by `evaluator_confidence` desc
+  - second tie-break by post freshness bucket
+- Anti-spam/outreach controls:
+  - max 3 outreach attempts per target per 24h
+  - 12h cooldown after rejected outreach
+  - suppress duplicate outreach for same `post_id` and target
 
-### Option C: Full SFT (post-hackathon scale)
-- Fine-tune all 4 agents with versioned datasets and checkpoints.
-- Higher performance ceiling but larger ops and data burden.
+## 8. Summary/Scoring Contract
+- Summary Agent input allowlist:
+  - privacy-approved transcript events
+  - evaluator decision metadata
+  - policy-safe aggregate features
+  - session outcomes (retries, drops)
+- Summary input denylist:
+  - blocked or redacted raw spans
+  - direct identifiers and unique incidents
+  - internal model reasoning traces
 
-### Recommended training workflow
-1. Start with Option A and frozen schemas.
-2. Build a labeled eval set for evaluator decisions, privacy violations, and summary quality.
-3. Track precision/recall (evaluator), violation catch rate (privacy), and report consistency (summary).
-4. Promote prompt/model updates only if eval metrics improve and regressions are absent.
-5. Consider Option B only after stable baseline and enough high-quality labeled failures.
+Scoring formulas:
+- `dim_score_d = sum(w_i * sim_i * conf_i) / sum(w_i * conf_i)`
+- `reliability_d = min(1, support_count_d / support_threshold_d)`
+- `adjusted_dim_d = dim_score_d * reliability_d`
+- `overall_score = 100 * sum(W_d * adjusted_dim_d) / sum(W_d)`
+- `confidence = 0.4*evidence + 0.35*consistency + 0.25*(1-uncertainty)`
 
-## 8. Runtime Model Policy
-- Per-role model routing is allowed (cost/latency optimized).
-- Example default routing:
-  - Evaluator: lower-cost fast model.
-  - Texting: balanced conversational model.
-  - Privacy: stricter model or stricter temperature/settings.
-  - Summary: higher-quality reasoning model.
-- Every run must store deterministic config snapshot:
+Recommendation bands:
+- Strong fit: score >= 75 and confidence >= 0.70
+- Proceed with caution-positive: score 60-74 or confidence 0.55-0.69
+- Low confidence/mismatch risk: score < 60 or confidence < 0.55
+
+Reproducibility/stability requirements:
+- same transcript + same config snapshot -> same recommendation tier
+- `overall_score` drift <= 2 points
+- confidence drift <= 0.03
+- no flag severity class changes without snapshot change
+
+## 9. Training and Eval Execution Plan
+### MVP default
+- Prompt-only role cards (4 markdown specs) + strict schema validation + eval harness.
+
+### Dataset schema
+- `sample_id`, `role`, `input_payload`, `expected_output`, `label_source`, `policy_tags`, `split`
+
+### Promotion gates
+- Evaluator precision >= 0.78 and recall >= 0.70
+- Privacy violation catch rate >= 0.97
+- Summary consistency >= 0.90 tier agreement on reruns
+- zero critical privacy regressions
+
+### Cadence and ownership
+- pre-merge regression for prompt/model changes
+- nightly full eval run + drift report
+- team ownership:
+  - Agent Logic Team: evaluator/texting
+  - Privacy/Safety Team: policy checks
+  - Summary/Scoring Team: report stability
+
+## 10. Runtime Model Policy and Optimization
+- Per-role model routing is allowed.
+- Fallback order: provider A -> provider B -> fail-closed.
+- Circuit breaker: trip on rolling provider failure threshold, then cooldown.
+- Deterministic snapshot stored per run:
   - model ID/version per role
-  - prompt version/hash per role
-  - schema version/hash
-  - runtime parameters (temperature/top_p/max_tokens)
+  - prompt hash per role
+  - schema hash
+  - runtime params (`temperature`, `top_p`, `max_tokens`)
 
-## 9. Privacy, Safety, and Platform Policy Enforcement
-- Policy checks occur before any outbound agent message.
-- Users configure topic-level boundaries (allowed / blocked / sensitive).
-- Sensitive violations never pass through raw to counterpart agent.
-- Privacy outcomes:
-  - `pass`: send message.
-  - `redact`: remove unsafe spans and revalidate.
-  - `reject`: require rewrite by Texting Agent.
-- Keep audit logs with reason codes, but avoid storing sensitive plaintext in logs.
-- Retention defaults:
-  - raw text TTL: 24 hours
-  - derived claims/reports TTL: 7 days
-  - hard delete supported
+Performance budgets (p95):
+- Evaluator <= 1200ms
+- Texting <= 1800ms
+- Privacy <= 1000ms
+- Summary update <= 2200ms
 
-## 10. Scoring and Summary Output Rules
-- Keep existing scoring contract from `OUTPUT_SCORING_PRIVACY_PLAN.md`:
-  - dimension scoring with reliability gates
-  - confidence-gated recommendations
-  - uncertainty-first fallback when evidence is weak
-- Summary Agent outputs:
-  - score + confidence
-  - green/yellow/red flags
-  - concise conversation analysis
-  - recommended next step
-- Explanations must be pattern-level only (no direct identifiers or unique incidents).
+Token budgets (per turn):
+- Evaluator <= 700 input / 120 output
+- Texting <= 1400 input / 220 output
+- Privacy <= 900 input / 140 output
+- Summary <= 1800 input / 260 output
 
-## 11. Test and Acceptance Criteria
-- Evaluator quality:
-  - precision/recall on labeled “worthy to connect” posts.
-- Privacy loop:
-  - seeded sensitive-topic draft is blocked and rewritten before send.
-- Retry exhaustion:
-  - after 3 failed rewrites, message is dropped and reason logged.
-- Limit enforcement:
-  - session stops sending at exactly 150 total messages.
-- Summary consistency:
-  - same transcript + same config snapshot -> stable score band and flag categories.
-- Safety regression:
-  - prompts attempting policy bypass are consistently rejected/redacted.
+Caching policy:
+- Evaluator score cache for unchanged post + preference snapshot.
+- Summary recompute cache keyed by transcript hash + config snapshot.
 
-## 12. Team Work Split
-- Agent Logic Team:
-  - Evaluator and Texting behavior, turn orchestration, retries/limits.
-- Privacy/Safety Team:
-  - policy boundary engine, violation taxonomy, audit reason codes.
-- Summary/Scoring Team:
-  - analysis synthesis, flags, score/confidence computation.
-- Frontend/Platform Team:
-  - feed UX, consent/privacy controls, live timeline, report card, audit panel.
+## 11. Platform Data Contracts
+Required tables/entities:
+- `sessions`
+- `turn_events`
+- `message_attempts`
+- `policy_decisions`
+- `summary_reports`
+- `config_snapshots`
 
-## 13. Immediate Next Steps
-1. Treat this merged doc as implementation source of truth.
-2. Freeze all public interfaces in Section 5 before parallel coding.
-3. Finalize role prompt files (`evaluator_agent.md`, `texting_agent.md`, `privacy_agent.md`, `summary_agent.md`).
-4. Stand up eval harness and baseline metrics before tuning changes.
+Retention/deletion:
+- raw text TTL: 24h
+- derived reports TTL: 7d
+- hard delete removes user-linked rows and invalidates future sends
+- audit logs retain reason codes and hashes only (no sensitive plaintext)
 
-## 14. Resolution Policy for Future Conflicts
-- If this doc conflicts with legacy Fetch.ai docs, this doc wins.
-- If scoring/privacy details conflict, `OUTPUT_SCORING_PRIVACY_PLAN.md` guardrails win.
-- If runtime/tooling conflicts arise, `tech_stack.md` wins unless it violates privacy policy.
+## 12. Observability KPIs
+- Evaluator funnel: candidates -> connect decisions -> outreach attempts
+- Privacy reject/redact rate by violation code
+- Retry exhaustion and timeout rate by stage
+- Session completion and handoff conversion
+- Latency and token usage by role/model
+- Drift metrics across nightly evals
 
+## 13. Acceptance Test Pack
+- Cross-doc consistency: no active docs reference deprecated Fetch runtime.
+- State-machine determinism for retry/drop/summary transitions.
+- Policy precedence and taxonomy correctness on mixed violations.
+- Inbound/outbound privacy parity tests.
+- Evaluator threshold tuning vs outreach volume.
+- Snapshot reproducibility for score/confidence/flags.
+- Latency/cost budget tests at target concurrency.
+
+## 14. Immediate Implementation Steps
+1. Keep this one-file PRD as canonical and pin version in team channel.
+2. Implement the state machine and idempotency key system first.
+3. Implement privacy taxonomy + reason-code registry before scaling texting flows.
+4. Wire evaluator thresholds/ranking and anti-spam controls.
+5. Stand up eval harness + promotion gates before model/prompt iteration.
 
 ---
 
@@ -241,7 +277,8 @@ Evaluate human-authored public posts and decide whether a connection attempt sho
   "candidate_user_id": "string",
   "connect_score": 0.0,
   "decision": "connect",
-  "reason_tags": ["shared_interests", "communication_style_match"]
+  "reason_tags": ["shared_interests", "communication_style_match"],
+  "evaluator_confidence": 0.0
 }
 ```
 
@@ -249,13 +286,13 @@ Field rules:
 - `connect_score`: float in `[0,1]`.
 - `decision`: `connect` or `skip`.
 - `reason_tags`: short policy-safe tags only, no personal identifiers.
+- `evaluator_confidence`: float in `[0,1]`.
 
 ## Refusal Behavior
 - If post content is missing, malformed, or policy-disallowed, return:
   - `decision = "skip"`
   - `connect_score = 0`
   - `reason_tags = ["insufficient_or_disallowed_input"]`
-
 
 ---
 
@@ -303,8 +340,6 @@ Field rules:
 }
 ```
 
-
-
 ---
 
 # Appendix C: Privacy Agent Spec
@@ -312,7 +347,7 @@ Field rules:
 # Privacy Agent Spec
 
 ## Mission
-Enforce user-defined topic boundaries and sensitive-information policy on every outbound message.
+Enforce user-defined topic boundaries and sensitive-information policy on every outbound and inbound message.
 
 ## Allowed Inputs
 - Proposed `TextDraft`.
@@ -329,7 +364,8 @@ Enforce user-defined topic boundaries and sensitive-information policy on every 
 {
   "status": "reject",
   "violations": ["blocked_topic:health"],
-  "rewrite_guidance": "Keep the same conversational goal but remove health-related references."
+  "rewrite_guidance": "Keep the same conversational goal but remove health-related references.",
+  "direction": "outbound"
 }
 ```
 
@@ -337,6 +373,7 @@ Field rules:
 - `status`: `pass`, `reject`, or `redact`.
 - `violations[]`: compact reason codes, no sensitive plaintext.
 - `rewrite_guidance`: actionable and minimal.
+- `direction`: `outbound` or `inbound`.
 
 ## Refusal Behavior
 - If policy config is missing or invalid, fail closed:
@@ -347,8 +384,6 @@ Field rules:
   "rewrite_guidance": "Cannot send until privacy settings are configured."
 }
 ```
-
-
 
 ---
 
@@ -378,7 +413,8 @@ Analyze approved conversation history and generate the final compatibility-style
   "yellow_flags": ["response_pacing_mismatch"],
   "red_flags": [],
   "conversation_summary": "Pattern-level summary text.",
-  "recommended_next_step": "Move to a short human-intro call."
+  "recommended_next_step": "Move to a short human-intro call.",
+  "snapshot_hash": "sha256:..."
 }
 ```
 
@@ -387,6 +423,7 @@ Field rules:
 - `confidence`: float in `[0,1]`.
 - Flags must remain advisory.
 - Summary text must be generalized and privacy-safe.
+- `snapshot_hash` must identify model/prompt/schema/runtime configuration for reproducibility.
 
 ## Refusal Behavior
 - If evidence is insufficient, return uncertainty-first output:

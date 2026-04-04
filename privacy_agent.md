@@ -1,7 +1,7 @@
 # Privacy Agent Spec
 
 ## Mission
-Enforce user-defined topic boundaries and sensitive-information policy on every outbound message.
+Enforce user-defined topic boundaries and sensitive-information policy on every outbound and inbound message.
 
 ## Allowed Inputs
 - Proposed `TextDraft`.
@@ -18,7 +18,8 @@ Enforce user-defined topic boundaries and sensitive-information policy on every 
 {
   "status": "reject",
   "violations": ["blocked_topic:health"],
-  "rewrite_guidance": "Keep the same conversational goal but remove health-related references."
+  "rewrite_guidance": "Keep the same conversational goal but remove health-related references.",
+  "direction": "outbound"
 }
 ```
 
@@ -26,6 +27,7 @@ Field rules:
 - `status`: `pass`, `reject`, or `redact`.
 - `violations[]`: compact reason codes, no sensitive plaintext.
 - `rewrite_guidance`: actionable and minimal.
+- `direction`: `outbound` or `inbound`.
 
 ## Refusal Behavior
 - If policy config is missing or invalid, fail closed:
@@ -36,4 +38,3 @@ Field rules:
   "rewrite_guidance": "Cannot send until privacy settings are configured."
 }
 ```
-
