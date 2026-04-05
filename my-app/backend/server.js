@@ -14,6 +14,7 @@ const {
 } = require("./lib/agents");
 
 const PORT = process.env.PORT || 8787;
+const MAX_AGENT_MESSAGES = 10;
 const clientsByThread = new Map();
 
 function sendJson(res, statusCode, data) {
@@ -179,6 +180,20 @@ function processDemoFlows(store) {
 
       addMessage(store, threadId, nextMessage.sender, nextMessage.text);
       if (nextMessage.sender === "me") {
+        if (session.usedMessages >= MAX_AGENT_MESSAGES) {
+          pushEvent(store, threadId, {
+            stage: "send",
+            status: "warn",
+            reason_code: "message_cap_reached",
+            turn_index: session.usedMessages
+          });
+          thread.status = "connected";
+          session.connectionStatus = "connected";
+          session.queueStatus = "normal";
+          flow.state = "completed";
+          changed = true;
+          break;
+        }
         session.usedMessages += 1;
       }
 
@@ -475,6 +490,22 @@ async function handleRequest(req, res) {
     const currentUser = store.users[currentUserId];
     const sourcePost = store.posts.find((post) => post.authorId === candidate.id) || store.posts[0];
     const session = store.sessions[threadId];
+    if (session.usedMessages >= MAX_AGENT_MESSAGES) {
+      pushEvent(store, threadId, {
+        stage: "send",
+        status: "warn",
+        reason_code: "message_cap_reached",
+        turn_index: session.usedMessages
+      });
+      saveStore(store);
+      sendJson(res, 200, {
+        ok: false,
+        reason_code: "message_cap_reached",
+        session,
+        events: store.events[threadId]
+      });
+      return;
+    }
 
     pushEvent(store, threadId, {
       stage: "texting_draft",

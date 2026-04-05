@@ -293,7 +293,20 @@ function createSeedStore() {
         { sender: "me", text: "No, it felt specific in a good way. I like people who know how to linger somewhere instead of treating everything like a checklist." },
         { sender: "them", text: "Same. That is usually how I tell whether conversation is actually going to go anywhere." },
         { sender: "me", text: "What kind of place usually gets the strongest reaction out of you, museum, bookstore, or somewhere with a really good coffee attached?" },
-        { sender: "them", text: "Bookstore with a little chaos, museum with one room you accidentally stay in forever, then coffee after to argue about what was actually good." }
+        { sender: "them", text: "Bookstore with a little chaos, museum with one room you accidentally stay in forever, then coffee after to argue about what was actually good." },
+        { sender: "me", text: "That sequence sounds weirdly perfect. I like when a day has one strong anchor and then room to improvise." },
+        { sender: "them", text: "Exactly. If it is overplanned it feels like homework instead of a good day." },
+        { sender: "me", text: "Do you prefer a first meetup that is quiet and specific, or a bigger plan where the energy is already high?" },
+        { sender: "them", text: "Quiet and specific. I want to hear how someone thinks before the room starts deciding the mood for us." },
+        { sender: "me", text: "Same. A focused conversation tells me more than any loud room ever has." },
+        { sender: "them", text: "Then we are probably aligned on pacing. I like curiosity that does not feel performative." },
+        { sender: "me", text: "What topic can you talk about for an hour without noticing time?" },
+        { sender: "them", text: "Stories about design choices people made under pressure, and why those decisions still show up years later." },
+        { sender: "me", text: "That is such a good answer. I could do the same with books that changed how people move through daily life." },
+        { sender: "them", text: "Now I want a running list we keep adding to whenever one of us finds something excellent." },
+        { sender: "me", text: "Done. We can compare notes after the first coffee and see if our lists overlap or challenge each other." },
+        { sender: "them", text: "Perfect. If the list is half overlap and half surprise, that is usually the best sign." },
+        { sender: "me", text: "Agreed. Balanced overlap feels like chemistry with room to grow." }
       ]
     },
     "t-noah": {
@@ -309,7 +322,21 @@ function createSeedStore() {
         { sender: "them", text: "Exactly. I can work with a weird idea if the edges are sharp." },
         { sender: "me", text: "Same. I am probably a little slower and more museum-pilled than you, but I respect the momentum." },
         { sender: "them", text: "That actually sounds like a useful balance. I tend to over-optimize unless someone reminds me the thing is supposed to feel alive too." },
-        { sender: "me", text: "That feels familiar. Best case is probably shared curiosity with slightly different operating speeds." }
+        { sender: "me", text: "That feels familiar. Best case is probably shared curiosity with slightly different operating speeds." },
+        { sender: "them", text: "Do you usually prototype in public, or do you hold things privately until they are almost done?" },
+        { sender: "me", text: "I prefer small trusted feedback loops early, then wider feedback once the core behavior is stable." },
+        { sender: "them", text: "That is disciplined. I sometimes ship too early because I get excited by momentum." },
+        { sender: "me", text: "Momentum is useful if it is tied to a hypothesis, not just velocity for its own sake." },
+        { sender: "them", text: "Fair. What is your favorite way to reset when a project gets noisy?" },
+        { sender: "me", text: "I rewrite the goal in one sentence and cut anything that does not directly support it." },
+        { sender: "them", text: "That is clean. I should probably steal that instead of adding another tracker." },
+        { sender: "me", text: "Steal it. Simpler process usually means clearer decisions." },
+        { sender: "them", text: "What kind of collaboration rhythm works best for you week to week?" },
+        { sender: "me", text: "Short async updates daily, deeper sync twice a week, and protected time for uninterrupted execution." },
+        { sender: "them", text: "That actually sounds ideal for me too, especially if we can keep decisions explicit." },
+        { sender: "me", text: "Then we should probably test that in a small project and see how it feels in practice." },
+        { sender: "them", text: "I am into that. Low stakes experiment first, then bigger build if the dynamic is good." },
+        { sender: "me", text: "Perfect. Small test, clear constraints, and honest retro after. That is my favorite setup." }
       ]
     }
   };
