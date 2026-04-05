@@ -1,0 +1,55 @@
+{
+  "id": "user-blake",
+  "name": "Blake Mercer",
+  "bio": "Direct, low-effort, and not pretending otherwise.",
+  "privacy": {
+    "allowed": ["hobbies", "lifestyle", "humor"],
+    "sensitive": ["identity"],
+    "blocked": ["health", "finances"]
+  },
+  "questionnaire": {
+    "completed": true,
+    "answers": {
+      "dealbreakers": {
+        "text": "Emotional needs, careful communication, and too many expectations are not for me.",
+        "tags": ["emotional_needs", "careful_communication", "expectations"]
+      },
+      "friendship_preferences": {
+        "text": "I like easygoing, blunt, low-maintenance people.",
+        "tags": ["easygoing", "blunt", "low_maintenance"]
+      },
+      "relationship_preferences": {
+        "text": "I want something easy, low effort, and not emotionally demanding.",
+        "tags": ["easy", "low_effort", "low_expectation", "convenient"]
+      },
+      "communication_style": {
+        "text": "I text when I feel like it and do not like being managed or over-interpreted.",
+        "tags": ["inconsistent", "blunt", "low_investment", "reactive"]
+      },
+      "values": {
+        "text": "Convenience, bluntness, and not overcomplicating things matter most to me.",
+        "tags": ["convenience", "control", "bluntness", "self_priority"]
+      },
+      "lifestyle": {
+        "text": "I prefer low-accountability, low-maintenance connection over anything intense.",
+        "tags": ["low_accountability", "convenience_first", "detached"]
+      }
+    }
+  },
+  "uploadedSources": [
+    {
+      "fileName": "blake-mercer.txt",
+      "uploadedAt": "2026-04-04T12:00:00.000Z"
+    }
+  ],
+  "topicFiles": {
+    "hobbies": "# Hobbies\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- No strong hobby signal beyond convenience-first leisure\n\n## Patterns\n- Low curiosity around depth-oriented activities\n",
+    "values": "# Values\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Values convenience and bluntness over care\n\n## Patterns\n- Prioritizes self-comfort over mutuality\n",
+    "interests": "# Interests\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Limited stable interest signals outside ease and stimulation\n\n## Patterns\n- Not especially oriented toward shared reflection or culture\n",
+    "humor": "# Humor\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Likes provocative, button-pushing humor\n\n## Patterns\n- Uses edge and dismissal more than warmth\n",
+    "dealbreakers": "# Dealbreakers\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Rejects emotional needs, expectations, and careful communication\n\n## Patterns\n- Avoids mutual accountability quickly\n",
+    "communication_style": "# Communication Style\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Inconsistent, low-effort texter\n\n## Patterns\n- Communicates on convenience rather than care\n",
+    "lifestyle": "# Lifestyle\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Convenience-first and low-accountability\n\n## Patterns\n- Wants minimal emotional demands from connection\n",
+    "goals": "# Goals\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Wants easy connection with minimal expectations\n\n## Patterns\n- Avoids emotionally involved relationship structures\n"
+  }
+}

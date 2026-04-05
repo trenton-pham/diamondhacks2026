@@ -1,13 +1,22 @@
 import React from "react";
 import Card from "./Card";
 
-export default function RightRail({ activePage, recommendationCount = 3 }) {
+export default function RightRail({ activePage, recommendationCount = 3, recommendations = [] }) {
   return (
     <div className="space-y-4">
       {activePage === "posts" && (
         <Card title="Connection Signals">
           <p className="text-sm text-stone-600">{recommendationCount} policy-safe recommendation(s) available.</p>
-          <p className="mt-2 text-xs text-stone-500">Compact view enabled for performance.</p>
+          <div className="mt-3 space-y-2">
+            {recommendations.slice(0, 2).map((recommendation) => (
+              <div key={recommendation.id} className="rounded-xl bg-stone-50 p-3">
+                <p className="text-sm font-medium">{recommendation.name}</p>
+                <p className="text-xs text-stone-500">
+                  Score {(recommendation.score * 100).toFixed(0)}% · {recommendation.confidence}
+                </p>
+              </div>
+            ))}
+          </div>
         </Card>
       )}
 

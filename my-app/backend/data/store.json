@@ -1,0 +1,1594 @@
+{
+  "schemaVersion": "2026-04-06.v1",
+  "demoDatasetVersion": "demo-review-v1",
+  "users": {
+    "user-jordan": {
+      "id": "user-jordan",
+      "name": "Jordan Lee",
+      "bio": "Building respectful, high-signal conversations.",
+      "privacy": {
+        "allowed": [
+          "hobbies",
+          "goals",
+          "books",
+          "travel",
+          "creative_projects"
+        ],
+        "sensitive": [
+          "identity",
+          "family",
+          "past_relationships"
+        ],
+        "blocked": [
+          "health",
+          "finances"
+        ]
+      },
+      "questionnaire": {
+        "completed": true,
+        "answers": {
+          "dealbreakers": {
+            "text": "Dishonesty, pushiness, and avoidant communication are hard no's for me.",
+            "tags": [
+              "dishonest",
+              "pushy",
+              "avoidant"
+            ]
+          },
+          "friendship_preferences": {
+            "text": "I look for kind, curious people who enjoy thoughtful conversation and follow-through.",
+            "tags": [
+              "kind",
+              "curious",
+              "thoughtful",
+              "consistent"
+            ]
+          },
+          "relationship_preferences": {
+            "text": "I want a calm, intentional connection with emotional maturity and warmth.",
+            "tags": [
+              "intentional",
+              "calm",
+              "emotionally_mature",
+              "warm"
+            ]
+          },
+          "communication_style": {
+            "text": "I prefer thoughtful messages, clear interest, and a balanced pace over constant texting.",
+            "tags": [
+              "thoughtful",
+              "clear",
+              "balanced_pace",
+              "steady"
+            ]
+          },
+          "values": {
+            "text": "Curiosity, patience, honesty, and respect matter most to me.",
+            "tags": [
+              "curiosity",
+              "patience",
+              "honesty",
+              "respect"
+            ]
+          },
+          "lifestyle": {
+            "text": "I like museums, creative projects, quiet weekends, and smaller social settings.",
+            "tags": [
+              "culture",
+              "creative",
+              "quiet_weekends",
+              "low_chaos"
+            ]
+          }
+        }
+      },
+      "uploadedSources": [
+        {
+          "fileName": "jordan-lee.txt",
+          "uploadedAt": "2026-04-04T12:00:00.000Z"
+        }
+      ],
+      "topicFiles": {
+        "hobbies": "# Hobbies\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 13 -->\n\n## Key Signals\n- Likes museums and quiet cultural plans\n- Takes long walks and writes regularly\n- Enjoys creative projects\n\n## Patterns\n- Prefers low-chaos activities with room for reflection\n",
+        "values": "# Values\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 13 -->\n\n## Key Signals\n- Values honesty and curiosity\n- Responds strongly to steady follow-through\n- Wants calm and real connection\n\n## Patterns\n- Drawn to thoughtful people who are clear and kind\n",
+        "interests": "# Interests\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 13 -->\n\n## Key Signals\n- Interested in books, design, and exhibits\n- Likes cultural events and creative work\n- Enjoys reflective conversation\n\n## Patterns\n- Opens up fastest around art, ideas, and people who notice details\n",
+        "humor": "# Humor\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 13 -->\n\n## Key Signals\n- Likes dry humor\n- Dislikes loud performative joking\n\n## Patterns\n- Prefers understated playfulness over high-volume energy\n",
+        "dealbreakers": "# Dealbreakers\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 13 -->\n\n## Key Signals\n- Turned off by pushy behavior\n- Reacts badly to dishonesty or slippery communication\n\n## Patterns\n- Needs emotional steadiness and straightforward behavior\n",
+        "communication_style": "# Communication Style\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 13 -->\n\n## Key Signals\n- Not an all-day texter\n- Sends thoughtful, engaged replies when interested\n- Likes clear and consistent communication\n\n## Patterns\n- Prefers balanced pacing over constant messaging\n",
+        "lifestyle": "# Lifestyle\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 13 -->\n\n## Key Signals\n- Protects quiet weekends\n- Prefers smaller gatherings over chaos\n- Likes dinners, exhibits, and slower plans\n\n## Patterns\n- Most at ease in low-chaos routines with meaningful social time\n",
+        "goals": "# Goals\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 13 -->\n\n## Key Signals\n- Wants a steady long-term connection\n- Seeks emotional maturity and playfulness\n\n## Patterns\n- Looking for a relationship that feels calm, warm, and real\n"
+      }
+    },
+    "user-maya": {
+      "id": "user-maya",
+      "name": "Maya Carter",
+      "bio": "Community builder who likes thoughtful messages and ambitious people.",
+      "privacy": {
+        "allowed": [
+          "hobbies",
+          "values",
+          "interests",
+          "goals"
+        ],
+        "sensitive": [
+          "identity",
+          "family",
+          "past_relationships"
+        ],
+        "blocked": [
+          "health",
+          "finances"
+        ]
+      },
+      "questionnaire": {
+        "completed": true,
+        "answers": {
+          "dealbreakers": {
+            "text": "Cruelty, avoidance, and emotional inconsistency are dealbreakers for me.",
+            "tags": [
+              "cruel",
+              "avoidant",
+              "inconsistent"
+            ]
+          },
+          "friendship_preferences": {
+            "text": "I value warm, emotionally fluent friendships where people show up for each other.",
+            "tags": [
+              "warm",
+              "supportive",
+              "emotionally_mature",
+              "consistent"
+            ]
+          },
+          "relationship_preferences": {
+            "text": "I am looking for a steady, ambitious, emotionally available partner.",
+            "tags": [
+              "intentional",
+              "ambitious",
+              "emotionally_mature",
+              "steady"
+            ]
+          },
+          "communication_style": {
+            "text": "I prefer encouraging, high-context communication with real follow-through.",
+            "tags": [
+              "high_context",
+              "encouraging",
+              "consistent",
+              "clear"
+            ]
+          },
+          "values": {
+            "text": "Empathy, effort, and consistency matter more to me than surface charm.",
+            "tags": [
+              "empathy",
+              "effort",
+              "consistency",
+              "kindness"
+            ]
+          },
+          "lifestyle": {
+            "text": "I like community dinners, meaningful weekends, and social lives with intention.",
+            "tags": [
+              "community",
+              "intentional",
+              "social",
+              "host"
+            ]
+          }
+        }
+      },
+      "uploadedSources": [
+        {
+          "fileName": "maya-carter.txt",
+          "uploadedAt": "2026-04-04T12:00:00.000Z"
+        }
+      ],
+      "topicFiles": {
+        "hobbies": "# Hobbies\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Hosts dinners and likes gathering people intentionally\n- Journals often and keeps active routines\n- Enjoys meaningful social plans\n\n## Patterns\n- Builds intimacy through shared time and thoughtful hosting\n",
+        "values": "# Values\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Values consistency over charm\n- Cares about emotional fluency and effort\n- Wants people whose actions match their words\n\n## Patterns\n- Trust grows through steadiness and follow-through\n",
+        "interests": "# Interests\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Interested in memoirs and behavioral design\n- Likes thoughtful travel stories and reflective conversation\n\n## Patterns\n- Drawn to people who can think deeply without becoming performative\n",
+        "humor": "# Humor\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Likes story-based humor and dramatic retelling\n\n## Patterns\n- Responds well to playful but warm social energy\n",
+        "dealbreakers": "# Dealbreakers\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Avoidant communication is a major turnoff\n- Reacts strongly to meanness or emotional inconsistency\n\n## Patterns\n- Needs reliability and emotional maturity early\n",
+        "communication_style": "# Communication Style\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Sends detailed texts when interested\n- Likes engaged, context-rich conversation\n\n## Patterns\n- Prefers responsive, emotionally present messaging over detached brevity\n",
+        "lifestyle": "# Lifestyle\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Busy week schedule with intentional social plans\n- Likes dinners, gatherings, and grounded ambition\n\n## Patterns\n- Balances full weeks with meaningful connection\n",
+        "goals": "# Goals\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Wants a deeply supportive relationship\n- Cares about building a strong life, not just surface chemistry\n\n## Patterns\n- Looking for both ambition and emotional safety\n"
+      },
+      "agentHandle": "maya.agent",
+      "tags": [
+        "community",
+        "emotionally_mature",
+        "ambition"
+      ]
+    },
+    "user-ava": {
+      "id": "user-ava",
+      "name": "Ava Lin",
+      "bio": "Museum weekends, essays, and patient conversations.",
+      "privacy": {
+        "allowed": [
+          "hobbies",
+          "values",
+          "interests",
+          "communication_style"
+        ],
+        "sensitive": [
+          "identity",
+          "family",
+          "work_specifics"
+        ],
+        "blocked": [
+          "health",
+          "finances"
+        ]
+      },
+      "questionnaire": {
+        "completed": true,
+        "answers": {
+          "dealbreakers": {
+            "text": "I do not want harsh, combative, or attention-seeking communication.",
+            "tags": [
+              "aggressive",
+              "performative",
+              "dishonest"
+            ]
+          },
+          "friendship_preferences": {
+            "text": "I look for thoughtful people who enjoy culture and can hold a real conversation.",
+            "tags": [
+              "thoughtful",
+              "curious",
+              "culture",
+              "warm"
+            ]
+          },
+          "relationship_preferences": {
+            "text": "I want something grounded, emotionally safe, and creatively alive.",
+            "tags": [
+              "intentional",
+              "emotionally_mature",
+              "creative",
+              "calm"
+            ]
+          },
+          "communication_style": {
+            "text": "I prefer warm, reflective messages over constant rapid-fire texting.",
+            "tags": [
+              "thoughtful",
+              "warm",
+              "steady",
+              "high_context"
+            ]
+          },
+          "values": {
+            "text": "Curiosity, honesty, and emotional steadiness matter most to me.",
+            "tags": [
+              "curiosity",
+              "honesty",
+              "kindness",
+              "stability"
+            ]
+          },
+          "lifestyle": {
+            "text": "I like quiet mornings, museums, bookstores, and low-chaos weekends.",
+            "tags": [
+              "quiet_weekends",
+              "culture",
+              "low_chaos",
+              "city_walks"
+            ]
+          }
+        }
+      },
+      "uploadedSources": [
+        {
+          "fileName": "ava-lin.txt",
+          "uploadedAt": "2026-04-04T12:00:00.000Z"
+        }
+      ],
+      "topicFiles": {
+        "hobbies": "# Hobbies\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Loves museums, bookstores, and long coffees\n- Writes often in notes and essays\n- Likes city walks and quiet routines\n\n## Patterns\n- Chooses slow, observant activities over high-intensity plans\n",
+        "values": "# Values\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Values honesty and emotional safety\n- Drawn to quiet curiosity over performance\n\n## Patterns\n- Prefers thoughtful depth without social aggression\n",
+        "interests": "# Interests\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Interested in poetry, documentaries, and design history\n- Likes talking about cities and aesthetics\n\n## Patterns\n- Feels most alive in reflective cultural conversation\n",
+        "humor": "# Humor\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Very dry sense of humor\n\n## Patterns\n- Likes low-key wit more than loud joking\n",
+        "dealbreakers": "# Dealbreakers\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Shuts down around aggressive energy\n- Loses interest quickly when honesty feels thin\n\n## Patterns\n- Needs safety and sincerity more than intensity\n",
+        "communication_style": "# Communication Style\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Likes thoughtful replies over frequent check-ins\n- Communicates warmly and reflectively\n\n## Patterns\n- Favors slower, emotionally intelligent pacing\n",
+        "lifestyle": "# Lifestyle\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Quiet mornings and low-chaos weekends feel natural\n- Likes slower city rhythms\n\n## Patterns\n- Prefers steady, grounded routines with cultural texture\n",
+        "goals": "# Goals\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Wants grounded companionship with creative energy\n\n## Patterns\n- Looking for emotional safety and long-form compatibility\n"
+      },
+      "agentHandle": "ava.agent",
+      "tags": [
+        "culture",
+        "writing",
+        "warm"
+      ]
+    },
+    "user-noah": {
+      "id": "user-noah",
+      "name": "Noah Kim",
+      "bio": "Product-minded builder who likes clear constraints and side quests.",
+      "privacy": {
+        "allowed": [
+          "hobbies",
+          "values",
+          "interests",
+          "goals"
+        ],
+        "sensitive": [
+          "identity",
+          "family",
+          "work_specifics"
+        ],
+        "blocked": [
+          "health",
+          "finances"
+        ]
+      },
+      "questionnaire": {
+        "completed": true,
+        "answers": {
+          "dealbreakers": {
+            "text": "I do not do flakiness, manipulation, or vague games.",
+            "tags": [
+              "flaky",
+              "manipulative",
+              "inconsistent"
+            ]
+          },
+          "friendship_preferences": {
+            "text": "I connect best with collaborative people who like building and learning.",
+            "tags": [
+              "builder",
+              "curious",
+              "collaborative",
+              "playful"
+            ]
+          },
+          "relationship_preferences": {
+            "text": "I want someone who is clear, reliable, and excited about making things happen together.",
+            "tags": [
+              "reliable",
+              "clear",
+              "ambitious",
+              "builder"
+            ]
+          },
+          "communication_style": {
+            "text": "Direct, kind, and relatively fast replies are ideal for me.",
+            "tags": [
+              "direct",
+              "kind",
+              "fast_reply",
+              "clear"
+            ]
+          },
+          "values": {
+            "text": "Reliability and learning matter more to me than over-romanticizing things.",
+            "tags": [
+              "reliability",
+              "growth",
+              "playfulness",
+              "clarity"
+            ]
+          },
+          "lifestyle": {
+            "text": "I like early mornings, coffee chats, trail runs, and productive weekends.",
+            "tags": [
+              "active",
+              "early_riser",
+              "builder",
+              "coffee_chats"
+            ]
+          }
+        }
+      },
+      "uploadedSources": [
+        {
+          "fileName": "noah-kim.txt",
+          "uploadedAt": "2026-04-04T12:00:00.000Z"
+        }
+      ],
+      "topicFiles": {
+        "hobbies": "# Hobbies\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Builds side projects often\n- Trail runs and board games are regular resets\n\n## Patterns\n- Uses projects and activity to regulate energy\n",
+        "values": "# Values\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Values reliability and competence\n- Dislikes flakiness and wasted time\n\n## Patterns\n- Trust is built through clarity and consistency\n",
+        "interests": "# Interests\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Interested in AI products, startups, and sci-fi\n\n## Patterns\n- Opens up most through building and idea exchange\n",
+        "humor": "# Humor\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Likes deadpan and absurd humor\n\n## Patterns\n- Prefers playful directness to heavy earnestness\n",
+        "dealbreakers": "# Dealbreakers\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Strong reaction to manipulation or ambiguity\n\n## Patterns\n- Needs directness and dependable follow-through\n",
+        "communication_style": "# Communication Style\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Texts directly and relatively quickly\n- Slower replies are fine if the signal is clear\n\n## Patterns\n- Prefers efficient, straightforward communication\n",
+        "lifestyle": "# Lifestyle\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Early-riser, productive-weekend energy\n- Likes coffee chats and active routines\n\n## Patterns\n- Runs on momentum, structure, and project energy\n",
+        "goals": "# Goals\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Wants to keep building useful things with the right people around him\n\n## Patterns\n- Looks for people who are aligned on ambition and effort\n"
+      },
+      "agentHandle": "noah.agent",
+      "tags": [
+        "projects",
+        "product",
+        "builder"
+      ]
+    },
+    "user-serena": {
+      "id": "user-serena",
+      "name": "Serena Patel",
+      "bio": "Thoughtful, social, and a little overbooked in a way that somehow still works.",
+      "privacy": {
+        "allowed": [
+          "hobbies",
+          "values",
+          "interests",
+          "lifestyle"
+        ],
+        "sensitive": [
+          "identity",
+          "family",
+          "past_relationships"
+        ],
+        "blocked": [
+          "health",
+          "finances"
+        ]
+      },
+      "questionnaire": {
+        "completed": true,
+        "answers": {
+          "dealbreakers": {
+            "text": "I struggle with rigidity, closed-off energy, and people who make warmth feel like work.",
+            "tags": [
+              "rigid",
+              "closed_off",
+              "ungenerous"
+            ]
+          },
+          "friendship_preferences": {
+            "text": "I like kind, curious people who are emotionally literate and still feel alive to be around.",
+            "tags": [
+              "kind",
+              "curious",
+              "emotionally_literate",
+              "energized"
+            ]
+          },
+          "relationship_preferences": {
+            "text": "I want something generous, emotionally aware, and open to a little spontaneity.",
+            "tags": [
+              "generous",
+              "curious",
+              "emotionally_aware",
+              "spontaneous"
+            ]
+          },
+          "communication_style": {
+            "text": "I like warm, thoughtful communication, even if my schedule occasionally gets chaotic.",
+            "tags": [
+              "thoughtful",
+              "warm",
+              "social",
+              "sometimes_uneven"
+            ]
+          },
+          "values": {
+            "text": "Kindness, generosity, curiosity, and momentum matter a lot to me.",
+            "tags": [
+              "kindness",
+              "generosity",
+              "curiosity",
+              "momentum"
+            ]
+          },
+          "lifestyle": {
+            "text": "I like eventful weeks, good food, gallery nights, and people who can move with some spontaneity.",
+            "tags": [
+              "social",
+              "eventful",
+              "spontaneous",
+              "expressive"
+            ]
+          }
+        }
+      },
+      "uploadedSources": [
+        {
+          "fileName": "serena-patel.txt",
+          "uploadedAt": "2026-04-04T12:00:00.000Z"
+        }
+      ],
+      "topicFiles": {
+        "hobbies": "# Hobbies\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Enjoys gallery openings, food outings, and long debrief walks\n- Likes active community/social plans\n\n## Patterns\n- Feels most alive when thoughtful conversation and real-world activity overlap\n",
+        "values": "# Values\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Values kindness and generosity\n- Wants warmth with momentum, not stillness without spark\n\n## Patterns\n- Looks for emotional literacy without social stagnation\n",
+        "interests": "# Interests\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Interested in design, food, and people's inner worlds\n\n## Patterns\n- Connects through aesthetic and relational curiosity\n",
+        "humor": "# Humor\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Light, socially responsive humor\n\n## Patterns\n- Likes playful conversation that still feels real\n",
+        "dealbreakers": "# Dealbreakers\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Reacts badly to rigidity and emotionally closed-off behavior\n\n## Patterns\n- Needs flexibility and emotional openness to stay interested\n",
+        "communication_style": "# Communication Style\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Thoughtful when present, but sometimes schedule-heavy\n\n## Patterns\n- Warm but less rhythmically consistent than quieter users\n",
+        "lifestyle": "# Lifestyle\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Likes lively weeks and social plans\n- Comfortable with a little chaos and spontaneity\n\n## Patterns\n- Thrives on movement, energy, and expressive social life\n",
+        "goals": "# Goals\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Wants emotionally literate relationships that still feel alive\n\n## Patterns\n- Looking for warmth plus movement, not stillness alone\n"
+      },
+      "agentHandle": "serena.agent",
+      "tags": [
+        "community",
+        "social",
+        "design"
+      ]
+    },
+    "user-riley": {
+      "id": "user-riley",
+      "name": "Riley Torres",
+      "bio": "Fast plans, loud nights, zero overthinking.",
+      "privacy": {
+        "allowed": [
+          "hobbies",
+          "lifestyle",
+          "humor",
+          "interests"
+        ],
+        "sensitive": [
+          "family",
+          "identity"
+        ],
+        "blocked": [
+          "health",
+          "finances"
+        ]
+      },
+      "questionnaire": {
+        "completed": true,
+        "answers": {
+          "dealbreakers": {
+            "text": "Too much depth too early, too much reassurance, and too much planning all make me pull away.",
+            "tags": [
+              "too_deep_too_early",
+              "reassurance_heavy",
+              "overplanned"
+            ]
+          },
+          "friendship_preferences": {
+            "text": "I like funny, spontaneous, easygoing people who can keep up.",
+            "tags": [
+              "fast",
+              "funny",
+              "spontaneous",
+              "easygoing"
+            ]
+          },
+          "relationship_preferences": {
+            "text": "I want something playful, low-pressure, and exciting more than serious right away.",
+            "tags": [
+              "playful",
+              "low_pressure",
+              "exciting",
+              "social"
+            ]
+          },
+          "communication_style": {
+            "text": "Fast banter is my thing. If a chat gets too reflective too quickly, I lose interest.",
+            "tags": [
+              "fast_banter",
+              "light",
+              "casual",
+              "low_reflection"
+            ]
+          },
+          "values": {
+            "text": "Fun, novelty, freedom, and momentum matter most to me right now.",
+            "tags": [
+              "fun",
+              "novelty",
+              "freedom",
+              "speed"
+            ]
+          },
+          "lifestyle": {
+            "text": "I like nightlife, spontaneous plans, loud rooms, and saying yes without thinking too hard.",
+            "tags": [
+              "nightlife",
+              "spontaneous",
+              "loud",
+              "social"
+            ]
+          }
+        }
+      },
+      "uploadedSources": [
+        {
+          "fileName": "riley-torres.txt",
+          "uploadedAt": "2026-04-04T12:00:00.000Z"
+        }
+      ],
+      "topicFiles": {
+        "hobbies": "# Hobbies\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Goes out often and prioritizes spontaneous plans\n\n## Patterns\n- Chooses speed and social energy over reflective downtime\n",
+        "values": "# Values\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Values fun and freedom over seriousness\n\n## Patterns\n- Avoids emotional heaviness and structure\n",
+        "interests": "# Interests\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Interested in nightlife, people, and momentum\n\n## Patterns\n- Gets most engaged around social stimulation and fast-paced interaction\n",
+        "humor": "# Humor\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Likes loud, fast, teasing humor\n\n## Patterns\n- Prefers banter over reflection\n",
+        "dealbreakers": "# Dealbreakers\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Pulls away from depth and reassurance-heavy energy early\n\n## Patterns\n- Needs lightness and room to move quickly\n",
+        "communication_style": "# Communication Style\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Fast, casual, low-reflection texter\n\n## Patterns\n- Responds poorly to slow emotional build-up\n",
+        "lifestyle": "# Lifestyle\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Lives socially and makes plans last minute\n\n## Patterns\n- Oriented around novelty and momentum more than routine\n",
+        "goals": "# Goals\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Optimizing for fun and excitement right now\n\n## Patterns\n- Avoids emotionally heavy relationship framing\n"
+      },
+      "agentHandle": "riley.agent",
+      "tags": [
+        "nightlife",
+        "social",
+        "spontaneous"
+      ]
+    },
+    "user-blake": {
+      "id": "user-blake",
+      "name": "Blake Mercer",
+      "bio": "Direct, low-effort, and not pretending otherwise.",
+      "privacy": {
+        "allowed": [
+          "hobbies",
+          "lifestyle",
+          "humor"
+        ],
+        "sensitive": [
+          "identity"
+        ],
+        "blocked": [
+          "health",
+          "finances"
+        ]
+      },
+      "questionnaire": {
+        "completed": true,
+        "answers": {
+          "dealbreakers": {
+            "text": "Emotional needs, careful communication, and too many expectations are not for me.",
+            "tags": [
+              "emotional_needs",
+              "careful_communication",
+              "expectations"
+            ]
+          },
+          "friendship_preferences": {
+            "text": "I like easygoing, blunt, low-maintenance people.",
+            "tags": [
+              "easygoing",
+              "blunt",
+              "low_maintenance"
+            ]
+          },
+          "relationship_preferences": {
+            "text": "I want something easy, low effort, and not emotionally demanding.",
+            "tags": [
+              "easy",
+              "low_effort",
+              "low_expectation",
+              "convenient"
+            ]
+          },
+          "communication_style": {
+            "text": "I text when I feel like it and do not like being managed or over-interpreted.",
+            "tags": [
+              "inconsistent",
+              "blunt",
+              "low_investment",
+              "reactive"
+            ]
+          },
+          "values": {
+            "text": "Convenience, bluntness, and not overcomplicating things matter most to me.",
+            "tags": [
+              "convenience",
+              "control",
+              "bluntness",
+              "self_priority"
+            ]
+          },
+          "lifestyle": {
+            "text": "I prefer low-accountability, low-maintenance connection over anything intense.",
+            "tags": [
+              "low_accountability",
+              "convenience_first",
+              "detached"
+            ]
+          }
+        }
+      },
+      "uploadedSources": [
+        {
+          "fileName": "blake-mercer.txt",
+          "uploadedAt": "2026-04-04T12:00:00.000Z"
+        }
+      ],
+      "topicFiles": {
+        "hobbies": "# Hobbies\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- No strong hobby signal beyond convenience-first leisure\n\n## Patterns\n- Low curiosity around depth-oriented activities\n",
+        "values": "# Values\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Values convenience and bluntness over care\n\n## Patterns\n- Prioritizes self-comfort over mutuality\n",
+        "interests": "# Interests\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Limited stable interest signals outside ease and stimulation\n\n## Patterns\n- Not especially oriented toward shared reflection or culture\n",
+        "humor": "# Humor\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Likes provocative, button-pushing humor\n\n## Patterns\n- Uses edge and dismissal more than warmth\n",
+        "dealbreakers": "# Dealbreakers\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Rejects emotional needs, expectations, and careful communication\n\n## Patterns\n- Avoids mutual accountability quickly\n",
+        "communication_style": "# Communication Style\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Inconsistent, low-effort texter\n\n## Patterns\n- Communicates on convenience rather than care\n",
+        "lifestyle": "# Lifestyle\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Convenience-first and low-accountability\n\n## Patterns\n- Wants minimal emotional demands from connection\n",
+        "goals": "# Goals\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Wants easy connection with minimal expectations\n\n## Patterns\n- Avoids emotionally involved relationship structures\n"
+      },
+      "agentHandle": "blake.agent",
+      "tags": [
+        "low_effort",
+        "detached",
+        "blunt"
+      ]
+    }
+  },
+  "posts": [
+    {
+      "id": "p-maya",
+      "authorId": "user-maya",
+      "author": "Maya Carter",
+      "timestamp": "2026-04-04T16:10:00.000Z",
+      "content": "I love people who can be both ambitious and emotionally fluent. Good conversation and follow-through matter a lot to me.",
+      "tags": [
+        "community",
+        "intentional",
+        "ambition"
+      ]
+    },
+    {
+      "id": "p-ava",
+      "authorId": "user-ava",
+      "author": "Ava Lin",
+      "timestamp": "2026-04-04T15:30:00.000Z",
+      "content": "Looking for people who enjoy museum weekends, bookstores, and long conversations that actually go somewhere.",
+      "tags": [
+        "culture",
+        "writing",
+        "quiet_weekends"
+      ]
+    },
+    {
+      "id": "p-serena",
+      "authorId": "user-serena",
+      "author": "Serena Patel",
+      "timestamp": "2026-04-04T15:05:00.000Z",
+      "content": "I like thoughtful people who can move between ambitious work, community events, and low-key late-night debriefs.",
+      "tags": [
+        "social",
+        "community",
+        "thoughtful"
+      ]
+    },
+    {
+      "id": "p-noah",
+      "authorId": "user-noah",
+      "author": "Noah Kim",
+      "timestamp": "2026-04-04T14:40:00.000Z",
+      "content": "Who else likes building side projects with clear constraints and talking through ideas over coffee?",
+      "tags": [
+        "projects",
+        "product",
+        "builder"
+      ]
+    },
+    {
+      "id": "p-riley",
+      "authorId": "user-riley",
+      "author": "Riley Torres",
+      "timestamp": "2026-04-04T14:12:00.000Z",
+      "content": "I like spontaneous plans, loud nights, and people who can keep things light without overthinking everything.",
+      "tags": [
+        "nightlife",
+        "spontaneous",
+        "social"
+      ]
+    },
+    {
+      "id": "p-blake",
+      "authorId": "user-blake",
+      "author": "Blake Mercer",
+      "timestamp": "2026-04-04T13:45:00.000Z",
+      "content": "I lose interest when people want too much emotional processing. I prefer things easy, fast, and low effort.",
+      "tags": [
+        "blunt",
+        "low_effort",
+        "detached"
+      ]
+    }
+  ],
+  "threads": [
+    {
+      "id": "t-maya",
+      "participantIds": [
+        "user-jordan",
+        "user-maya"
+      ],
+      "name": "Maya Carter",
+      "counterpartId": "user-maya",
+      "status": "connected",
+      "compatibilityScore": 0.77,
+      "confidence": "calibrated",
+      "intentSummary": "Explicit dealbreaker conflict on avoidant. Shared interests overlap on 2 visible tag signals. Topic files show 1 stronger compatibility cues.",
+      "lastPreview": "Honestly, I value warm, emotionally fluent friendships where people show up for each other.",
+      "updatedAt": "2026-04-05T05:18:34.334Z"
+    },
+    {
+      "id": "t-ava",
+      "participantIds": [
+        "user-jordan",
+        "user-ava"
+      ],
+      "name": "Ava Lin",
+      "counterpartId": "user-ava",
+      "status": "connected",
+      "compatibilityScore": 0,
+      "confidence": "calibrated",
+      "intentSummary": "",
+      "lastPreview": "Perfect. I was hoping you would.",
+      "updatedAt": "2026-04-04T16:18:00.000Z"
+    },
+    {
+      "id": "t-serena",
+      "participantIds": [
+        "user-jordan",
+        "user-serena"
+      ],
+      "name": "Serena Patel",
+      "counterpartId": "user-serena",
+      "status": "connected",
+      "compatibilityScore": 0,
+      "confidence": "calibrated",
+      "intentSummary": "",
+      "lastPreview": "Okay that actually sounds better than I expected from your post.",
+      "updatedAt": "2026-04-04T15:50:00.000Z"
+    },
+    {
+      "id": "t-noah",
+      "participantIds": [
+        "user-jordan",
+        "user-noah"
+      ],
+      "name": "Noah Kim",
+      "counterpartId": "user-noah",
+      "status": "connected",
+      "compatibilityScore": 0,
+      "confidence": "calibrated",
+      "intentSummary": "",
+      "lastPreview": "Honestly that is still a decent start.",
+      "updatedAt": "2026-04-04T15:28:00.000Z"
+    },
+    {
+      "id": "t-riley",
+      "participantIds": [
+        "user-jordan",
+        "user-riley"
+      ],
+      "name": "Riley Torres",
+      "counterpartId": "user-riley",
+      "status": "paused",
+      "compatibilityScore": 0,
+      "confidence": "degraded",
+      "intentSummary": "",
+      "lastPreview": "Honestly better to know now than after I drag you to something horrible.",
+      "updatedAt": "2026-04-04T14:58:00.000Z"
+    },
+    {
+      "id": "t-blake",
+      "participantIds": [
+        "user-jordan",
+        "user-blake"
+      ],
+      "name": "Blake Mercer",
+      "counterpartId": "user-blake",
+      "status": "paused",
+      "compatibilityScore": 0,
+      "confidence": "degraded",
+      "intentSummary": "",
+      "lastPreview": "Probably. No hard feelings, just not the same wavelength.",
+      "updatedAt": "2026-04-04T14:20:00.000Z"
+    }
+  ],
+  "messages": {
+    "t-maya": [
+      {
+        "id": "m-maya-1",
+        "threadId": "t-maya",
+        "sender": "them",
+        "text": "Your post about wanting something calm but real stayed with me for some reason.",
+        "time": "09:20 AM",
+        "createdAt": "2026-04-04T16:20:00.000Z"
+      },
+      {
+        "id": "m-maya-2",
+        "threadId": "t-maya",
+        "sender": "me",
+        "text": "That is nice to hear. Yours stood out to me too, especially the part about ambition and emotional fluency.",
+        "time": "09:22 AM",
+        "createdAt": "2026-04-04T16:22:00.000Z"
+      },
+      {
+        "id": "m-maya-3",
+        "threadId": "t-maya",
+        "sender": "them",
+        "text": "I feel like everyone says they want depth, but not everyone means it in a livable way.",
+        "time": "09:26 AM",
+        "createdAt": "2026-04-04T16:26:00.000Z"
+      },
+      {
+        "id": "m-maya-4",
+        "threadId": "t-maya",
+        "sender": "me",
+        "text": "Exactly. I like depth that still feels grounded and easy to be inside of.",
+        "time": "09:30 AM",
+        "createdAt": "2026-04-04T16:30:00.000Z"
+      },
+      {
+        "id": "m-maya-5",
+        "threadId": "t-maya",
+        "sender": "them",
+        "text": "Same. Also your profile made me think you are probably good at picking dinner spots.",
+        "time": "09:34 AM",
+        "createdAt": "2026-04-04T16:34:00.000Z"
+      },
+      {
+        "id": "m-maya-6",
+        "threadId": "t-maya",
+        "sender": "me",
+        "text": "That is such a specific compliment, but yes, I take it seriously.",
+        "time": "09:37 AM",
+        "createdAt": "2026-04-04T16:37:00.000Z"
+      },
+      {
+        "id": "m-maya-7",
+        "threadId": "t-maya",
+        "sender": "them",
+        "text": "Good. Because I am very pro long dinner, second drink, accidental three-hour conversation.",
+        "time": "09:40 AM",
+        "createdAt": "2026-04-04T16:40:00.000Z"
+      },
+      {
+        "id": "m-maya-8",
+        "threadId": "t-maya",
+        "sender": "me",
+        "text": "That sounds ideal to me honestly.",
+        "time": "09:43 AM",
+        "createdAt": "2026-04-04T16:43:00.000Z"
+      },
+      {
+        "id": "m-maya-9",
+        "threadId": "t-maya",
+        "sender": "them",
+        "text": "Same. I trust steady energy way more than instant chemistry.",
+        "time": "09:45 AM",
+        "createdAt": "2026-04-04T16:45:00.000Z"
+      },
+      {
+        "id": "m-1775365394823-38",
+        "threadId": "t-maya",
+        "sender": "me",
+        "text": "Would you like to get coffee sometime",
+        "time": "10:03 PM",
+        "createdAt": "2026-04-05T05:03:14.823Z"
+      },
+      {
+        "id": "m-1775365394833-708",
+        "threadId": "t-maya",
+        "sender": "them",
+        "text": "That tracks for me too. I like conversations that feel intentional and a little playful.",
+        "time": "10:03 PM",
+        "createdAt": "2026-04-05T05:03:14.832Z"
+      },
+      {
+        "id": "m-1775365676393-382",
+        "threadId": "t-maya",
+        "sender": "me",
+        "text": "would you like to get ice cream",
+        "time": "10:07 PM",
+        "createdAt": "2026-04-05T05:07:56.393Z"
+      },
+      {
+        "id": "m-1775365676394-245",
+        "threadId": "t-maya",
+        "sender": "them",
+        "text": "That tracks for me too. I like conversations that feel intentional and a little playful.",
+        "time": "10:07 PM",
+        "createdAt": "2026-04-05T05:07:56.394Z"
+      },
+      {
+        "id": "m-1775366314331-446",
+        "threadId": "t-maya",
+        "sender": "me",
+        "text": "We should go to the beach and have a good conversation",
+        "time": "10:18 PM",
+        "createdAt": "2026-04-05T05:18:34.331Z"
+      },
+      {
+        "id": "m-1775366314334-867",
+        "threadId": "t-maya",
+        "sender": "them",
+        "text": "Honestly, I value warm, emotionally fluent friendships where people show up for each other.",
+        "time": "10:18 PM",
+        "createdAt": "2026-04-05T05:18:34.334Z"
+      }
+    ],
+    "t-ava": [
+      {
+        "id": "m-ava-1",
+        "threadId": "t-ava",
+        "sender": "me",
+        "text": "Your post made me laugh because museum plus bookstore is basically my default answer to everything.",
+        "time": "08:52 AM",
+        "createdAt": "2026-04-04T15:52:00.000Z"
+      },
+      {
+        "id": "m-ava-2",
+        "threadId": "t-ava",
+        "sender": "them",
+        "text": "Okay good, so you get it.",
+        "time": "08:54 AM",
+        "createdAt": "2026-04-04T15:54:00.000Z"
+      },
+      {
+        "id": "m-ava-3",
+        "threadId": "t-ava",
+        "sender": "them",
+        "text": "I am deeply suspicious of people who speedwalk through beautiful places.",
+        "time": "08:56 AM",
+        "createdAt": "2026-04-04T15:56:00.000Z"
+      },
+      {
+        "id": "m-ava-4",
+        "threadId": "t-ava",
+        "sender": "me",
+        "text": "Completely fair. Half the fun is lingering.",
+        "time": "08:59 AM",
+        "createdAt": "2026-04-04T15:59:00.000Z"
+      },
+      {
+        "id": "m-ava-5",
+        "threadId": "t-ava",
+        "sender": "them",
+        "text": "Exactly. I like conversations that move like that too.",
+        "time": "09:03 AM",
+        "createdAt": "2026-04-04T16:03:00.000Z"
+      },
+      {
+        "id": "m-ava-6",
+        "threadId": "t-ava",
+        "sender": "me",
+        "text": "That makes sense. What do you end up talking about for way too long with the right person?",
+        "time": "09:08 AM",
+        "createdAt": "2026-04-04T16:08:00.000Z"
+      },
+      {
+        "id": "m-ava-7",
+        "threadId": "t-ava",
+        "sender": "them",
+        "text": "Books, design, other people, and occasionally whether a city is emotionally stable.",
+        "time": "09:12 AM",
+        "createdAt": "2026-04-04T16:12:00.000Z"
+      },
+      {
+        "id": "m-ava-8",
+        "threadId": "t-ava",
+        "sender": "me",
+        "text": "That is such a specific category and I completely understand what you mean.",
+        "time": "09:16 AM",
+        "createdAt": "2026-04-04T16:16:00.000Z"
+      },
+      {
+        "id": "m-ava-9",
+        "threadId": "t-ava",
+        "sender": "them",
+        "text": "Perfect. I was hoping you would.",
+        "time": "09:18 AM",
+        "createdAt": "2026-04-04T16:18:00.000Z"
+      }
+    ],
+    "t-serena": [
+      {
+        "id": "m-serena-1",
+        "threadId": "t-serena",
+        "sender": "them",
+        "text": "Your profile made me think you might actually know how to hold a conversation after an event instead of just saying \"fun night.\"",
+        "time": "08:32 AM",
+        "createdAt": "2026-04-04T15:32:00.000Z"
+      },
+      {
+        "id": "m-serena-2",
+        "threadId": "t-serena",
+        "sender": "me",
+        "text": "That is generous. Yours felt thoughtful too, just maybe more socially ambitious than mine.",
+        "time": "08:35 AM",
+        "createdAt": "2026-04-04T15:35:00.000Z"
+      },
+      {
+        "id": "m-serena-3",
+        "threadId": "t-serena",
+        "sender": "them",
+        "text": "That is definitely fair. I like a lively week, but I still need the conversation part to feel real.",
+        "time": "08:39 AM",
+        "createdAt": "2026-04-04T15:39:00.000Z"
+      },
+      {
+        "id": "m-serena-4",
+        "threadId": "t-serena",
+        "sender": "me",
+        "text": "Same. I am just probably more museum-and-dinner than event-and-afterparty.",
+        "time": "08:42 AM",
+        "createdAt": "2026-04-04T15:42:00.000Z"
+      },
+      {
+        "id": "m-serena-5",
+        "threadId": "t-serena",
+        "sender": "them",
+        "text": "Honestly that is probably healthy for me.",
+        "time": "08:44 AM",
+        "createdAt": "2026-04-04T15:44:00.000Z"
+      },
+      {
+        "id": "m-serena-6",
+        "threadId": "t-serena",
+        "sender": "me",
+        "text": "What kind of plans usually feel most like you?",
+        "time": "08:47 AM",
+        "createdAt": "2026-04-04T15:47:00.000Z"
+      },
+      {
+        "id": "m-serena-7",
+        "threadId": "t-serena",
+        "sender": "them",
+        "text": "Gallery opening, food somewhere good, then a long walk where the conversation gets a little too honest.",
+        "time": "08:49 AM",
+        "createdAt": "2026-04-04T15:49:00.000Z"
+      },
+      {
+        "id": "m-serena-8",
+        "threadId": "t-serena",
+        "sender": "me",
+        "text": "Okay that actually sounds better than I expected from your post.",
+        "time": "08:50 AM",
+        "createdAt": "2026-04-04T15:50:00.000Z"
+      }
+    ],
+    "t-noah": [
+      {
+        "id": "m-noah-1",
+        "threadId": "t-noah",
+        "sender": "me",
+        "text": "Your post about side projects with constraints felt extremely targeted at my brain.",
+        "time": "08:08 AM",
+        "createdAt": "2026-04-04T15:08:00.000Z"
+      },
+      {
+        "id": "m-noah-2",
+        "threadId": "t-noah",
+        "sender": "them",
+        "text": "Then the post did its job.",
+        "time": "08:10 AM",
+        "createdAt": "2026-04-04T15:10:00.000Z"
+      },
+      {
+        "id": "m-noah-3",
+        "threadId": "t-noah",
+        "sender": "them",
+        "text": "Constraints make people reveal whether they actually have taste.",
+        "time": "08:12 AM",
+        "createdAt": "2026-04-04T15:12:00.000Z"
+      },
+      {
+        "id": "m-noah-4",
+        "threadId": "t-noah",
+        "sender": "me",
+        "text": "That is maybe too real. What are you building lately?",
+        "time": "08:15 AM",
+        "createdAt": "2026-04-04T15:15:00.000Z"
+      },
+      {
+        "id": "m-noah-5",
+        "threadId": "t-noah",
+        "sender": "them",
+        "text": "Mostly small product experiments and AI tools. If I go too long without making something I get annoying.",
+        "time": "08:18 AM",
+        "createdAt": "2026-04-04T15:18:00.000Z"
+      },
+      {
+        "id": "m-noah-6",
+        "threadId": "t-noah",
+        "sender": "me",
+        "text": "I get that. I like making things too, but I definitely need some quiet in the middle of it.",
+        "time": "08:22 AM",
+        "createdAt": "2026-04-04T15:22:00.000Z"
+      },
+      {
+        "id": "m-noah-7",
+        "threadId": "t-noah",
+        "sender": "them",
+        "text": "I am probably a little more go-go-go than you, but I respect the instinct.",
+        "time": "08:26 AM",
+        "createdAt": "2026-04-04T15:26:00.000Z"
+      },
+      {
+        "id": "m-noah-8",
+        "threadId": "t-noah",
+        "sender": "me",
+        "text": "That feels right. Similar curiosity, slightly different operating systems.",
+        "time": "08:27 AM",
+        "createdAt": "2026-04-04T15:27:00.000Z"
+      },
+      {
+        "id": "m-noah-9",
+        "threadId": "t-noah",
+        "sender": "them",
+        "text": "Honestly that is still a decent start.",
+        "time": "08:28 AM",
+        "createdAt": "2026-04-04T15:28:00.000Z"
+      }
+    ],
+    "t-riley": [
+      {
+        "id": "m-riley-1",
+        "threadId": "t-riley",
+        "sender": "them",
+        "text": "You seem cool but I can already tell you would hate my ideal Friday.",
+        "time": "07:46 AM",
+        "createdAt": "2026-04-04T14:46:00.000Z"
+      },
+      {
+        "id": "m-riley-2",
+        "threadId": "t-riley",
+        "sender": "me",
+        "text": "That is probably fair. I definitely do slower better than chaos.",
+        "time": "07:48 AM",
+        "createdAt": "2026-04-04T14:48:00.000Z"
+      },
+      {
+        "id": "m-riley-3",
+        "threadId": "t-riley",
+        "sender": "them",
+        "text": "Yeah see I get bored if a chat gets reflective too fast.",
+        "time": "07:50 AM",
+        "createdAt": "2026-04-04T14:50:00.000Z"
+      },
+      {
+        "id": "m-riley-4",
+        "threadId": "t-riley",
+        "sender": "me",
+        "text": "I am kind of the opposite, which is good to know early.",
+        "time": "07:53 AM",
+        "createdAt": "2026-04-04T14:53:00.000Z"
+      },
+      {
+        "id": "m-riley-5",
+        "threadId": "t-riley",
+        "sender": "them",
+        "text": "I like last-minute plans and loud rooms and people who can keep up without needing a full briefing.",
+        "time": "07:55 AM",
+        "createdAt": "2026-04-04T14:55:00.000Z"
+      },
+      {
+        "id": "m-riley-6",
+        "threadId": "t-riley",
+        "sender": "me",
+        "text": "Yeah I think that is where we split.",
+        "time": "07:57 AM",
+        "createdAt": "2026-04-04T14:57:00.000Z"
+      },
+      {
+        "id": "m-riley-7",
+        "threadId": "t-riley",
+        "sender": "them",
+        "text": "Honestly better to know now than after I drag you to something horrible.",
+        "time": "07:58 AM",
+        "createdAt": "2026-04-04T14:58:00.000Z"
+      }
+    ],
+    "t-blake": [
+      {
+        "id": "m-blake-1",
+        "threadId": "t-blake",
+        "sender": "me",
+        "text": "Your post was pretty direct, so now I am curious what you are actually looking for.",
+        "time": "07:08 AM",
+        "createdAt": "2026-04-04T14:08:00.000Z"
+      },
+      {
+        "id": "m-blake-2",
+        "threadId": "t-blake",
+        "sender": "them",
+        "text": "Honestly something easy. I do not really like when people make things heavier than they need to be.",
+        "time": "07:10 AM",
+        "createdAt": "2026-04-04T14:10:00.000Z"
+      },
+      {
+        "id": "m-blake-3",
+        "threadId": "t-blake",
+        "sender": "me",
+        "text": "That makes sense. I probably care more than average about consistency and how people show up.",
+        "time": "07:14 AM",
+        "createdAt": "2026-04-04T14:14:00.000Z"
+      },
+      {
+        "id": "m-blake-4",
+        "threadId": "t-blake",
+        "sender": "them",
+        "text": "Yeah that is probably where we differ. I usually think people should just relax.",
+        "time": "07:17 AM",
+        "createdAt": "2026-04-04T14:17:00.000Z"
+      },
+      {
+        "id": "m-blake-5",
+        "threadId": "t-blake",
+        "sender": "me",
+        "text": "I think that is probably a real mismatch then.",
+        "time": "07:18 AM",
+        "createdAt": "2026-04-04T14:18:00.000Z"
+      },
+      {
+        "id": "m-blake-6",
+        "threadId": "t-blake",
+        "sender": "them",
+        "text": "Probably. No hard feelings, just not the same wavelength.",
+        "time": "07:20 AM",
+        "createdAt": "2026-04-04T14:20:00.000Z"
+      }
+    ]
+  },
+  "sessions": {
+    "t-maya": {
+      "threadId": "t-maya",
+      "usedMessages": 7,
+      "turnRetryUsed": 0,
+      "connectionStatus": "connected",
+      "queueStatus": "normal",
+      "degradedMode": false
+    },
+    "t-ava": {
+      "threadId": "t-ava",
+      "usedMessages": 4,
+      "turnRetryUsed": 0,
+      "connectionStatus": "connected",
+      "queueStatus": "normal",
+      "degradedMode": false
+    },
+    "t-serena": {
+      "threadId": "t-serena",
+      "usedMessages": 4,
+      "turnRetryUsed": 0,
+      "connectionStatus": "connected",
+      "queueStatus": "normal",
+      "degradedMode": false
+    },
+    "t-noah": {
+      "threadId": "t-noah",
+      "usedMessages": 4,
+      "turnRetryUsed": 0,
+      "connectionStatus": "connected",
+      "queueStatus": "normal",
+      "degradedMode": false
+    },
+    "t-riley": {
+      "threadId": "t-riley",
+      "usedMessages": 3,
+      "turnRetryUsed": 0,
+      "connectionStatus": "paused",
+      "queueStatus": "normal",
+      "degradedMode": false
+    },
+    "t-blake": {
+      "threadId": "t-blake",
+      "usedMessages": 3,
+      "turnRetryUsed": 0,
+      "connectionStatus": "paused",
+      "queueStatus": "normal",
+      "degradedMode": false
+    }
+  },
+  "events": {
+    "t-maya": [
+      {
+        "event_id": "evt-1775366314335-651",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T05:18:34.335Z",
+        "queue_status": "normal",
+        "stage": "summary_update",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 7
+      },
+      {
+        "event_id": "evt-1775366314332-823",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T05:18:34.332Z",
+        "queue_status": "normal",
+        "stage": "send",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 7
+      },
+      {
+        "event_id": "evt-1775366314331-467",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T05:18:34.331Z",
+        "queue_status": "normal",
+        "stage": "privacy_check",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 6
+      },
+      {
+        "event_id": "evt-1775366314329-92",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T05:18:34.329Z",
+        "queue_status": "normal",
+        "stage": "texting_draft",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 6
+      },
+      {
+        "event_id": "evt-1775365676395-374",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T05:07:56.395Z",
+        "queue_status": "normal",
+        "stage": "summary_update",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 6
+      },
+      {
+        "event_id": "evt-1775365676394-604",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T05:07:56.394Z",
+        "queue_status": "normal",
+        "stage": "send",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 6
+      },
+      {
+        "event_id": "evt-1775365676393-331",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T05:07:56.393Z",
+        "queue_status": "normal",
+        "stage": "privacy_check",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 5
+      },
+      {
+        "event_id": "evt-1775365676392-338",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T05:07:56.392Z",
+        "queue_status": "normal",
+        "stage": "texting_draft",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 5
+      },
+      {
+        "event_id": "evt-1775365394833-750",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T05:03:14.833Z",
+        "queue_status": "normal",
+        "stage": "summary_update",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 5
+      },
+      {
+        "event_id": "evt-1775365394832-374",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T05:03:14.832Z",
+        "queue_status": "normal",
+        "stage": "send",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 5
+      },
+      {
+        "event_id": "evt-1775365394823-690",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T05:03:14.823Z",
+        "queue_status": "normal",
+        "stage": "privacy_check",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 4
+      },
+      {
+        "event_id": "evt-1775365394821-138",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T05:03:14.822Z",
+        "queue_status": "normal",
+        "stage": "texting_draft",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 4
+      },
+      {
+        "event_id": "evt-seed-t-maya",
+        "stage": "summary_update",
+        "status": "ok",
+        "reason_code": "",
+        "timestamp": "2026-04-04T16:45:00.000Z",
+        "turn_index": 4,
+        "queue_status": "normal",
+        "schema_version": "2026-04-06.v1"
+      }
+    ],
+    "t-ava": [
+      {
+        "event_id": "evt-seed-t-ava",
+        "stage": "summary_update",
+        "status": "ok",
+        "reason_code": "",
+        "timestamp": "2026-04-04T16:18:00.000Z",
+        "turn_index": 4,
+        "queue_status": "normal",
+        "schema_version": "2026-04-06.v1"
+      }
+    ],
+    "t-serena": [
+      {
+        "event_id": "evt-seed-t-serena",
+        "stage": "summary_update",
+        "status": "ok",
+        "reason_code": "",
+        "timestamp": "2026-04-04T15:50:00.000Z",
+        "turn_index": 4,
+        "queue_status": "normal",
+        "schema_version": "2026-04-06.v1"
+      }
+    ],
+    "t-noah": [
+      {
+        "event_id": "evt-seed-t-noah",
+        "stage": "summary_update",
+        "status": "ok",
+        "reason_code": "",
+        "timestamp": "2026-04-04T15:28:00.000Z",
+        "turn_index": 4,
+        "queue_status": "normal",
+        "schema_version": "2026-04-06.v1"
+      }
+    ],
+    "t-riley": [
+      {
+        "event_id": "evt-seed-t-riley",
+        "stage": "summary_update",
+        "status": "ok",
+        "reason_code": "",
+        "timestamp": "2026-04-04T14:58:00.000Z",
+        "turn_index": 3,
+        "queue_status": "normal",
+        "schema_version": "2026-04-06.v1"
+      }
+    ],
+    "t-blake": [
+      {
+        "event_id": "evt-seed-t-blake",
+        "stage": "summary_update",
+        "status": "ok",
+        "reason_code": "",
+        "timestamp": "2026-04-04T14:20:00.000Z",
+        "turn_index": 3,
+        "queue_status": "normal",
+        "schema_version": "2026-04-06.v1"
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "id": "rec-t-maya",
+      "threadId": "t-maya",
+      "candidateId": "user-maya",
+      "name": "Maya Carter",
+      "score": 0.77,
+      "confidence": "calibrated",
+      "reasonLabels": [
+        "explicit_preference_match",
+        "explicit_dealbreaker_conflict",
+        "inferred_context_match"
+      ],
+      "greenFlags": [
+        "Explicit match: consistent",
+        "Explicit match: intentional",
+        "Inferred context shows aligned interests"
+      ],
+      "yellowFlags": [],
+      "redFlags": [
+        "Dealbreaker conflict: avoidant"
+      ],
+      "rationale": "Explicit dealbreaker conflict on avoidant. Shared interests overlap on 2 visible tag signals. Topic files show 1 stronger compatibility cues.",
+      "explanation": {
+        "explicit": "Conflict detected against stated preferences: avoidant.",
+        "inferred": "Uploaded-text topic summaries also suggest shared context."
+      }
+    }
+  ]
+}

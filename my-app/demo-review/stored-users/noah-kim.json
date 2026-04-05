@@ -1,0 +1,55 @@
+{
+  "id": "user-noah",
+  "name": "Noah Kim",
+  "bio": "Product-minded builder who likes clear constraints and side quests.",
+  "privacy": {
+    "allowed": ["hobbies", "values", "interests", "goals"],
+    "sensitive": ["identity", "family", "work_specifics"],
+    "blocked": ["health", "finances"]
+  },
+  "questionnaire": {
+    "completed": true,
+    "answers": {
+      "dealbreakers": {
+        "text": "I do not do flakiness, manipulation, or vague games.",
+        "tags": ["flaky", "manipulative", "inconsistent"]
+      },
+      "friendship_preferences": {
+        "text": "I connect best with collaborative people who like building and learning.",
+        "tags": ["builder", "curious", "collaborative", "playful"]
+      },
+      "relationship_preferences": {
+        "text": "I want someone who is clear, reliable, and excited about making things happen together.",
+        "tags": ["reliable", "clear", "ambitious", "builder"]
+      },
+      "communication_style": {
+        "text": "Direct, kind, and relatively fast replies are ideal for me.",
+        "tags": ["direct", "kind", "fast_reply", "clear"]
+      },
+      "values": {
+        "text": "Reliability and learning matter more to me than over-romanticizing things.",
+        "tags": ["reliability", "growth", "playfulness", "clarity"]
+      },
+      "lifestyle": {
+        "text": "I like early mornings, coffee chats, trail runs, and productive weekends.",
+        "tags": ["active", "early_riser", "builder", "coffee_chats"]
+      }
+    }
+  },
+  "uploadedSources": [
+    {
+      "fileName": "noah-kim.txt",
+      "uploadedAt": "2026-04-04T12:00:00.000Z"
+    }
+  ],
+  "topicFiles": {
+    "hobbies": "# Hobbies\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Builds side projects often\n- Trail runs and board games are regular resets\n\n## Patterns\n- Uses projects and activity to regulate energy\n",
+    "values": "# Values\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Values reliability and competence\n- Dislikes flakiness and wasted time\n\n## Patterns\n- Trust is built through clarity and consistency\n",
+    "interests": "# Interests\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Interested in AI products, startups, and sci-fi\n\n## Patterns\n- Opens up most through building and idea exchange\n",
+    "humor": "# Humor\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Likes deadpan and absurd humor\n\n## Patterns\n- Prefers playful directness to heavy earnestness\n",
+    "dealbreakers": "# Dealbreakers\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Strong reaction to manipulation or ambiguity\n\n## Patterns\n- Needs directness and dependable follow-through\n",
+    "communication_style": "# Communication Style\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Texts directly and relatively quickly\n- Slower replies are fine if the signal is clear\n\n## Patterns\n- Prefers efficient, straightforward communication\n",
+    "lifestyle": "# Lifestyle\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Early-riser, productive-weekend energy\n- Likes coffee chats and active routines\n\n## Patterns\n- Runs on momentum, structure, and project energy\n",
+    "goals": "# Goals\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Wants to keep building useful things with the right people around him\n\n## Patterns\n- Looks for people who are aligned on ambition and effort\n"
+  }
+}

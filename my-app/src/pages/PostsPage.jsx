@@ -3,7 +3,25 @@ import Card from "../components/Card";
 import { createPost } from "../services/api";
 import { useDebouncedValue } from "../hooks/useDebouncedValue";
 
-export default function PostsPage({ posts, setPosts, isAuthenticated = true }) {
+function deriveTags(text) {
+  const lower = text.toLowerCase();
+  const tags = [];
+  if (lower.includes("museum") || lower.includes("museums") || lower.includes("writing")) tags.push("culture");
+  if (lower.includes("project") || lower.includes("projects") || lower.includes("build")) tags.push("projects");
+  if (lower.includes("book") || lower.includes("movie")) tags.push("interests");
+  if (lower.includes("goal") || lower.includes("future")) tags.push("goals");
+  return tags.length ? tags : ["new"];
+}
+
+export default function PostsPage({
+  posts,
+  profile,
+  setPosts,
+  setThreads,
+  setRecommendations,
+  setActiveThreadId,
+  isAuthenticated = true
+}) {
   const [draft, setDraft] = useState("");
   const debounced = useDebouncedValue(draft, 180);
   const remaining = 280 - debounced.length;
@@ -22,8 +40,18 @@ export default function PostsPage({ posts, setPosts, isAuthenticated = true }) {
     setPosts((prev) => [optimistic, ...prev]);
     setDraft("");
     try {
-      const persisted = await createPost(optimistic);
-      setPosts((prev) => [persisted, ...prev.filter((p) => p.id !== optimistic.id)]);
+      const response = await createPost({
+        ...optimistic,
+        tags: deriveTags(optimistic.content)
+      });
+      setPosts((prev) => [response.post, ...prev.filter((p) => p.id !== optimistic.id)]);
+      if (response.threads?.length) {
+        setThreads(response.threads);
+        setActiveThreadId(response.threads[0].id);
+      }
+      if (response.recommendations) {
+        setRecommendations(response.recommendations);
+      }
     } catch {
       setPosts((prev) => prev.filter((p) => p.id !== optimistic.id));
     }
@@ -31,23 +59,35 @@ export default function PostsPage({ posts, setPosts, isAuthenticated = true }) {
 
   return (
     <div className="space-y-4">
-      <Card title="Human Posts" right={<span className="text-xs text-stone-500">AI read-only</span>}>
+      {!profile?.questionnaire?.completed && (
+        <Card title="Complete Preference Intake" className="border-none" >
+          <p className="text-sm leading-6" style={{ color: "var(--text-soft)" }}>
+            Add your friendship, dating, and dealbreaker preferences in Profile so the agent can make higher-confidence matches.
+          </p>
+        </Card>
+      )}
+
+      <Card title="Human Posts" right={<span className="soft-chip">AI read-only</span>}>
         <textarea
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           disabled={!isAuthenticated}
-          className="min-h-24 w-full rounded-xl border p-3 text-sm text-stone-800 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-stone-100"
+          className="soft-input min-h-28 w-full"
           placeholder="Share a thoughtful update..."
         />
         <div className="mt-3 flex items-center justify-between">
-          <p className="text-xs text-stone-500">Only human-authored posts are publishable.</p>
+          <p className="text-xs" style={{ color: "var(--text-soft)" }}>
+            Only human-authored posts are publishable.
+          </p>
           <div className="flex items-center gap-3">
-            <span className={`text-xs ${remaining < 30 ? "text-amber-600" : "text-stone-500"}`}>{remaining}</span>
+            <span className="text-xs" style={{ color: remaining < 30 ? "#c07149" : "var(--text-soft)" }}>
+              {remaining}
+            </span>
             <button
               type="button"
               onClick={handlePublish}
               disabled={!isAuthenticated || !draft.trim()}
-              className="rounded-lg bg-stone-900 px-3 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:bg-stone-300"
+              className="soft-button"
             >
               Publish
             </button>
@@ -60,18 +100,22 @@ export default function PostsPage({ posts, setPosts, isAuthenticated = true }) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-semibold">{post.author}</p>
-              <p className="text-xs text-stone-500">{post.timestamp}</p>
+              <p className="text-xs" style={{ color: "var(--text-soft)" }}>
+                {post.timestamp}
+              </p>
             </div>
-            <div className="flex gap-2 text-xs text-stone-500">
-              <button type="button">Like</button>
-              <button type="button">Comment</button>
-              <button type="button">Save</button>
+            <div className="flex gap-2 text-xs" style={{ color: "var(--text-soft)" }}>
+              <button type="button" className="soft-subtle-button">Like</button>
+              <button type="button" className="soft-subtle-button">Comment</button>
+              <button type="button" className="soft-subtle-button">Save</button>
             </div>
           </div>
-          <p className="mt-3 text-sm text-stone-700">{post.content}</p>
+          <p className="mt-3 text-sm leading-6" style={{ color: "var(--text-main)" }}>
+            {post.content}
+          </p>
           <div className="mt-3 flex flex-wrap gap-2">
             {post.tags.map((tag) => (
-              <span key={tag} className="rounded-full bg-stone-100 px-2 py-1 text-xs text-stone-600">
+              <span key={tag} className="soft-chip">
                 #{tag}
               </span>
             ))}

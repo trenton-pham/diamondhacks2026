@@ -1,0 +1,55 @@
+{
+  "id": "user-serena",
+  "name": "Serena Patel",
+  "bio": "Thoughtful, social, and a little overbooked in a way that somehow still works.",
+  "privacy": {
+    "allowed": ["hobbies", "values", "interests", "lifestyle"],
+    "sensitive": ["identity", "family", "past_relationships"],
+    "blocked": ["health", "finances"]
+  },
+  "questionnaire": {
+    "completed": true,
+    "answers": {
+      "dealbreakers": {
+        "text": "I struggle with rigidity, closed-off energy, and people who make warmth feel like work.",
+        "tags": ["rigid", "closed_off", "ungenerous"]
+      },
+      "friendship_preferences": {
+        "text": "I like kind, curious people who are emotionally literate and still feel alive to be around.",
+        "tags": ["kind", "curious", "emotionally_literate", "energized"]
+      },
+      "relationship_preferences": {
+        "text": "I want something generous, emotionally aware, and open to a little spontaneity.",
+        "tags": ["generous", "curious", "emotionally_aware", "spontaneous"]
+      },
+      "communication_style": {
+        "text": "I like warm, thoughtful communication, even if my schedule occasionally gets chaotic.",
+        "tags": ["thoughtful", "warm", "social", "sometimes_uneven"]
+      },
+      "values": {
+        "text": "Kindness, generosity, curiosity, and momentum matter a lot to me.",
+        "tags": ["kindness", "generosity", "curiosity", "momentum"]
+      },
+      "lifestyle": {
+        "text": "I like eventful weeks, good food, gallery nights, and people who can move with some spontaneity.",
+        "tags": ["social", "eventful", "spontaneous", "expressive"]
+      }
+    }
+  },
+  "uploadedSources": [
+    {
+      "fileName": "serena-patel.txt",
+      "uploadedAt": "2026-04-04T12:00:00.000Z"
+    }
+  ],
+  "topicFiles": {
+    "hobbies": "# Hobbies\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Enjoys gallery openings, food outings, and long debrief walks\n- Likes active community/social plans\n\n## Patterns\n- Feels most alive when thoughtful conversation and real-world activity overlap\n",
+    "values": "# Values\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Values kindness and generosity\n- Wants warmth with momentum, not stillness without spark\n\n## Patterns\n- Looks for emotional literacy without social stagnation\n",
+    "interests": "# Interests\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Interested in design, food, and people's inner worlds\n\n## Patterns\n- Connects through aesthetic and relational curiosity\n",
+    "humor": "# Humor\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Light, socially responsive humor\n\n## Patterns\n- Likes playful conversation that still feels real\n",
+    "dealbreakers": "# Dealbreakers\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Reacts badly to rigidity and emotionally closed-off behavior\n\n## Patterns\n- Needs flexibility and emotional openness to stay interested\n",
+    "communication_style": "# Communication Style\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Thoughtful when present, but sometimes schedule-heavy\n\n## Patterns\n- Warm but less rhythmically consistent than quieter users\n",
+    "lifestyle": "# Lifestyle\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Likes lively weeks and social plans\n- Comfortable with a little chaos and spontaneity\n\n## Patterns\n- Thrives on movement, energy, and expressive social life\n",
+    "goals": "# Goals\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 10 -->\n\n## Key Signals\n- Wants emotionally literate relationships that still feel alive\n\n## Patterns\n- Looking for warmth plus movement, not stillness alone\n"
+  }
+}

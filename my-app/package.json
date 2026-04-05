@@ -14,6 +14,7 @@
     "vite": "^8.0.3"
   },
   "scripts": {
+    "server": "node backend/server.js",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"

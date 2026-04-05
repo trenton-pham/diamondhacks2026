@@ -1,0 +1,55 @@
+{
+  "id": "user-ava",
+  "name": "Ava Lin",
+  "bio": "Museum weekends, essays, and patient conversations.",
+  "privacy": {
+    "allowed": ["hobbies", "values", "interests", "communication_style"],
+    "sensitive": ["identity", "family", "work_specifics"],
+    "blocked": ["health", "finances"]
+  },
+  "questionnaire": {
+    "completed": true,
+    "answers": {
+      "dealbreakers": {
+        "text": "I do not want harsh, combative, or attention-seeking communication.",
+        "tags": ["aggressive", "performative", "dishonest"]
+      },
+      "friendship_preferences": {
+        "text": "I look for thoughtful people who enjoy culture and can hold a real conversation.",
+        "tags": ["thoughtful", "curious", "culture", "warm"]
+      },
+      "relationship_preferences": {
+        "text": "I want something grounded, emotionally safe, and creatively alive.",
+        "tags": ["intentional", "emotionally_mature", "creative", "calm"]
+      },
+      "communication_style": {
+        "text": "I prefer warm, reflective messages over constant rapid-fire texting.",
+        "tags": ["thoughtful", "warm", "steady", "high_context"]
+      },
+      "values": {
+        "text": "Curiosity, honesty, and emotional steadiness matter most to me.",
+        "tags": ["curiosity", "honesty", "kindness", "stability"]
+      },
+      "lifestyle": {
+        "text": "I like quiet mornings, museums, bookstores, and low-chaos weekends.",
+        "tags": ["quiet_weekends", "culture", "low_chaos", "city_walks"]
+      }
+    }
+  },
+  "uploadedSources": [
+    {
+      "fileName": "ava-lin.txt",
+      "uploadedAt": "2026-04-04T12:00:00.000Z"
+    }
+  ],
+  "topicFiles": {
+    "hobbies": "# Hobbies\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Loves museums, bookstores, and long coffees\n- Writes often in notes and essays\n- Likes city walks and quiet routines\n\n## Patterns\n- Chooses slow, observant activities over high-intensity plans\n",
+    "values": "# Values\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Values honesty and emotional safety\n- Drawn to quiet curiosity over performance\n\n## Patterns\n- Prefers thoughtful depth without social aggression\n",
+    "interests": "# Interests\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Interested in poetry, documentaries, and design history\n- Likes talking about cities and aesthetics\n\n## Patterns\n- Feels most alive in reflective cultural conversation\n",
+    "humor": "# Humor\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Very dry sense of humor\n\n## Patterns\n- Likes low-key wit more than loud joking\n",
+    "dealbreakers": "# Dealbreakers\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Shuts down around aggressive energy\n- Loses interest quickly when honesty feels thin\n\n## Patterns\n- Needs safety and sincerity more than intensity\n",
+    "communication_style": "# Communication Style\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Likes thoughtful replies over frequent check-ins\n- Communicates warmly and reflectively\n\n## Patterns\n- Favors slower, emotionally intelligent pacing\n",
+    "lifestyle": "# Lifestyle\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Quiet mornings and low-chaos weekends feel natural\n- Likes slower city rhythms\n\n## Patterns\n- Prefers steady, grounded routines with cultural texture\n",
+    "goals": "# Goals\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Wants grounded companionship with creative energy\n\n## Patterns\n- Looking for emotional safety and long-form compatibility\n"
+  }
+}

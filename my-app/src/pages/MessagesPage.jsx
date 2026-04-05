@@ -3,11 +3,23 @@ import Card from "../components/Card";
 import StatusChip from "../components/StatusChip";
 import { mapReasonCode } from "../utils/reasonCodeMap";
 import { SESSION_LIMITS, CONNECTION_STATES } from "../utils/constants";
+import { sendThreadMessage } from "../services/api";
 
-export default function MessagesPage({ threads, messages, session }) {
-  const [activeThreadId, setActiveThreadId] = useState(threads[0]?.id || "");
+export default function MessagesPage({
+  threads,
+  messages,
+  session,
+  activeThreadId,
+  setActiveThreadId,
+  setMessages,
+  setEventsByThread,
+  setThreads,
+  setSessions,
+  setRecommendations
+}) {
   const [draft, setDraft] = useState("");
   const [showTimeline, setShowTimeline] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   const activeThread = threads.find((t) => t.id === activeThreadId) || threads[0];
   const threadMessages = messages[activeThread?.id] || [];
@@ -20,33 +32,46 @@ export default function MessagesPage({ threads, messages, session }) {
     return "";
   }, [session.connectionStatus, session.usedMessages, session.turnRetryUsed]);
 
-  function simulateSend() {
+  async function simulateSend() {
     if (!session.canSend || !draft.trim()) return;
-    const blocked = draft.toLowerCase().includes("health");
+    if (!activeThread?.id) return;
 
-    session.pushEvent({
-      stage: "texting_draft",
-      status: "ok",
-      reason_code: "",
-      turn_index: session.usedMessages,
-      timestamp: new Date().toISOString()
-    });
-
-    if (blocked) {
-      session.registerRejectedDraft("blocked_topic:health");
-      return;
+    setIsSending(true);
+    try {
+      const response = await sendThreadMessage(activeThread.id, { text: draft.trim() });
+      if (response.ok) {
+        setMessages((prev) => ({
+          ...prev,
+          [activeThread.id]: [...(prev[activeThread.id] || []), response.sent, response.reply]
+        }));
+        setThreads((prev) =>
+          prev.map((thread) => (thread.id === activeThread.id ? { ...thread, ...response.thread } : thread))
+        );
+        setSessions((prev) => ({
+          ...prev,
+          [activeThread.id]: response.session
+        }));
+        setEventsByThread((prev) => ({
+          ...prev,
+          [activeThread.id]: response.events
+        }));
+        setRecommendations((prev) =>
+          [response.recommendation, ...prev.filter((item) => item.threadId !== response.recommendation.threadId)].sort(
+            (a, b) => b.score - a.score
+          )
+        );
+        session.applyServerState(response.session, response.events);
+        setDraft("");
+      } else {
+        setEventsByThread((prev) => ({
+          ...prev,
+          [activeThread.id]: response.events
+        }));
+        session.applyServerState(response.session, response.events);
+      }
+    } finally {
+      setIsSending(false);
     }
-
-    session.pushEvent({
-      stage: "send",
-      status: "ok",
-      reason_code: "",
-      turn_index: session.usedMessages,
-      timestamp: new Date().toISOString()
-    });
-    session.registerApprovedMessage();
-    session.resetRetry();
-    setDraft("");
   }
 
   return (
@@ -58,12 +83,21 @@ export default function MessagesPage({ threads, messages, session }) {
               <button
                 type="button"
                 onClick={() => setActiveThreadId(thread.id)}
-                className={`w-full rounded-xl border px-3 py-2 text-left ${
-                  activeThreadId === thread.id ? "bg-stone-100" : "hover:bg-stone-50"
+                className={`w-full rounded-[22px] border px-4 py-3 text-left transition ${
+                  activeThreadId === thread.id ? "" : "hover:bg-white/50"
                 }`}
+                style={
+                  activeThreadId === thread.id
+                    ? { background: "rgba(255, 234, 226, 0.9)" }
+                    : { background: "rgba(255, 251, 249, 0.72)" }
+                }
               >
-                <p className="text-sm font-medium">{thread.name}</p>
-                <p className="text-xs text-stone-500">{thread.lastPreview}</p>
+                <p className="text-sm font-semibold" style={{ color: "var(--text-main)" }}>
+                  {thread.name}
+                </p>
+                <p className="text-xs" style={{ color: "var(--text-soft)" }}>
+                  {thread.lastPreview}
+                </p>
               </button>
             </li>
           ))}
@@ -78,11 +112,18 @@ export default function MessagesPage({ threads, messages, session }) {
                 key={message.id}
                 className={`max-w-[85%] rounded-xl px-3 py-2 text-sm ${
                   message.sender === "me"
-                    ? "ml-auto bg-stone-900 text-white"
+                    ? "ml-auto text-white"
                     : message.sender === "system"
                       ? "bg-amber-50 text-amber-800"
-                      : "bg-stone-100 text-stone-800"
+                      : ""
                 }`}
+                style={
+                  message.sender === "me"
+                    ? { background: "linear-gradient(135deg, var(--accent-main) 0%, var(--accent-deep) 100%)" }
+                    : message.sender === "system"
+                      ? {}
+                      : { background: "rgba(255, 239, 233, 0.92)", color: "var(--text-main)" }
+                }
               >
                 <p>{message.text}</p>
                 <p className="mt-1 text-[10px] opacity-70">{message.time}</p>
@@ -95,18 +136,20 @@ export default function MessagesPage({ threads, messages, session }) {
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               disabled={!session.canSend}
-              className="min-h-20 w-full rounded-xl border p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-stone-100"
+              className="soft-input min-h-24 w-full disabled:bg-[#f5e5e2]"
               placeholder={disabledReason || "Write a message..."}
             />
             <div className="mt-2 flex items-center justify-between">
-              <p className="text-xs text-stone-500">AI-generated content is policy-filtered.</p>
+              <p className="text-xs" style={{ color: "var(--text-soft)" }}>
+                AI-generated content is policy-filtered.
+              </p>
               <button
                 type="button"
                 onClick={simulateSend}
-                disabled={!session.canSend || !draft.trim()}
-                className="rounded-lg bg-stone-900 px-3 py-2 text-sm font-medium text-white disabled:bg-stone-300"
+                disabled={!session.canSend || !draft.trim() || isSending}
+                className="soft-button"
               >
-                Send
+                {isSending ? "Sending..." : "Send"}
               </button>
             </div>
           </div>
@@ -115,7 +158,7 @@ export default function MessagesPage({ threads, messages, session }) {
         <Card
           title="Policy Rail"
           right={
-            <button type="button" className="text-xs text-blue-700" onClick={() => setShowTimeline((v) => !v)}>
+            <button type="button" className="text-xs font-semibold" style={{ color: "var(--accent-deep)" }} onClick={() => setShowTimeline((v) => !v)}>
               {showTimeline ? "Hide timeline" : "Show timeline"}
             </button>
           }
@@ -133,16 +176,22 @@ export default function MessagesPage({ threads, messages, session }) {
             />
           </div>
 
-          <p className="mt-3 text-sm text-stone-600">{mapReasonCode(latestEvent?.reason_code)}</p>
+          <p className="mt-3 text-sm" style={{ color: "var(--text-soft)" }}>
+            {mapReasonCode(latestEvent?.reason_code)}
+          </p>
 
           {showTimeline && (
             <ul className="mt-3 space-y-2">
               {session.events.map((event) => (
-                <li key={event.event_id} className="rounded-lg border p-2 text-xs text-stone-700">
+                <li
+                  key={event.event_id}
+                  className="rounded-2xl border p-3 text-xs"
+                  style={{ background: "rgba(255, 248, 245, 0.85)", color: "var(--text-main)" }}
+                >
                   <p>
-                    <strong>{event.stage}</strong> · {event.status}
+                    <strong>{event.stage}</strong> - {event.status}
                   </p>
-                  <p className="text-stone-500">{mapReasonCode(event.reason_code)}</p>
+                  <p style={{ color: "var(--text-soft)" }}>{mapReasonCode(event.reason_code)}</p>
                 </li>
               ))}
             </ul>

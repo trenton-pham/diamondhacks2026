@@ -1,0 +1,55 @@
+{
+  "id": "user-jordan",
+  "name": "Jordan Lee",
+  "bio": "Building respectful, high-signal conversations.",
+  "privacy": {
+    "allowed": ["hobbies", "goals", "books", "travel", "creative_projects"],
+    "sensitive": ["identity", "family", "past_relationships"],
+    "blocked": ["health", "finances"]
+  },
+  "questionnaire": {
+    "completed": true,
+    "answers": {
+      "dealbreakers": {
+        "text": "Dishonesty, pushiness, and avoidant communication are hard no's for me.",
+        "tags": ["dishonest", "pushy", "avoidant"]
+      },
+      "friendship_preferences": {
+        "text": "I look for kind, curious people who enjoy thoughtful conversation and follow-through.",
+        "tags": ["kind", "curious", "thoughtful", "consistent"]
+      },
+      "relationship_preferences": {
+        "text": "I want a calm, intentional connection with emotional maturity and warmth.",
+        "tags": ["intentional", "calm", "emotionally_mature", "warm"]
+      },
+      "communication_style": {
+        "text": "I prefer thoughtful messages, clear interest, and a balanced pace over constant texting.",
+        "tags": ["thoughtful", "clear", "balanced_pace", "steady"]
+      },
+      "values": {
+        "text": "Curiosity, patience, honesty, and respect matter most to me.",
+        "tags": ["curiosity", "patience", "honesty", "respect"]
+      },
+      "lifestyle": {
+        "text": "I like museums, creative projects, quiet weekends, and smaller social settings.",
+        "tags": ["culture", "creative", "quiet_weekends", "low_chaos"]
+      }
+    }
+  },
+  "uploadedSources": [
+    {
+      "fileName": "jordan-lee.txt",
+      "uploadedAt": "2026-04-04T12:00:00.000Z"
+    }
+  ],
+  "topicFiles": {
+    "hobbies": "# Hobbies\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 13 -->\n\n## Key Signals\n- Likes museums and quiet cultural plans\n- Takes long walks and writes regularly\n- Enjoys creative projects\n\n## Patterns\n- Prefers low-chaos activities with room for reflection\n",
+    "values": "# Values\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 13 -->\n\n## Key Signals\n- Values honesty and curiosity\n- Responds strongly to steady follow-through\n- Wants calm and real connection\n\n## Patterns\n- Drawn to thoughtful people who are clear and kind\n",
+    "interests": "# Interests\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 13 -->\n\n## Key Signals\n- Interested in books, design, and exhibits\n- Likes cultural events and creative work\n- Enjoys reflective conversation\n\n## Patterns\n- Opens up fastest around art, ideas, and people who notice details\n",
+    "humor": "# Humor\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 13 -->\n\n## Key Signals\n- Likes dry humor\n- Dislikes loud performative joking\n\n## Patterns\n- Prefers understated playfulness over high-volume energy\n",
+    "dealbreakers": "# Dealbreakers\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 13 -->\n\n## Key Signals\n- Turned off by pushy behavior\n- Reacts badly to dishonesty or slippery communication\n\n## Patterns\n- Needs emotional steadiness and straightforward behavior\n",
+    "communication_style": "# Communication Style\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 13 -->\n\n## Key Signals\n- Not an all-day texter\n- Sends thoughtful, engaged replies when interested\n- Likes clear and consistent communication\n\n## Patterns\n- Prefers balanced pacing over constant messaging\n",
+    "lifestyle": "# Lifestyle\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 13 -->\n\n## Key Signals\n- Protects quiet weekends\n- Prefers smaller gatherings over chaos\n- Likes dinners, exhibits, and slower plans\n\n## Patterns\n- Most at ease in low-chaos routines with meaningful social time\n",
+    "goals": "# Goals\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 13 -->\n\n## Key Signals\n- Wants a steady long-term connection\n- Seeks emotional maturity and playfulness\n\n## Patterns\n- Looking for a relationship that feels calm, warm, and real\n"
+  }
+}

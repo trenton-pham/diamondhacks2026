@@ -3,16 +3,23 @@ import { createMessagesSocket } from "../../services/wsClient";
 import { normalizeEvent } from "../../utils/normalizers";
 import { CONNECTION_STATES, SESSION_LIMITS } from "../../utils/constants";
 
-export function useMessagesSession(activePage) {
+export function useMessagesSession(activePage, activeThreadId, sessionSnapshot, initialEvents = []) {
   const [events, setEvents] = useState([]);
-  const [usedMessages, setUsedMessages] = useState(12);
+  const [usedMessages, setUsedMessages] = useState(0);
   const [turnRetryUsed, setTurnRetryUsed] = useState(0);
   const [connectionStatus, setConnectionStatus] = useState(CONNECTION_STATES.CONNECTED);
   const [socketState, setSocketState] = useState("disconnected");
 
   useEffect(() => {
-    if (activePage !== "messages") return undefined;
-    const socket = createMessagesSocket((event) => {
+    setEvents((initialEvents || []).map((event, index) => normalizeEvent(event, index)).slice(0, 20));
+    setUsedMessages(sessionSnapshot?.usedMessages || 0);
+    setTurnRetryUsed(sessionSnapshot?.turnRetryUsed || 0);
+    setConnectionStatus(sessionSnapshot?.connectionStatus || CONNECTION_STATES.CONNECTED);
+  }, [activeThreadId, initialEvents, sessionSnapshot]);
+
+  useEffect(() => {
+    if (activePage !== "messages" || !activeThreadId) return undefined;
+    const socket = createMessagesSocket(activeThreadId, (event) => {
       setEvents((prev) => [normalizeEvent(event, prev.length), ...prev].slice(0, 20));
     });
     socket.connect();
@@ -21,7 +28,7 @@ export function useMessagesSession(activePage) {
       socket.disconnect();
       setSocketState("disconnected");
     };
-  }, [activePage]);
+  }, [activePage, activeThreadId]);
 
   const canSend = useMemo(() => {
     return (
@@ -35,23 +42,16 @@ export function useMessagesSession(activePage) {
     setEvents((prev) => [normalizeEvent(event, prev.length), ...prev].slice(0, 20));
   }
 
-  function registerApprovedMessage() {
-    setUsedMessages((v) => Math.min(v + 1, SESSION_LIMITS.maxMessages));
-  }
+  function applyServerState(nextSession, nextEvents = []) {
+    if (nextSession) {
+      setUsedMessages(nextSession.usedMessages || 0);
+      setTurnRetryUsed(nextSession.turnRetryUsed || 0);
+      setConnectionStatus(nextSession.connectionStatus || CONNECTION_STATES.CONNECTED);
+    }
 
-  function registerRejectedDraft(reasonCode = "retry_exhausted_drop") {
-    setTurnRetryUsed((v) => Math.min(v + 1, SESSION_LIMITS.maxPrivacyRetries));
-    pushEvent({
-      stage: "rewrite",
-      status: "warn",
-      reason_code: reasonCode,
-      turn_index: usedMessages,
-      timestamp: new Date().toISOString()
-    });
-  }
-
-  function resetRetry() {
-    setTurnRetryUsed(0);
+    if (nextEvents.length) {
+      setEvents(nextEvents.map((event, index) => normalizeEvent(event, index)).slice(0, 20));
+    }
   }
 
   return {
@@ -62,9 +62,7 @@ export function useMessagesSession(activePage) {
     setConnectionStatus,
     socketState,
     canSend,
-    registerApprovedMessage,
-    registerRejectedDraft,
-    resetRetry,
-    pushEvent
+    pushEvent,
+    applyServerState
   };
 }

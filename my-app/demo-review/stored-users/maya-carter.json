@@ -1,0 +1,55 @@
+{
+  "id": "user-maya",
+  "name": "Maya Carter",
+  "bio": "Community builder who likes thoughtful messages and ambitious people.",
+  "privacy": {
+    "allowed": ["hobbies", "values", "interests", "goals"],
+    "sensitive": ["identity", "family", "past_relationships"],
+    "blocked": ["health", "finances"]
+  },
+  "questionnaire": {
+    "completed": true,
+    "answers": {
+      "dealbreakers": {
+        "text": "Cruelty, avoidance, and emotional inconsistency are dealbreakers for me.",
+        "tags": ["cruel", "avoidant", "inconsistent"]
+      },
+      "friendship_preferences": {
+        "text": "I value warm, emotionally fluent friendships where people show up for each other.",
+        "tags": ["warm", "supportive", "emotionally_mature", "consistent"]
+      },
+      "relationship_preferences": {
+        "text": "I am looking for a steady, ambitious, emotionally available partner.",
+        "tags": ["intentional", "ambitious", "emotionally_mature", "steady"]
+      },
+      "communication_style": {
+        "text": "I prefer encouraging, high-context communication with real follow-through.",
+        "tags": ["high_context", "encouraging", "consistent", "clear"]
+      },
+      "values": {
+        "text": "Empathy, effort, and consistency matter more to me than surface charm.",
+        "tags": ["empathy", "effort", "consistency", "kindness"]
+      },
+      "lifestyle": {
+        "text": "I like community dinners, meaningful weekends, and social lives with intention.",
+        "tags": ["community", "intentional", "social", "host"]
+      }
+    }
+  },
+  "uploadedSources": [
+    {
+      "fileName": "maya-carter.txt",
+      "uploadedAt": "2026-04-04T12:00:00.000Z"
+    }
+  ],
+  "topicFiles": {
+    "hobbies": "# Hobbies\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Hosts dinners and likes gathering people intentionally\n- Journals often and keeps active routines\n- Enjoys meaningful social plans\n\n## Patterns\n- Builds intimacy through shared time and thoughtful hosting\n",
+    "values": "# Values\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Values consistency over charm\n- Cares about emotional fluency and effort\n- Wants people whose actions match their words\n\n## Patterns\n- Trust grows through steadiness and follow-through\n",
+    "interests": "# Interests\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Interested in memoirs and behavioral design\n- Likes thoughtful travel stories and reflective conversation\n\n## Patterns\n- Drawn to people who can think deeply without becoming performative\n",
+    "humor": "# Humor\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Likes story-based humor and dramatic retelling\n\n## Patterns\n- Responds well to playful but warm social energy\n",
+    "dealbreakers": "# Dealbreakers\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Avoidant communication is a major turnoff\n- Reacts strongly to meanness or emotional inconsistency\n\n## Patterns\n- Needs reliability and emotional maturity early\n",
+    "communication_style": "# Communication Style\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Sends detailed texts when interested\n- Likes engaged, context-rich conversation\n\n## Patterns\n- Prefers responsive, emotionally present messaging over detached brevity\n",
+    "lifestyle": "# Lifestyle\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Busy week schedule with intentional social plans\n- Likes dinners, gatherings, and grounded ambition\n\n## Patterns\n- Balances full weeks with meaningful connection\n",
+    "goals": "# Goals\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 11 -->\n\n## Key Signals\n- Wants a deeply supportive relationship\n- Cares about building a strong life, not just surface chemistry\n\n## Patterns\n- Looking for both ambition and emotional safety\n"
+  }
+}

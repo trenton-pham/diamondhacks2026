@@ -1,0 +1,55 @@
+{
+  "id": "user-riley",
+  "name": "Riley Torres",
+  "bio": "Fast plans, loud nights, zero overthinking.",
+  "privacy": {
+    "allowed": ["hobbies", "lifestyle", "humor", "interests"],
+    "sensitive": ["family", "identity"],
+    "blocked": ["health", "finances"]
+  },
+  "questionnaire": {
+    "completed": true,
+    "answers": {
+      "dealbreakers": {
+        "text": "Too much depth too early, too much reassurance, and too much planning all make me pull away.",
+        "tags": ["too_deep_too_early", "reassurance_heavy", "overplanned"]
+      },
+      "friendship_preferences": {
+        "text": "I like funny, spontaneous, easygoing people who can keep up.",
+        "tags": ["fast", "funny", "spontaneous", "easygoing"]
+      },
+      "relationship_preferences": {
+        "text": "I want something playful, low-pressure, and exciting more than serious right away.",
+        "tags": ["playful", "low_pressure", "exciting", "social"]
+      },
+      "communication_style": {
+        "text": "Fast banter is my thing. If a chat gets too reflective too quickly, I lose interest.",
+        "tags": ["fast_banter", "light", "casual", "low_reflection"]
+      },
+      "values": {
+        "text": "Fun, novelty, freedom, and momentum matter most to me right now.",
+        "tags": ["fun", "novelty", "freedom", "speed"]
+      },
+      "lifestyle": {
+        "text": "I like nightlife, spontaneous plans, loud rooms, and saying yes without thinking too hard.",
+        "tags": ["nightlife", "spontaneous", "loud", "social"]
+      }
+    }
+  },
+  "uploadedSources": [
+    {
+      "fileName": "riley-torres.txt",
+      "uploadedAt": "2026-04-04T12:00:00.000Z"
+    }
+  ],
+  "topicFiles": {
+    "hobbies": "# Hobbies\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Goes out often and prioritizes spontaneous plans\n\n## Patterns\n- Chooses speed and social energy over reflective downtime\n",
+    "values": "# Values\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Values fun and freedom over seriousness\n\n## Patterns\n- Avoids emotional heaviness and structure\n",
+    "interests": "# Interests\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Interested in nightlife, people, and momentum\n\n## Patterns\n- Gets most engaged around social stimulation and fast-paced interaction\n",
+    "humor": "# Humor\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Likes loud, fast, teasing humor\n\n## Patterns\n- Prefers banter over reflection\n",
+    "dealbreakers": "# Dealbreakers\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Pulls away from depth and reassurance-heavy energy early\n\n## Patterns\n- Needs lightness and room to move quickly\n",
+    "communication_style": "# Communication Style\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Fast, casual, low-reflection texter\n\n## Patterns\n- Responds poorly to slow emotional build-up\n",
+    "lifestyle": "# Lifestyle\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Lives socially and makes plans last minute\n\n## Patterns\n- Oriented around novelty and momentum more than routine\n",
+    "goals": "# Goals\n<!-- generated_at: 2026-04-04T12:00:00.000Z -->\n<!-- source_message_count: 9 -->\n\n## Key Signals\n- Optimizing for fun and excitement right now\n\n## Patterns\n- Avoids emotionally heavy relationship framing\n"
+  }
+}

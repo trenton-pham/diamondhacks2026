@@ -1,22 +1,29 @@
-export function createMessagesSocket(onEvent) {
-  let intervalId = null;
+export function createMessagesSocket(threadId, onEvent) {
+  let source = null;
 
   return {
     connect() {
-      intervalId = setInterval(() => {
-        onEvent({
-          event_id: `evt-${Date.now()}`,
-          stage: "privacy_check_outbound",
-          status: "ok",
-          reason_code: "",
-          timestamp: new Date().toISOString(),
-          turn_index: Math.floor(Math.random() * 10)
-        });
-      }, 6000);
+      if (!threadId) {
+        return;
+      }
+
+      source = new EventSource(`/api/threads/${threadId}/events`);
+      source.onmessage = (message) => {
+        try {
+          const payload = JSON.parse(message.data);
+          if (payload?.event_id) {
+            onEvent(payload);
+          }
+        } catch {
+          // Ignore malformed events and keep the stream alive.
+        }
+      };
     },
     disconnect() {
-      if (intervalId) clearInterval(intervalId);
-      intervalId = null;
+      if (source) {
+        source.close();
+      }
+      source = null;
     }
   };
 }
