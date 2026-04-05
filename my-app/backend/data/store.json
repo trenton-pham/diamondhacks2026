@@ -804,12 +804,12 @@
       ],
       "name": "Ava Lin",
       "counterpartId": "user-ava",
-      "status": "queued",
-      "compatibilityScore": 0,
-      "confidence": "pending",
-      "intentSummary": "Agent handshake queued from Jordan's side after Ava's post.",
-      "lastPreview": "Agent handshake pending...",
-      "updatedAt": "2026-04-04T16:55:00.000Z"
+      "status": "connected",
+      "compatibilityScore": 0.96,
+      "confidence": "calibrated",
+      "intentSummary": "Strong alignment on culture, pacing, and thoughtful communication.",
+      "lastPreview": "Bookstore with a little chaos, museum with one room you accidentally stay in forever, then coffee after to argue about what was actually good.",
+      "updatedAt": "2026-04-05T08:21:26.824Z"
     },
     {
       "id": "t-serena",
@@ -834,12 +834,12 @@
       ],
       "name": "Noah Kim",
       "counterpartId": "user-noah",
-      "status": "queued",
-      "compatibilityScore": 0,
-      "confidence": "pending",
-      "intentSummary": "Agent handshake queued after Noah's post was shortlisted.",
-      "lastPreview": "Agents are evaluating whether to open a DM...",
-      "updatedAt": "2026-04-04T16:52:00.000Z"
+      "status": "connected",
+      "compatibilityScore": 0.85,
+      "confidence": "calibrated",
+      "intentSummary": "Good builder curiosity, with slightly different pace and lifestyle energy.",
+      "lastPreview": "That feels familiar. Best case is probably shared curiosity with slightly different operating speeds.",
+      "updatedAt": "2026-04-05T08:21:30.838Z"
     },
     {
       "id": "t-riley",
@@ -947,7 +947,56 @@
         "createdAt": "2026-04-04T16:45:00.000Z"
       }
     ],
-    "t-ava": [],
+    "t-ava": [
+      {
+        "id": "m-1775377275743-298",
+        "threadId": "t-ava",
+        "sender": "me",
+        "text": "Your post made me feel oddly understood. Museum plus bookstore is a very convincing argument.",
+        "time": "01:21 AM",
+        "createdAt": "2026-04-05T08:21:15.743Z"
+      },
+      {
+        "id": "m-1775377279769-289",
+        "threadId": "t-ava",
+        "sender": "them",
+        "text": "Okay good, because I was hoping that would land with the right person and not just sound precious.",
+        "time": "01:21 AM",
+        "createdAt": "2026-04-05T08:21:19.769Z"
+      },
+      {
+        "id": "m-1775377279770-497",
+        "threadId": "t-ava",
+        "sender": "me",
+        "text": "No, it felt specific in a good way. I like people who know how to linger somewhere instead of treating everything like a checklist.",
+        "time": "01:21 AM",
+        "createdAt": "2026-04-05T08:21:19.770Z"
+      },
+      {
+        "id": "m-1775377282827-412",
+        "threadId": "t-ava",
+        "sender": "them",
+        "text": "Same. That is usually how I tell whether conversation is actually going to go anywhere.",
+        "time": "01:21 AM",
+        "createdAt": "2026-04-05T08:21:22.827Z"
+      },
+      {
+        "id": "m-1775377286824-449",
+        "threadId": "t-ava",
+        "sender": "me",
+        "text": "What kind of place usually gets the strongest reaction out of you, museum, bookstore, or somewhere with a really good coffee attached?",
+        "time": "01:21 AM",
+        "createdAt": "2026-04-05T08:21:26.824Z"
+      },
+      {
+        "id": "m-1775377286824-943",
+        "threadId": "t-ava",
+        "sender": "them",
+        "text": "Bookstore with a little chaos, museum with one room you accidentally stay in forever, then coffee after to argue about what was actually good.",
+        "time": "01:21 AM",
+        "createdAt": "2026-04-05T08:21:26.824Z"
+      }
+    ],
     "t-serena": [
       {
         "id": "m-serena-1",
@@ -1014,7 +1063,56 @@
         "createdAt": "2026-04-04T15:50:00.000Z"
       }
     ],
-    "t-noah": [],
+    "t-noah": [
+      {
+        "id": "m-1775377279770-806",
+        "threadId": "t-noah",
+        "sender": "them",
+        "text": "Your profile makes you seem like someone who would have opinions about constraints in a good way. Figured I should test that theory.",
+        "time": "01:21 AM",
+        "createdAt": "2026-04-05T08:21:19.770Z"
+      },
+      {
+        "id": "m-1775377279771-233",
+        "threadId": "t-noah",
+        "sender": "me",
+        "text": "That is unfortunately very accurate. Clear constraints usually make people reveal whether they actually have taste.",
+        "time": "01:21 AM",
+        "createdAt": "2026-04-05T08:21:19.771Z"
+      },
+      {
+        "id": "m-1775377282827-179",
+        "threadId": "t-noah",
+        "sender": "them",
+        "text": "Exactly. I can work with a weird idea if the edges are sharp.",
+        "time": "01:21 AM",
+        "createdAt": "2026-04-05T08:21:22.827Z"
+      },
+      {
+        "id": "m-1775377286825-555",
+        "threadId": "t-noah",
+        "sender": "me",
+        "text": "Same. I am probably a little slower and more museum-pilled than you, but I respect the momentum.",
+        "time": "01:21 AM",
+        "createdAt": "2026-04-05T08:21:26.825Z"
+      },
+      {
+        "id": "m-1775377286825-770",
+        "threadId": "t-noah",
+        "sender": "them",
+        "text": "That actually sounds like a useful balance. I tend to over-optimize unless someone reminds me the thing is supposed to feel alive too.",
+        "time": "01:21 AM",
+        "createdAt": "2026-04-05T08:21:26.825Z"
+      },
+      {
+        "id": "m-1775377290838-773",
+        "threadId": "t-noah",
+        "sender": "me",
+        "text": "That feels familiar. Best case is probably shared curiosity with slightly different operating speeds.",
+        "time": "01:21 AM",
+        "createdAt": "2026-04-05T08:21:30.838Z"
+      }
+    ],
     "t-riley": [
       {
         "id": "m-riley-1",
@@ -1135,10 +1233,10 @@
     },
     "t-ava": {
       "threadId": "t-ava",
-      "usedMessages": 0,
+      "usedMessages": 3,
       "turnRetryUsed": 0,
-      "connectionStatus": "paused",
-      "queueStatus": "queued",
+      "connectionStatus": "connected",
+      "queueStatus": "normal",
       "degradedMode": false
     },
     "t-serena": {
@@ -1151,10 +1249,10 @@
     },
     "t-noah": {
       "threadId": "t-noah",
-      "usedMessages": 0,
+      "usedMessages": 3,
       "turnRetryUsed": 0,
-      "connectionStatus": "paused",
-      "queueStatus": "queued",
+      "connectionStatus": "connected",
+      "queueStatus": "normal",
       "degradedMode": false
     },
     "t-riley": {
@@ -1189,6 +1287,76 @@
     ],
     "t-ava": [
       {
+        "event_id": "evt-1775377290838-527",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T08:21:30.838Z",
+        "queue_status": "normal",
+        "stage": "summary_update",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 3
+      },
+      {
+        "event_id": "evt-1775377286824-518",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T08:21:26.824Z",
+        "queue_status": "queued",
+        "stage": "send",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 3
+      },
+      {
+        "event_id": "evt-1775377286823-125",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T08:21:26.823Z",
+        "queue_status": "queued",
+        "stage": "send",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 2
+      },
+      {
+        "event_id": "evt-1775377282826-291",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T08:21:22.826Z",
+        "queue_status": "queued",
+        "stage": "send",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 2
+      },
+      {
+        "event_id": "evt-1775377279770-293",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T08:21:19.770Z",
+        "queue_status": "queued",
+        "stage": "send",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 1
+      },
+      {
+        "event_id": "evt-1775377279769-324",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T08:21:19.769Z",
+        "queue_status": "queued",
+        "stage": "send",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 1
+      },
+      {
+        "event_id": "evt-1775377275740-420",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T08:21:15.742Z",
+        "queue_status": "queued",
+        "stage": "texting_draft",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 0
+      },
+      {
         "event_id": "evt-seed-t-ava",
         "stage": "candidate_select",
         "status": "pending",
@@ -1212,6 +1380,76 @@
       }
     ],
     "t-noah": [
+      {
+        "event_id": "evt-1775377290840-622",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T08:21:30.840Z",
+        "queue_status": "normal",
+        "stage": "summary_update",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 3
+      },
+      {
+        "event_id": "evt-1775377290838-529",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T08:21:30.838Z",
+        "queue_status": "queued",
+        "stage": "send",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 2
+      },
+      {
+        "event_id": "evt-1775377286825-936",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T08:21:26.825Z",
+        "queue_status": "queued",
+        "stage": "send",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 2
+      },
+      {
+        "event_id": "evt-1775377286825-224",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T08:21:26.825Z",
+        "queue_status": "queued",
+        "stage": "send",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 1
+      },
+      {
+        "event_id": "evt-1775377282827-272",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T08:21:22.827Z",
+        "queue_status": "queued",
+        "stage": "send",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 1
+      },
+      {
+        "event_id": "evt-1775377279771-467",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T08:21:19.771Z",
+        "queue_status": "queued",
+        "stage": "send",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 0
+      },
+      {
+        "event_id": "evt-1775377279770-196",
+        "schema_version": "2026-04-06.v1",
+        "timestamp": "2026-04-05T08:21:19.770Z",
+        "queue_status": "queued",
+        "stage": "texting_draft",
+        "status": "ok",
+        "reason_code": "",
+        "turn_index": 0
+      },
       {
         "event_id": "evt-seed-t-noah",
         "stage": "candidate_select",
@@ -1250,10 +1488,10 @@
   },
   "demoFlows": {
     "t-ava": {
-      "state": "pending",
+      "state": "completed",
       "delayMs": 6000,
-      "armedAt": "2026-04-05T06:40:29.745Z",
-      "stepIndex": 0,
+      "armedAt": "2026-04-05T08:21:07.906Z",
+      "stepIndex": 6,
       "stepDelayMs": 2500,
       "summary": "Strong alignment on culture, pacing, and thoughtful communication.",
       "script": [
@@ -1281,13 +1519,14 @@
           "sender": "them",
           "text": "Bookstore with a little chaos, museum with one room you accidentally stay in forever, then coffee after to argue about what was actually good."
         }
-      ]
+      ],
+      "lastStepAt": "2026-04-05T08:21:26.406Z"
     },
     "t-noah": {
-      "state": "pending",
+      "state": "completed",
       "delayMs": 9000,
-      "armedAt": "2026-04-05T06:40:29.745Z",
-      "stepIndex": 0,
+      "armedAt": "2026-04-05T08:21:07.906Z",
+      "stepIndex": 6,
       "stepDelayMs": 2200,
       "summary": "Good builder curiosity, with slightly different pace and lifestyle energy.",
       "script": [
@@ -1315,8 +1554,61 @@
           "sender": "me",
           "text": "That feels familiar. Best case is probably shared curiosity with slightly different operating speeds."
         }
-      ]
+      ],
+      "lastStepAt": "2026-04-05T08:21:27.906Z"
     }
   },
-  "recommendations": []
+  "recommendations": [
+    {
+      "id": "rec-t-ava",
+      "threadId": "t-ava",
+      "candidateId": "user-ava",
+      "name": "Ava Lin",
+      "score": 0.96,
+      "confidence": "calibrated",
+      "reasonLabels": [
+        "explicit_preference_match",
+        "explicit_dealbreaker_conflict",
+        "inferred_context_match"
+      ],
+      "greenFlags": [
+        "Explicit match: curious",
+        "Explicit match: thoughtful",
+        "Inferred context shows aligned interests"
+      ],
+      "yellowFlags": [],
+      "redFlags": [
+        "Dealbreaker conflict: performative"
+      ],
+      "rationale": "Explicit dealbreaker conflict on performative. Shared interests overlap on 1 visible tag signals. Topic files show 2 stronger compatibility cues.",
+      "explanation": {
+        "explicit": "Conflict detected against stated preferences: performative.",
+        "inferred": "Uploaded-text topic summaries also suggest shared context."
+      }
+    },
+    {
+      "id": "rec-t-noah",
+      "threadId": "t-noah",
+      "candidateId": "user-noah",
+      "name": "Noah Kim",
+      "score": 0.85,
+      "confidence": "calibrated",
+      "reasonLabels": [
+        "explicit_preference_match",
+        "inferred_context_match"
+      ],
+      "greenFlags": [
+        "Explicit match: curious",
+        "Explicit match: clear",
+        "Inferred context shows aligned interests"
+      ],
+      "yellowFlags": [],
+      "redFlags": [],
+      "rationale": "Questionnaire alignment on curious, clear. Shared interests overlap on 2 visible tag signals. Topic files show 1 stronger compatibility cues.",
+      "explanation": {
+        "explicit": "Explicit preferences aligned on curious, clear.",
+        "inferred": "Uploaded-text topic summaries also suggest shared context."
+      }
+    }
+  ]
 }

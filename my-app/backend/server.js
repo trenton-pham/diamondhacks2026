@@ -9,6 +9,7 @@ const {
   runPrivacyCheck,
   generateReply,
   buildRecommendation,
+  buildThreadSummary,
   findCandidateByAuthor
 } = require("./lib/agents");
 
@@ -241,6 +242,7 @@ function buildBootstrap(store) {
   const threads = listThreads(store);
   const messages = Object.fromEntries(threads.map((thread) => [thread.id, getMessages(store, thread.id)]));
   const events = Object.fromEntries(threads.map((thread) => [thread.id, store.events[thread.id] || []]));
+  const threadSummaries = {};
   const recommendations = threads
     .map((thread) => {
       const candidate = store.users[thread.counterpartId];
@@ -256,7 +258,19 @@ function buildBootstrap(store) {
       thread.compatibilityScore = Number(evaluator.score.toFixed(2));
       thread.confidence = evaluator.questionnaireCompleted ? "calibrated" : "degraded";
       thread.intentSummary = evaluator.reasons.join(" ");
-      return buildRecommendation(thread, candidate, evaluator, { status: "approved" });
+      const recommendation = buildRecommendation(thread, candidate, evaluator, { status: "approved" });
+      if (thread.status !== "queued") {
+        threadSummaries[thread.id] = buildThreadSummary({
+          thread,
+          currentUser,
+          candidate,
+          messages: messages[thread.id],
+          evaluator,
+          recommendation,
+          post: sourcePost
+        });
+      }
+      return recommendation;
     })
     .filter(Boolean)
     .sort((a, b) => b.score - a.score);
@@ -272,6 +286,7 @@ function buildBootstrap(store) {
     messages,
     events,
     sessions: store.sessions,
+    threadSummaries,
     recommendations
   };
 }
@@ -531,6 +546,15 @@ async function handleRequest(req, res) {
     );
     const evaluator = scoreCandidate(currentUser, candidate, sourcePost);
     const recommendation = buildRecommendation(thread, candidate, evaluator, privacy);
+    const threadSummary = buildThreadSummary({
+      thread,
+      currentUser,
+      candidate,
+      messages: getMessages(store, threadId),
+      evaluator,
+      recommendation,
+      post: sourcePost
+    });
     thread.compatibilityScore = recommendation.score;
     thread.confidence = recommendation.confidence;
     thread.intentSummary = recommendation.rationale;
@@ -553,6 +577,7 @@ async function handleRequest(req, res) {
       reply,
       thread,
       session,
+      threadSummary,
       recommendation,
       events: store.events[threadId]
     });

@@ -32,6 +32,12 @@ function getTags(answer) {
   return (answer?.tags || []).map((tag) => String(tag).toLowerCase());
 }
 
+function humanizeLabel(tag) {
+  return String(tag || "")
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
 function hasCompletedQuestionnaire(user) {
   return Boolean(user.questionnaire?.completed);
 }
@@ -714,6 +720,157 @@ function buildRecommendation(thread, candidate, evaluator, privacyResult) {
   };
 }
 
+function pickConversationTopics(messages = [], post = null) {
+  const text = [...messages.map((message) => message.text), post?.content || ""].join(" ").toLowerCase();
+  const topicSignals = [
+    {
+      label: "Shared interest in culture, books, or places with texture",
+      keywords: ["museum", "book", "bookstore", "poetry", "design", "city", "art", "gallery"]
+    },
+    {
+      label: "Mutual curiosity around projects, products, or how ideas get made",
+      keywords: ["project", "product", "build", "constraints", "ai", "tool", "startup"]
+    },
+    {
+      label: "Similar preference for thoughtful pacing and longer conversations",
+      keywords: ["linger", "slow", "pace", "conversation", "thoughtful", "weekend", "steady"]
+    },
+    {
+      label: "Discussion around social energy, hosting, or the kind of plans that feel natural",
+      keywords: ["dinner", "community", "host", "event", "afterparty", "gallery", "plans"]
+    },
+    {
+      label: "Possible mismatch around nightlife, chaos, or spontaneity",
+      keywords: ["loud", "nightlife", "chaos", "spontaneous", "party", "last-minute"]
+    },
+    {
+      label: "Direct conversation about consistency, effort, and emotional steadiness",
+      keywords: ["consistent", "follow-through", "effort", "honesty", "steady", "emotional", "depth"]
+    }
+  ];
+
+  return topicSignals
+    .filter((topic) => topic.keywords.some((keyword) => text.includes(keyword)))
+    .map((topic) => topic.label)
+    .slice(0, 3);
+}
+
+function gatherStrengths(user) {
+  const answers = getQuestionnaireAnswers(user);
+  const orderedFields = ["friendship_preferences", "relationship_preferences", "communication_style", "values", "lifestyle"];
+  const seen = new Set();
+  const strengths = [];
+
+  orderedFields.forEach((field) => {
+    getTags(answers[field]).forEach((tag) => {
+      if (seen.has(tag)) {
+        return;
+      }
+      seen.add(tag);
+      strengths.push(humanizeLabel(tag));
+    });
+  });
+
+  return strengths.slice(0, 4);
+}
+
+function gatherConcerns(currentUser, candidate, evaluator) {
+  const currentAnswers = getQuestionnaireAnswers(currentUser);
+  const candidateAnswers = getQuestionnaireAnswers(candidate);
+  const currentConcerns = [];
+  const candidateConcerns = [];
+
+  evaluator.explicitConflicts.forEach((conflict) => {
+    const label = humanizeLabel(conflict.tag);
+    if (conflict.source === "current_user") {
+      currentConcerns.push(`May run into Jordan's dealbreaker around ${label.toLowerCase()}`);
+    } else {
+      candidateConcerns.push(`May run into ${candidate.name}'s dealbreaker around ${label.toLowerCase()}`);
+    }
+  });
+
+  const currentLifestyle = new Set(getTags(currentAnswers.lifestyle));
+  const candidateLifestyle = new Set(getTags(candidateAnswers.lifestyle));
+  const currentCommunication = new Set(getTags(currentAnswers.communication_style));
+  const candidateCommunication = new Set(getTags(candidateAnswers.communication_style));
+
+  if (
+    currentLifestyle.has("quiet_weekends") &&
+    (candidateLifestyle.has("social") || candidateLifestyle.has("nightlife") || candidateLifestyle.has("host"))
+  ) {
+    currentConcerns.push("Jordan tends to prefer quieter plans than this match's default social rhythm");
+  }
+
+  if (
+    candidateLifestyle.has("low_accountability") ||
+    candidateLifestyle.has("convenience_first") ||
+    candidateCommunication.has("low_investment")
+  ) {
+    currentConcerns.push("Signals lower follow-through than Jordan usually wants");
+  }
+
+  if (
+    candidateCommunication.has("fast_reply") &&
+    (currentCommunication.has("balanced_pace") || currentCommunication.has("steady"))
+  ) {
+    candidateConcerns.push("Jordan's pace is more measured than this match's ideal response rhythm");
+  }
+
+  if (
+    candidateLifestyle.has("social") &&
+    (currentLifestyle.has("low_chaos") || currentLifestyle.has("quiet_weekends"))
+  ) {
+    candidateConcerns.push("Jordan is lower-chaos and more selective about plans than this match may expect");
+  }
+
+  return {
+    currentConcerns: [...new Set(currentConcerns)].slice(0, 3),
+    candidateConcerns: [...new Set(candidateConcerns)].slice(0, 3)
+  };
+}
+
+function compatibilityLabel(score) {
+  if (score >= 0.82) {
+    return "High";
+  }
+  if (score >= 0.66) {
+    return "Promising";
+  }
+  if (score >= 0.5) {
+    return "Mixed";
+  }
+  return "Low";
+}
+
+function buildThreadSummary({ thread, currentUser, candidate, messages = [], evaluator, recommendation, post }) {
+  const keyPoints = pickConversationTopics(messages, post);
+  const jordanPositives = gatherStrengths(currentUser);
+  const candidatePositives = gatherStrengths(candidate);
+  const concerns = gatherConcerns(currentUser, candidate, evaluator);
+  const score = Number((recommendation?.score ?? evaluator.score).toFixed(2));
+
+  return {
+    threadId: thread.id,
+    candidateId: candidate.id,
+    candidateName: candidate.name,
+    compatibility: {
+      score,
+      label: compatibilityLabel(score),
+      rationale: recommendation?.rationale || evaluator.reasons.join(" ")
+    },
+    keyPoints: keyPoints.length ? keyPoints : ["The conversation is still light, so the signal is mostly coming from profile and post alignment."],
+    jordan: {
+      positives: jordanPositives.length ? jordanPositives : ["Thoughtful communication", "Clear intent"],
+      concerns: concerns.currentConcerns.length ? concerns.currentConcerns : ["No major concerns surfaced yet."]
+    },
+    counterpart: {
+      name: candidate.name,
+      positives: candidatePositives.length ? candidatePositives : ["Clear communication", "Some profile alignment"],
+      concerns: concerns.candidateConcerns.length ? concerns.candidateConcerns : ["No major concerns surfaced yet."]
+    }
+  };
+}
+
 function findCandidateByAuthor(authorId) {
   return candidateUsers.find((candidate) => candidate.id === authorId);
 }
@@ -724,5 +881,6 @@ module.exports = {
   runPrivacyCheck,
   generateReply,
   buildRecommendation,
+  buildThreadSummary,
   findCandidateByAuthor
 };

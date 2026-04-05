@@ -9,12 +9,14 @@ export default function MessagesPage({
   threads,
   messages,
   session,
+  threadSummaries,
   activeThreadId,
   setActiveThreadId,
   setMessages,
   setEventsByThread,
   setThreads,
   setSessions,
+  setThreadSummaries,
   setRecommendations
 }) {
   const [draft, setDraft] = useState("");
@@ -23,6 +25,7 @@ export default function MessagesPage({
 
   const activeThread = threads.find((t) => t.id === activeThreadId) || threads[0];
   const threadMessages = messages[activeThread?.id] || [];
+  const activeSummary = threadSummaries[activeThread?.id];
   const latestEvent = session.events[0];
 
   const disabledReason = useMemo(() => {
@@ -50,6 +53,10 @@ export default function MessagesPage({
         setSessions((prev) => ({
           ...prev,
           [activeThread.id]: response.session
+        }));
+        setThreadSummaries((prev) => ({
+          ...prev,
+          [activeThread.id]: response.threadSummary
         }));
         setEventsByThread((prev) => ({
           ...prev,
@@ -162,6 +169,80 @@ export default function MessagesPage({
               </button>
             </div>
           </div>
+        </Card>
+
+        <Card title="Conversation Summary">
+          {activeSummary ? (
+            <div className="space-y-4 text-sm" style={{ color: "var(--text-main)" }}>
+              <div className="rounded-[22px] border p-3" style={{ background: "rgba(255, 243, 238, 0.86)" }}>
+                <p className="font-semibold">
+                  Compatibility {Math.round((activeSummary.compatibility.score || 0) * 100)}% - {activeSummary.compatibility.label}
+                </p>
+                <p className="mt-1 text-xs leading-5" style={{ color: "var(--text-soft)" }}>
+                  {activeSummary.compatibility.rationale}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "var(--text-soft)" }}>
+                  Key Points
+                </p>
+                <ul className="mt-2 space-y-2">
+                  {activeSummary.keyPoints.map((point) => (
+                    <li key={point} className="rounded-2xl border px-3 py-2" style={{ background: "rgba(255, 248, 245, 0.9)" }}>
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="rounded-[22px] border p-3" style={{ background: "rgba(255, 248, 245, 0.9)" }}>
+                  <p className="font-semibold">Jordan</p>
+                  <p className="mt-2 text-xs font-semibold uppercase tracking-[0.16em]" style={{ color: "var(--text-soft)" }}>
+                    Positives
+                  </p>
+                  <ul className="mt-2 space-y-1 text-sm">
+                    {activeSummary.jordan.positives.map((item) => (
+                      <li key={item}>+ {item}</li>
+                    ))}
+                  </ul>
+                  <p className="mt-3 text-xs font-semibold uppercase tracking-[0.16em]" style={{ color: "var(--text-soft)" }}>
+                    Potential Concerns
+                  </p>
+                  <ul className="mt-2 space-y-1 text-sm">
+                    {activeSummary.jordan.concerns.map((item) => (
+                      <li key={item}>- {item}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="rounded-[22px] border p-3" style={{ background: "rgba(255, 248, 245, 0.9)" }}>
+                  <p className="font-semibold">{activeSummary.counterpart.name}</p>
+                  <p className="mt-2 text-xs font-semibold uppercase tracking-[0.16em]" style={{ color: "var(--text-soft)" }}>
+                    Positives
+                  </p>
+                  <ul className="mt-2 space-y-1 text-sm">
+                    {activeSummary.counterpart.positives.map((item) => (
+                      <li key={item}>+ {item}</li>
+                    ))}
+                  </ul>
+                  <p className="mt-3 text-xs font-semibold uppercase tracking-[0.16em]" style={{ color: "var(--text-soft)" }}>
+                    Potential Concerns
+                  </p>
+                  <ul className="mt-2 space-y-1 text-sm">
+                    {activeSummary.counterpart.concerns.map((item) => (
+                      <li key={item}>- {item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <p className="text-sm" style={{ color: "var(--text-soft)" }}>
+              Summary will appear once the agents have enough signal from the conversation and profile match.
+            </p>
+          )}
         </Card>
 
         <Card

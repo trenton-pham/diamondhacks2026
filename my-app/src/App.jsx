@@ -16,6 +16,7 @@ export default function App() {
   const [messages, setMessages] = useState({});
   const [eventsByThread, setEventsByThread] = useState({});
   const [sessions, setSessions] = useState({});
+  const [threadSummaries, setThreadSummaries] = useState({});
   const [recommendations, setRecommendations] = useState([]);
   const [activeThreadId, setActiveThreadId] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -32,6 +33,7 @@ export default function App() {
       setMessages(data.messages || {});
       setEventsByThread(data.events || {});
       setSessions(data.sessions || {});
+      setThreadSummaries(data.threadSummaries || {});
       setRecommendations(data.recommendations || []);
       setActiveThreadId((current) => {
         if (preserveThread && current && data.threads?.some((thread) => thread.id === current)) {
@@ -50,6 +52,7 @@ export default function App() {
         setMessages(data.messages || {});
         setEventsByThread(data.events || {});
         setSessions(data.sessions || {});
+        setThreadSummaries(data.threadSummaries || {});
         setRecommendations(data.recommendations || []);
         setActiveThreadId(data.threads?.[0]?.id || "");
       })
@@ -129,6 +132,8 @@ export default function App() {
               setEventsByThread={setEventsByThread}
               setThreads={setThreads}
               setSessions={setSessions}
+              threadSummaries={threadSummaries}
+              setThreadSummaries={setThreadSummaries}
               setRecommendations={setRecommendations}
             />
           )}
