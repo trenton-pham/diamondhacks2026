@@ -89,8 +89,16 @@ function saveStore(store) {
   persistProfileFiles(store);
 }
 
+function resetStore() {
+  const seed = createSeedStore();
+  writeJson(storePath, seed);
+  persistProfileFiles(seed);
+  return seed;
+}
+
 module.exports = {
   getStore,
   saveStore,
+  resetStore,
   profilesDir
 };

@@ -18,7 +18,7 @@ const TOPIC_NAMES = [
 ];
 
 const currentUserId = "user-jordan";
-const demoDatasetVersion = "demo-review-v1";
+const demoDatasetVersion = "demo-review-v3";
 
 const candidateUsers = [
   {
@@ -143,12 +143,12 @@ function createSeedStore() {
       participantIds: [currentUserId, "user-ava"],
       name: "Ava Lin",
       counterpartId: "user-ava",
-      status: "connected",
+      status: "queued",
       compatibilityScore: 0,
-      confidence: "calibrated",
-      intentSummary: "",
-      lastPreview: "Perfect. I was hoping you would.",
-      updatedAt: withTime(4, 16, 18)
+      confidence: "pending",
+      intentSummary: "Agent handshake queued from Jordan's side after Ava's post.",
+      lastPreview: "Agent handshake pending...",
+      updatedAt: withTime(4, 16, 55)
     },
     {
       id: "t-serena",
@@ -167,12 +167,12 @@ function createSeedStore() {
       participantIds: [currentUserId, "user-noah"],
       name: "Noah Kim",
       counterpartId: "user-noah",
-      status: "connected",
+      status: "queued",
       compatibilityScore: 0,
-      confidence: "calibrated",
-      intentSummary: "",
-      lastPreview: "Honestly that is still a decent start.",
-      updatedAt: withTime(4, 15, 28)
+      confidence: "pending",
+      intentSummary: "Agent handshake queued after Noah's post was shortlisted.",
+      lastPreview: "Agents are evaluating whether to open a DM...",
+      updatedAt: withTime(4, 16, 52)
     },
     {
       id: "t-riley",
@@ -213,15 +213,7 @@ function createSeedStore() {
       makeMessage("m-maya-9", "t-maya", "them", "Same. I trust steady energy way more than instant chemistry.", withTime(4, 16, 45))
     ],
     "t-ava": [
-      makeMessage("m-ava-1", "t-ava", "me", "Your post made me laugh because museum plus bookstore is basically my default answer to everything.", withTime(4, 15, 52)),
-      makeMessage("m-ava-2", "t-ava", "them", "Okay good, so you get it.", withTime(4, 15, 54)),
-      makeMessage("m-ava-3", "t-ava", "them", "I am deeply suspicious of people who speedwalk through beautiful places.", withTime(4, 15, 56)),
-      makeMessage("m-ava-4", "t-ava", "me", "Completely fair. Half the fun is lingering.", withTime(4, 15, 59)),
-      makeMessage("m-ava-5", "t-ava", "them", "Exactly. I like conversations that move like that too.", withTime(4, 16, 3)),
-      makeMessage("m-ava-6", "t-ava", "me", "That makes sense. What do you end up talking about for way too long with the right person?", withTime(4, 16, 8)),
-      makeMessage("m-ava-7", "t-ava", "them", "Books, design, other people, and occasionally whether a city is emotionally stable.", withTime(4, 16, 12)),
-      makeMessage("m-ava-8", "t-ava", "me", "That is such a specific category and I completely understand what you mean.", withTime(4, 16, 16)),
-      makeMessage("m-ava-9", "t-ava", "them", "Perfect. I was hoping you would.", withTime(4, 16, 18))
+      
     ],
     "t-serena": [
       makeMessage("m-serena-1", "t-serena", "them", "Your profile made me think you might actually know how to hold a conversation after an event instead of just saying \"fun night.\"", withTime(4, 15, 32)),
@@ -234,15 +226,7 @@ function createSeedStore() {
       makeMessage("m-serena-8", "t-serena", "me", "Okay that actually sounds better than I expected from your post.", withTime(4, 15, 50))
     ],
     "t-noah": [
-      makeMessage("m-noah-1", "t-noah", "me", "Your post about side projects with constraints felt extremely targeted at my brain.", withTime(4, 15, 8)),
-      makeMessage("m-noah-2", "t-noah", "them", "Then the post did its job.", withTime(4, 15, 10)),
-      makeMessage("m-noah-3", "t-noah", "them", "Constraints make people reveal whether they actually have taste.", withTime(4, 15, 12)),
-      makeMessage("m-noah-4", "t-noah", "me", "That is maybe too real. What are you building lately?", withTime(4, 15, 15)),
-      makeMessage("m-noah-5", "t-noah", "them", "Mostly small product experiments and AI tools. If I go too long without making something I get annoying.", withTime(4, 15, 18)),
-      makeMessage("m-noah-6", "t-noah", "me", "I get that. I like making things too, but I definitely need some quiet in the middle of it.", withTime(4, 15, 22)),
-      makeMessage("m-noah-7", "t-noah", "them", "I am probably a little more go-go-go than you, but I respect the instinct.", withTime(4, 15, 26)),
-      makeMessage("m-noah-8", "t-noah", "me", "That feels right. Similar curiosity, slightly different operating systems.", withTime(4, 15, 27)),
-      makeMessage("m-noah-9", "t-noah", "them", "Honestly that is still a decent start.", withTime(4, 15, 28))
+      
     ],
     "t-riley": [
       makeMessage("m-riley-1", "t-riley", "them", "You seem cool but I can already tell you would hate my ideal Friday.", withTime(4, 14, 46)),
@@ -271,7 +255,7 @@ function createSeedStore() {
         usedMessages: messages[thread.id].filter((message) => message.sender === "me").length,
         turnRetryUsed: 0,
         connectionStatus: thread.status === "connected" ? "connected" : "paused",
-        queueStatus: "normal",
+        queueStatus: thread.status === "queued" ? "queued" : "normal",
         degradedMode: false
       }
     ])
@@ -283,17 +267,52 @@ function createSeedStore() {
       [
         {
           event_id: `evt-seed-${thread.id}`,
-          stage: "summary_update",
-          status: "ok",
+          stage: thread.status === "queued" ? "candidate_select" : "summary_update",
+          status: thread.status === "queued" ? "pending" : "ok",
           reason_code: "",
           timestamp: thread.updatedAt,
           turn_index: sessions[thread.id].usedMessages,
-          queue_status: "normal",
+          queue_status: sessions[thread.id].queueStatus,
           schema_version: "2026-04-06.v1"
         }
       ]
     ])
   );
+
+  const demoFlows = {
+    "t-ava": {
+      state: "pending",
+      delayMs: 6000,
+      armedAt: null,
+      stepIndex: 0,
+      stepDelayMs: 2500,
+      summary: "Strong alignment on culture, pacing, and thoughtful communication.",
+      script: [
+        { sender: "me", text: "Your post made me feel oddly understood. Museum plus bookstore is a very convincing argument." },
+        { sender: "them", text: "Okay good, because I was hoping that would land with the right person and not just sound precious." },
+        { sender: "me", text: "No, it felt specific in a good way. I like people who know how to linger somewhere instead of treating everything like a checklist." },
+        { sender: "them", text: "Same. That is usually how I tell whether conversation is actually going to go anywhere." },
+        { sender: "me", text: "What kind of place usually gets the strongest reaction out of you, museum, bookstore, or somewhere with a really good coffee attached?" },
+        { sender: "them", text: "Bookstore with a little chaos, museum with one room you accidentally stay in forever, then coffee after to argue about what was actually good." }
+      ]
+    },
+    "t-noah": {
+      state: "pending",
+      delayMs: 9000,
+      armedAt: null,
+      stepIndex: 0,
+      stepDelayMs: 2200,
+      summary: "Good builder curiosity, with slightly different pace and lifestyle energy.",
+      script: [
+        { sender: "them", text: "Your profile makes you seem like someone who would have opinions about constraints in a good way. Figured I should test that theory." },
+        { sender: "me", text: "That is unfortunately very accurate. Clear constraints usually make people reveal whether they actually have taste." },
+        { sender: "them", text: "Exactly. I can work with a weird idea if the edges are sharp." },
+        { sender: "me", text: "Same. I am probably a little slower and more museum-pilled than you, but I respect the momentum." },
+        { sender: "them", text: "That actually sounds like a useful balance. I tend to over-optimize unless someone reminds me the thing is supposed to feel alive too." },
+        { sender: "me", text: "That feels familiar. Best case is probably shared curiosity with slightly different operating speeds." }
+      ]
+    }
+  };
 
   return {
     schemaVersion: "2026-04-06.v1",
@@ -304,6 +323,7 @@ function createSeedStore() {
     messages,
     sessions,
     events,
+    demoFlows,
     recommendations: []
   };
 }

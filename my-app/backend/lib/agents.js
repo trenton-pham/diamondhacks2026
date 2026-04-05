@@ -223,6 +223,67 @@ function formatConversation(priorMessages) {
   return transcript.map((message) => `${message.sender === "me" ? "Jordan" : "Agent"}: ${message.text}`).join("\n");
 }
 
+function extractFinalReply(raw) {
+  const text = String(raw || "").trim();
+  if (!text) {
+    return "";
+  }
+
+  const explicitMarker = text.match(/FINAL_REPLY:\s*([\s\S]*)/i);
+  if (explicitMarker?.[1]) {
+    return explicitMarker[1].trim().replace(/^["']|["']$/g, "");
+  }
+
+  const lines = text
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .filter((line) => !/^\d+\./.test(line))
+    .filter((line) => !/^[-*]/.test(line))
+    .filter((line) => !/^(analyze|analysis|reasoning|persona|context|constraint|values)\b/i.test(line));
+
+  if (!lines.length) {
+    return text;
+  }
+
+  return lines[lines.length - 1].replace(/^["']|["']$/g, "");
+}
+
+function looksLikeReasoningDump(text) {
+  const lower = String(text || "").toLowerCase();
+  return (
+    lower.includes("analyze") ||
+    lower.includes("analysis") ||
+    lower.includes("constraint") ||
+    lower.includes("persona:") ||
+    lower.includes("context:") ||
+    /^\d+\.\s+\*\*/m.test(String(text || "")) ||
+    lower.includes("evaluate the plan")
+  );
+}
+
+async function rewriteModelOutputToMessage(rawOutput) {
+  const response = await chatWithQwen({
+    temperature: 0.2,
+    maxTokens: 120,
+    stopSequences: ["\n"],
+    messages: [
+      {
+        role: "system",
+        content:
+          "Convert internal analysis into one natural DM reply. Output exactly one line in this format and nothing else: FINAL_REPLY: <message>"
+      },
+      {
+        role: "user",
+        content: `Turn this into a short natural message and remove all analysis:\n\n${rawOutput}`
+      },
+      { role: "assistant", content: "FINAL_REPLY: " }
+    ]
+  });
+
+  return extractFinalReply(response);
+}
+
 async function generateDraftWithLlm({ currentUser, candidate, post, priorMessages }) {
   const system = [
     `You are ${candidate.name}, a real person represented by an autonomous social agent.`,
@@ -230,7 +291,8 @@ async function generateDraftWithLlm({ currentUser, candidate, post, priorMessage
     "Sound natural, grounded, and human.",
     "Reference the post or thread naturally when useful.",
     "Do not mention questionnaires, topic files, compatibility scores, or being an AI.",
-    "Keep it to 1-3 sentences."
+    "Keep it to 1-3 sentences.",
+    "Output exactly one line in this format and nothing else: FINAL_REPLY: <message>"
   ].join(" ");
 
   const userPrompt = [
@@ -249,14 +311,23 @@ async function generateDraftWithLlm({ currentUser, candidate, post, priorMessage
     "Write the next message you would send."
   ].join("\n");
 
-  return chatWithQwen({
+  const response = await chatWithQwen({
     temperature: 0.85,
     maxTokens: 160,
     messages: [
       { role: "system", content: system },
-      { role: "user", content: userPrompt }
-    ]
+      { role: "user", content: userPrompt },
+      { role: "assistant", content: "FINAL_REPLY: " }
+    ],
+    stopSequences: ["\n"]
   });
+
+  const finalReply = extractFinalReply(response);
+  if (looksLikeReasoningDump(finalReply)) {
+    return rewriteModelOutputToMessage(finalReply);
+  }
+
+  return finalReply;
 }
 
 function runPrivacyCheck({ draftText, blockedTopics, sensitiveTopics }) {
@@ -527,7 +598,8 @@ async function generateReplyWithLlm({ currentUser, candidate, inboundText, prior
     "Use profile context only when it actually helps answer the message.",
     "Do not ignore invitations, suggestions, yes/no questions, or concrete plans.",
     "Do not mention questionnaires, topic files, compatibility scoring, or being an AI.",
-    "Keep the reply to 1-4 sentences."
+    "Keep the reply to 1-4 sentences.",
+    "Output exactly one line in this format and nothing else: FINAL_REPLY: <message>"
   ].join(" ");
 
   const userPrompt = [
@@ -548,14 +620,23 @@ async function generateReplyWithLlm({ currentUser, candidate, inboundText, prior
     "Write your reply."
   ].join("\n");
 
-  return chatWithQwen({
+  const response = await chatWithQwen({
     temperature: 0.9,
     maxTokens: 220,
     messages: [
       { role: "system", content: system },
-      { role: "user", content: userPrompt }
-    ]
+      { role: "user", content: userPrompt },
+      { role: "assistant", content: "FINAL_REPLY: " }
+    ],
+    stopSequences: ["\n"]
   });
+
+  const finalReply = extractFinalReply(response);
+  if (looksLikeReasoningDump(finalReply)) {
+    return rewriteModelOutputToMessage(finalReply);
+  }
+
+  return finalReply;
 }
 
 async function generateDraft(options) {

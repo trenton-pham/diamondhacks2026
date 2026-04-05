@@ -107,28 +107,37 @@ export default function MessagesPage({
       <div className="space-y-4">
         <Card title={activeThread?.name || "Messages"}>
           <div className="space-y-2">
-            {threadMessages.map((message) => (
+            {threadMessages.length ? (
+              threadMessages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`max-w-[85%] rounded-xl px-3 py-2 text-sm ${
+                    message.sender === "me"
+                      ? "ml-auto text-white"
+                      : message.sender === "system"
+                        ? "bg-amber-50 text-amber-800"
+                        : ""
+                  }`}
+                  style={
+                    message.sender === "me"
+                      ? { background: "linear-gradient(135deg, var(--accent-main) 0%, var(--accent-deep) 100%)" }
+                      : message.sender === "system"
+                        ? {}
+                        : { background: "rgba(255, 239, 233, 0.92)", color: "var(--text-main)" }
+                  }
+                >
+                  <p>{message.text}</p>
+                  <p className="mt-1 text-[10px] opacity-70">{message.time}</p>
+                </div>
+              ))
+            ) : (
               <div
-                key={message.id}
-                className={`max-w-[85%] rounded-xl px-3 py-2 text-sm ${
-                  message.sender === "me"
-                    ? "ml-auto text-white"
-                    : message.sender === "system"
-                      ? "bg-amber-50 text-amber-800"
-                      : ""
-                }`}
-                style={
-                  message.sender === "me"
-                    ? { background: "linear-gradient(135deg, var(--accent-main) 0%, var(--accent-deep) 100%)" }
-                    : message.sender === "system"
-                      ? {}
-                      : { background: "rgba(255, 239, 233, 0.92)", color: "var(--text-main)" }
-                }
+                className="rounded-[24px] border border-dashed px-4 py-5 text-sm"
+                style={{ background: "rgba(255, 248, 245, 0.82)", color: "var(--text-soft)" }}
               >
-                <p>{message.text}</p>
-                <p className="mt-1 text-[10px] opacity-70">{message.time}</p>
+                Agents are reviewing this match now. If it looks promising, the thread will populate here automatically.
               </div>
-            ))}
+            )}
           </div>
 
           <div className="mt-4 border-t pt-3">

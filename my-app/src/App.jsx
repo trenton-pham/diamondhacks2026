@@ -6,7 +6,7 @@ import MessagesPage from "./pages/MessagesPage";
 import ProfilePage from "./pages/ProfilePage";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { useMessagesSession } from "./features/messages/useMessagesSession";
-import { fetchBootstrap } from "./services/api";
+import { fetchBootstrap, resetDemo } from "./services/api";
 
 export default function App() {
   const [activePage, setActivePage] = useLocalStorage("active_page", "posts");
@@ -23,7 +23,25 @@ export default function App() {
   useEffect(() => {
     let mounted = true;
 
-    fetchBootstrap()
+    async function loadBootstrap({ preserveThread = true } = {}) {
+      const data = await fetchBootstrap();
+      if (!mounted) return;
+      setPosts(data.posts || []);
+      setProfile(data.profile || null);
+      setThreads(data.threads || []);
+      setMessages(data.messages || {});
+      setEventsByThread(data.events || {});
+      setSessions(data.sessions || {});
+      setRecommendations(data.recommendations || []);
+      setActiveThreadId((current) => {
+        if (preserveThread && current && data.threads?.some((thread) => thread.id === current)) {
+          return current;
+        }
+        return data.threads?.[0]?.id || "";
+      });
+    }
+
+    resetDemo()
       .then((data) => {
         if (!mounted) return;
         setPosts(data.posts || []);
@@ -35,14 +53,22 @@ export default function App() {
         setRecommendations(data.recommendations || []);
         setActiveThreadId(data.threads?.[0]?.id || "");
       })
+      .catch(() => loadBootstrap({ preserveThread: false }))
       .finally(() => {
         if (mounted) {
           setIsLoading(false);
         }
       });
 
+    const interval = setInterval(() => {
+      loadBootstrap().catch(() => {
+        // Keep the current UI state if the refresh fails.
+      });
+    }, 4000);
+
     return () => {
       mounted = false;
+      clearInterval(interval);
     };
   }, []);
 

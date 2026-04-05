@@ -1,6 +1,6 @@
 const http = require("http");
 const { URL } = require("url");
-const { getStore, saveStore } = require("./lib/store");
+const { getStore, saveStore, resetStore } = require("./lib/store");
 const { currentUserId } = require("./lib/seedData");
 const { runTextSorter } = require("./lib/textSorter");
 const {
@@ -104,6 +104,101 @@ function addMessage(store, threadId, sender, text) {
   return message;
 }
 
+function addSystemMessage(store, threadId, text) {
+  return addMessage(store, threadId, "system", text);
+}
+
+function processDemoFlows(store) {
+  const flows = store.demoFlows || {};
+  const now = Date.now();
+  let changed = false;
+  const currentUser = store.users[currentUserId];
+
+  Object.entries(flows).forEach(([threadId, flow]) => {
+    const thread = store.threads.find((item) => item.id === threadId);
+    const session = store.sessions[threadId];
+    const candidate = store.users[thread?.counterpartId];
+    const sourcePost = store.posts.find((post) => post.authorId === thread?.counterpartId);
+    if (!thread || !session || !flow || flow.state === "completed") {
+      return;
+    }
+
+    if (!flow.armedAt) {
+      flow.armedAt = new Date(now).toISOString();
+      changed = true;
+      return;
+    }
+
+    const armedAtMs = new Date(flow.armedAt).getTime();
+    const lastStepAtMs = flow.lastStepAt ? new Date(flow.lastStepAt).getTime() : armedAtMs;
+    if (Number.isNaN(armedAtMs) || Number.isNaN(lastStepAtMs)) {
+      return;
+    }
+
+    let referenceMs = lastStepAtMs;
+    let threshold = flow.stepIndex > 0 ? flow.stepDelayMs || 2500 : flow.delayMs || 0;
+
+    while (now - referenceMs >= threshold && flow.state !== "completed") {
+      const nextMessage = flow.script?.[flow.stepIndex];
+      if (!nextMessage) {
+        const evaluator =
+          currentUser && candidate && sourcePost ? scoreCandidate(currentUser, candidate, sourcePost) : null;
+
+        if (evaluator && candidate) {
+          const recommendation = buildRecommendation(thread, candidate, evaluator, { status: "approved" });
+          thread.compatibilityScore = recommendation.score;
+          thread.confidence = recommendation.confidence;
+          thread.intentSummary = flow.summary || recommendation.rationale;
+          store.recommendations = [
+            recommendation,
+            ...store.recommendations.filter((item) => item.threadId !== thread.id)
+          ].sort((a, b) => b.score - a.score);
+        }
+
+        thread.status = "connected";
+        session.connectionStatus = "connected";
+        session.queueStatus = "normal";
+        pushEvent(store, threadId, {
+          stage: "summary_update",
+          status: "ok",
+          reason_code: "",
+          turn_index: session.usedMessages
+        });
+        flow.state = "completed";
+        changed = true;
+        break;
+      }
+
+      pushEvent(store, threadId, {
+        stage: flow.stepIndex === 0 ? "texting_draft" : "send",
+        status: "ok",
+        reason_code: "",
+        turn_index: session.usedMessages
+      });
+
+      addMessage(store, threadId, nextMessage.sender, nextMessage.text);
+      if (nextMessage.sender === "me") {
+        session.usedMessages += 1;
+      }
+
+      thread.status = "queued";
+      thread.confidence = "pending";
+      thread.intentSummary = "Agents are actively exchanging messages and scoring the fit.";
+      session.connectionStatus = "paused";
+      session.queueStatus = "queued";
+      flow.stepIndex += 1;
+      referenceMs += threshold;
+      flow.lastStepAt = new Date(referenceMs).toISOString();
+      threshold = flow.stepDelayMs || 2500;
+      changed = true;
+    }
+  });
+
+  if (changed) {
+    saveStore(store);
+  }
+}
+
 function ensureThreadForPost(store, post) {
   const candidate = findCandidateByAuthor(post.authorId);
   if (!candidate) {
@@ -189,6 +284,7 @@ async function handleRequest(req, res) {
 
   const url = new URL(req.url, `http://${req.headers.host}`);
   const store = getStore();
+  processDemoFlows(store);
 
   if (req.method === "GET" && url.pathname === "/api/health") {
     sendJson(res, 200, { ok: true });
@@ -197,6 +293,12 @@ async function handleRequest(req, res) {
 
   if (req.method === "GET" && url.pathname === "/api/bootstrap") {
     sendJson(res, 200, buildBootstrap(store));
+    return;
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/demo/reset") {
+    const freshStore = resetStore();
+    sendJson(res, 200, buildBootstrap(freshStore));
     return;
   }
 

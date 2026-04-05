@@ -1,6 +1,6 @@
 {
   "schemaVersion": "2026-04-06.v1",
-  "demoDatasetVersion": "demo-review-v1",
+  "demoDatasetVersion": "demo-review-v3",
   "users": {
     "user-jordan": {
       "id": "user-jordan",
@@ -790,11 +790,11 @@
       "name": "Maya Carter",
       "counterpartId": "user-maya",
       "status": "connected",
-      "compatibilityScore": 0.77,
+      "compatibilityScore": 0,
       "confidence": "calibrated",
-      "intentSummary": "Explicit dealbreaker conflict on avoidant. Shared interests overlap on 2 visible tag signals. Topic files show 1 stronger compatibility cues.",
-      "lastPreview": "Honestly, I value warm, emotionally fluent friendships where people show up for each other.",
-      "updatedAt": "2026-04-05T05:18:34.334Z"
+      "intentSummary": "",
+      "lastPreview": "Same. I trust steady energy way more than instant chemistry.",
+      "updatedAt": "2026-04-04T16:45:00.000Z"
     },
     {
       "id": "t-ava",
@@ -804,12 +804,12 @@
       ],
       "name": "Ava Lin",
       "counterpartId": "user-ava",
-      "status": "connected",
+      "status": "queued",
       "compatibilityScore": 0,
-      "confidence": "calibrated",
-      "intentSummary": "",
-      "lastPreview": "Perfect. I was hoping you would.",
-      "updatedAt": "2026-04-04T16:18:00.000Z"
+      "confidence": "pending",
+      "intentSummary": "Agent handshake queued from Jordan's side after Ava's post.",
+      "lastPreview": "Agent handshake pending...",
+      "updatedAt": "2026-04-04T16:55:00.000Z"
     },
     {
       "id": "t-serena",
@@ -834,12 +834,12 @@
       ],
       "name": "Noah Kim",
       "counterpartId": "user-noah",
-      "status": "connected",
+      "status": "queued",
       "compatibilityScore": 0,
-      "confidence": "calibrated",
-      "intentSummary": "",
-      "lastPreview": "Honestly that is still a decent start.",
-      "updatedAt": "2026-04-04T15:28:00.000Z"
+      "confidence": "pending",
+      "intentSummary": "Agent handshake queued after Noah's post was shortlisted.",
+      "lastPreview": "Agents are evaluating whether to open a DM...",
+      "updatedAt": "2026-04-04T16:52:00.000Z"
     },
     {
       "id": "t-riley",
@@ -945,130 +945,9 @@
         "text": "Same. I trust steady energy way more than instant chemistry.",
         "time": "09:45 AM",
         "createdAt": "2026-04-04T16:45:00.000Z"
-      },
-      {
-        "id": "m-1775365394823-38",
-        "threadId": "t-maya",
-        "sender": "me",
-        "text": "Would you like to get coffee sometime",
-        "time": "10:03 PM",
-        "createdAt": "2026-04-05T05:03:14.823Z"
-      },
-      {
-        "id": "m-1775365394833-708",
-        "threadId": "t-maya",
-        "sender": "them",
-        "text": "That tracks for me too. I like conversations that feel intentional and a little playful.",
-        "time": "10:03 PM",
-        "createdAt": "2026-04-05T05:03:14.832Z"
-      },
-      {
-        "id": "m-1775365676393-382",
-        "threadId": "t-maya",
-        "sender": "me",
-        "text": "would you like to get ice cream",
-        "time": "10:07 PM",
-        "createdAt": "2026-04-05T05:07:56.393Z"
-      },
-      {
-        "id": "m-1775365676394-245",
-        "threadId": "t-maya",
-        "sender": "them",
-        "text": "That tracks for me too. I like conversations that feel intentional and a little playful.",
-        "time": "10:07 PM",
-        "createdAt": "2026-04-05T05:07:56.394Z"
-      },
-      {
-        "id": "m-1775366314331-446",
-        "threadId": "t-maya",
-        "sender": "me",
-        "text": "We should go to the beach and have a good conversation",
-        "time": "10:18 PM",
-        "createdAt": "2026-04-05T05:18:34.331Z"
-      },
-      {
-        "id": "m-1775366314334-867",
-        "threadId": "t-maya",
-        "sender": "them",
-        "text": "Honestly, I value warm, emotionally fluent friendships where people show up for each other.",
-        "time": "10:18 PM",
-        "createdAt": "2026-04-05T05:18:34.334Z"
       }
     ],
-    "t-ava": [
-      {
-        "id": "m-ava-1",
-        "threadId": "t-ava",
-        "sender": "me",
-        "text": "Your post made me laugh because museum plus bookstore is basically my default answer to everything.",
-        "time": "08:52 AM",
-        "createdAt": "2026-04-04T15:52:00.000Z"
-      },
-      {
-        "id": "m-ava-2",
-        "threadId": "t-ava",
-        "sender": "them",
-        "text": "Okay good, so you get it.",
-        "time": "08:54 AM",
-        "createdAt": "2026-04-04T15:54:00.000Z"
-      },
-      {
-        "id": "m-ava-3",
-        "threadId": "t-ava",
-        "sender": "them",
-        "text": "I am deeply suspicious of people who speedwalk through beautiful places.",
-        "time": "08:56 AM",
-        "createdAt": "2026-04-04T15:56:00.000Z"
-      },
-      {
-        "id": "m-ava-4",
-        "threadId": "t-ava",
-        "sender": "me",
-        "text": "Completely fair. Half the fun is lingering.",
-        "time": "08:59 AM",
-        "createdAt": "2026-04-04T15:59:00.000Z"
-      },
-      {
-        "id": "m-ava-5",
-        "threadId": "t-ava",
-        "sender": "them",
-        "text": "Exactly. I like conversations that move like that too.",
-        "time": "09:03 AM",
-        "createdAt": "2026-04-04T16:03:00.000Z"
-      },
-      {
-        "id": "m-ava-6",
-        "threadId": "t-ava",
-        "sender": "me",
-        "text": "That makes sense. What do you end up talking about for way too long with the right person?",
-        "time": "09:08 AM",
-        "createdAt": "2026-04-04T16:08:00.000Z"
-      },
-      {
-        "id": "m-ava-7",
-        "threadId": "t-ava",
-        "sender": "them",
-        "text": "Books, design, other people, and occasionally whether a city is emotionally stable.",
-        "time": "09:12 AM",
-        "createdAt": "2026-04-04T16:12:00.000Z"
-      },
-      {
-        "id": "m-ava-8",
-        "threadId": "t-ava",
-        "sender": "me",
-        "text": "That is such a specific category and I completely understand what you mean.",
-        "time": "09:16 AM",
-        "createdAt": "2026-04-04T16:16:00.000Z"
-      },
-      {
-        "id": "m-ava-9",
-        "threadId": "t-ava",
-        "sender": "them",
-        "text": "Perfect. I was hoping you would.",
-        "time": "09:18 AM",
-        "createdAt": "2026-04-04T16:18:00.000Z"
-      }
-    ],
+    "t-ava": [],
     "t-serena": [
       {
         "id": "m-serena-1",
@@ -1135,80 +1014,7 @@
         "createdAt": "2026-04-04T15:50:00.000Z"
       }
     ],
-    "t-noah": [
-      {
-        "id": "m-noah-1",
-        "threadId": "t-noah",
-        "sender": "me",
-        "text": "Your post about side projects with constraints felt extremely targeted at my brain.",
-        "time": "08:08 AM",
-        "createdAt": "2026-04-04T15:08:00.000Z"
-      },
-      {
-        "id": "m-noah-2",
-        "threadId": "t-noah",
-        "sender": "them",
-        "text": "Then the post did its job.",
-        "time": "08:10 AM",
-        "createdAt": "2026-04-04T15:10:00.000Z"
-      },
-      {
-        "id": "m-noah-3",
-        "threadId": "t-noah",
-        "sender": "them",
-        "text": "Constraints make people reveal whether they actually have taste.",
-        "time": "08:12 AM",
-        "createdAt": "2026-04-04T15:12:00.000Z"
-      },
-      {
-        "id": "m-noah-4",
-        "threadId": "t-noah",
-        "sender": "me",
-        "text": "That is maybe too real. What are you building lately?",
-        "time": "08:15 AM",
-        "createdAt": "2026-04-04T15:15:00.000Z"
-      },
-      {
-        "id": "m-noah-5",
-        "threadId": "t-noah",
-        "sender": "them",
-        "text": "Mostly small product experiments and AI tools. If I go too long without making something I get annoying.",
-        "time": "08:18 AM",
-        "createdAt": "2026-04-04T15:18:00.000Z"
-      },
-      {
-        "id": "m-noah-6",
-        "threadId": "t-noah",
-        "sender": "me",
-        "text": "I get that. I like making things too, but I definitely need some quiet in the middle of it.",
-        "time": "08:22 AM",
-        "createdAt": "2026-04-04T15:22:00.000Z"
-      },
-      {
-        "id": "m-noah-7",
-        "threadId": "t-noah",
-        "sender": "them",
-        "text": "I am probably a little more go-go-go than you, but I respect the instinct.",
-        "time": "08:26 AM",
-        "createdAt": "2026-04-04T15:26:00.000Z"
-      },
-      {
-        "id": "m-noah-8",
-        "threadId": "t-noah",
-        "sender": "me",
-        "text": "That feels right. Similar curiosity, slightly different operating systems.",
-        "time": "08:27 AM",
-        "createdAt": "2026-04-04T15:27:00.000Z"
-      },
-      {
-        "id": "m-noah-9",
-        "threadId": "t-noah",
-        "sender": "them",
-        "text": "Honestly that is still a decent start.",
-        "time": "08:28 AM",
-        "createdAt": "2026-04-04T15:28:00.000Z"
-      }
-    ],
+    "t-noah": [],
     "t-riley": [
       {
         "id": "m-riley-1",
@@ -1321,7 +1127,7 @@
   "sessions": {
     "t-maya": {
       "threadId": "t-maya",
-      "usedMessages": 7,
+      "usedMessages": 4,
       "turnRetryUsed": 0,
       "connectionStatus": "connected",
       "queueStatus": "normal",
@@ -1329,10 +1135,10 @@
     },
     "t-ava": {
       "threadId": "t-ava",
-      "usedMessages": 4,
+      "usedMessages": 0,
       "turnRetryUsed": 0,
-      "connectionStatus": "connected",
-      "queueStatus": "normal",
+      "connectionStatus": "paused",
+      "queueStatus": "queued",
       "degradedMode": false
     },
     "t-serena": {
@@ -1345,10 +1151,10 @@
     },
     "t-noah": {
       "threadId": "t-noah",
-      "usedMessages": 4,
+      "usedMessages": 0,
       "turnRetryUsed": 0,
-      "connectionStatus": "connected",
-      "queueStatus": "normal",
+      "connectionStatus": "paused",
+      "queueStatus": "queued",
       "degradedMode": false
     },
     "t-riley": {
@@ -1371,126 +1177,6 @@
   "events": {
     "t-maya": [
       {
-        "event_id": "evt-1775366314335-651",
-        "schema_version": "2026-04-06.v1",
-        "timestamp": "2026-04-05T05:18:34.335Z",
-        "queue_status": "normal",
-        "stage": "summary_update",
-        "status": "ok",
-        "reason_code": "",
-        "turn_index": 7
-      },
-      {
-        "event_id": "evt-1775366314332-823",
-        "schema_version": "2026-04-06.v1",
-        "timestamp": "2026-04-05T05:18:34.332Z",
-        "queue_status": "normal",
-        "stage": "send",
-        "status": "ok",
-        "reason_code": "",
-        "turn_index": 7
-      },
-      {
-        "event_id": "evt-1775366314331-467",
-        "schema_version": "2026-04-06.v1",
-        "timestamp": "2026-04-05T05:18:34.331Z",
-        "queue_status": "normal",
-        "stage": "privacy_check",
-        "status": "ok",
-        "reason_code": "",
-        "turn_index": 6
-      },
-      {
-        "event_id": "evt-1775366314329-92",
-        "schema_version": "2026-04-06.v1",
-        "timestamp": "2026-04-05T05:18:34.329Z",
-        "queue_status": "normal",
-        "stage": "texting_draft",
-        "status": "ok",
-        "reason_code": "",
-        "turn_index": 6
-      },
-      {
-        "event_id": "evt-1775365676395-374",
-        "schema_version": "2026-04-06.v1",
-        "timestamp": "2026-04-05T05:07:56.395Z",
-        "queue_status": "normal",
-        "stage": "summary_update",
-        "status": "ok",
-        "reason_code": "",
-        "turn_index": 6
-      },
-      {
-        "event_id": "evt-1775365676394-604",
-        "schema_version": "2026-04-06.v1",
-        "timestamp": "2026-04-05T05:07:56.394Z",
-        "queue_status": "normal",
-        "stage": "send",
-        "status": "ok",
-        "reason_code": "",
-        "turn_index": 6
-      },
-      {
-        "event_id": "evt-1775365676393-331",
-        "schema_version": "2026-04-06.v1",
-        "timestamp": "2026-04-05T05:07:56.393Z",
-        "queue_status": "normal",
-        "stage": "privacy_check",
-        "status": "ok",
-        "reason_code": "",
-        "turn_index": 5
-      },
-      {
-        "event_id": "evt-1775365676392-338",
-        "schema_version": "2026-04-06.v1",
-        "timestamp": "2026-04-05T05:07:56.392Z",
-        "queue_status": "normal",
-        "stage": "texting_draft",
-        "status": "ok",
-        "reason_code": "",
-        "turn_index": 5
-      },
-      {
-        "event_id": "evt-1775365394833-750",
-        "schema_version": "2026-04-06.v1",
-        "timestamp": "2026-04-05T05:03:14.833Z",
-        "queue_status": "normal",
-        "stage": "summary_update",
-        "status": "ok",
-        "reason_code": "",
-        "turn_index": 5
-      },
-      {
-        "event_id": "evt-1775365394832-374",
-        "schema_version": "2026-04-06.v1",
-        "timestamp": "2026-04-05T05:03:14.832Z",
-        "queue_status": "normal",
-        "stage": "send",
-        "status": "ok",
-        "reason_code": "",
-        "turn_index": 5
-      },
-      {
-        "event_id": "evt-1775365394823-690",
-        "schema_version": "2026-04-06.v1",
-        "timestamp": "2026-04-05T05:03:14.823Z",
-        "queue_status": "normal",
-        "stage": "privacy_check",
-        "status": "ok",
-        "reason_code": "",
-        "turn_index": 4
-      },
-      {
-        "event_id": "evt-1775365394821-138",
-        "schema_version": "2026-04-06.v1",
-        "timestamp": "2026-04-05T05:03:14.822Z",
-        "queue_status": "normal",
-        "stage": "texting_draft",
-        "status": "ok",
-        "reason_code": "",
-        "turn_index": 4
-      },
-      {
         "event_id": "evt-seed-t-maya",
         "stage": "summary_update",
         "status": "ok",
@@ -1504,12 +1190,12 @@
     "t-ava": [
       {
         "event_id": "evt-seed-t-ava",
-        "stage": "summary_update",
-        "status": "ok",
+        "stage": "candidate_select",
+        "status": "pending",
         "reason_code": "",
-        "timestamp": "2026-04-04T16:18:00.000Z",
-        "turn_index": 4,
-        "queue_status": "normal",
+        "timestamp": "2026-04-04T16:55:00.000Z",
+        "turn_index": 0,
+        "queue_status": "queued",
         "schema_version": "2026-04-06.v1"
       }
     ],
@@ -1528,12 +1214,12 @@
     "t-noah": [
       {
         "event_id": "evt-seed-t-noah",
-        "stage": "summary_update",
-        "status": "ok",
+        "stage": "candidate_select",
+        "status": "pending",
         "reason_code": "",
-        "timestamp": "2026-04-04T15:28:00.000Z",
-        "turn_index": 4,
-        "queue_status": "normal",
+        "timestamp": "2026-04-04T16:52:00.000Z",
+        "turn_index": 0,
+        "queue_status": "queued",
         "schema_version": "2026-04-06.v1"
       }
     ],
@@ -1562,33 +1248,75 @@
       }
     ]
   },
-  "recommendations": [
-    {
-      "id": "rec-t-maya",
-      "threadId": "t-maya",
-      "candidateId": "user-maya",
-      "name": "Maya Carter",
-      "score": 0.77,
-      "confidence": "calibrated",
-      "reasonLabels": [
-        "explicit_preference_match",
-        "explicit_dealbreaker_conflict",
-        "inferred_context_match"
-      ],
-      "greenFlags": [
-        "Explicit match: consistent",
-        "Explicit match: intentional",
-        "Inferred context shows aligned interests"
-      ],
-      "yellowFlags": [],
-      "redFlags": [
-        "Dealbreaker conflict: avoidant"
-      ],
-      "rationale": "Explicit dealbreaker conflict on avoidant. Shared interests overlap on 2 visible tag signals. Topic files show 1 stronger compatibility cues.",
-      "explanation": {
-        "explicit": "Conflict detected against stated preferences: avoidant.",
-        "inferred": "Uploaded-text topic summaries also suggest shared context."
-      }
+  "demoFlows": {
+    "t-ava": {
+      "state": "pending",
+      "delayMs": 6000,
+      "armedAt": "2026-04-05T06:40:29.745Z",
+      "stepIndex": 0,
+      "stepDelayMs": 2500,
+      "summary": "Strong alignment on culture, pacing, and thoughtful communication.",
+      "script": [
+        {
+          "sender": "me",
+          "text": "Your post made me feel oddly understood. Museum plus bookstore is a very convincing argument."
+        },
+        {
+          "sender": "them",
+          "text": "Okay good, because I was hoping that would land with the right person and not just sound precious."
+        },
+        {
+          "sender": "me",
+          "text": "No, it felt specific in a good way. I like people who know how to linger somewhere instead of treating everything like a checklist."
+        },
+        {
+          "sender": "them",
+          "text": "Same. That is usually how I tell whether conversation is actually going to go anywhere."
+        },
+        {
+          "sender": "me",
+          "text": "What kind of place usually gets the strongest reaction out of you, museum, bookstore, or somewhere with a really good coffee attached?"
+        },
+        {
+          "sender": "them",
+          "text": "Bookstore with a little chaos, museum with one room you accidentally stay in forever, then coffee after to argue about what was actually good."
+        }
+      ]
+    },
+    "t-noah": {
+      "state": "pending",
+      "delayMs": 9000,
+      "armedAt": "2026-04-05T06:40:29.745Z",
+      "stepIndex": 0,
+      "stepDelayMs": 2200,
+      "summary": "Good builder curiosity, with slightly different pace and lifestyle energy.",
+      "script": [
+        {
+          "sender": "them",
+          "text": "Your profile makes you seem like someone who would have opinions about constraints in a good way. Figured I should test that theory."
+        },
+        {
+          "sender": "me",
+          "text": "That is unfortunately very accurate. Clear constraints usually make people reveal whether they actually have taste."
+        },
+        {
+          "sender": "them",
+          "text": "Exactly. I can work with a weird idea if the edges are sharp."
+        },
+        {
+          "sender": "me",
+          "text": "Same. I am probably a little slower and more museum-pilled than you, but I respect the momentum."
+        },
+        {
+          "sender": "them",
+          "text": "That actually sounds like a useful balance. I tend to over-optimize unless someone reminds me the thing is supposed to feel alive too."
+        },
+        {
+          "sender": "me",
+          "text": "That feels familiar. Best case is probably shared curiosity with slightly different operating speeds."
+        }
+      ]
     }
-  ]
+  },
+  "recommendations": []
 }

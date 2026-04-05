@@ -21,6 +21,12 @@ export function fetchBootstrap() {
   return request("/bootstrap");
 }
 
+export function resetDemo() {
+  return request("/demo/reset", {
+    method: "POST"
+  });
+}
+
 export function createPost(post) {
   return request("/posts", {
     method: "POST",
