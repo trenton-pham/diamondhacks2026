@@ -83,7 +83,182 @@ function evaluateQuestionnaireAlignment(currentUser, candidate) {
   };
 }
 
-function scoreCandidate(currentUser, candidate, post) {
+function normalizeText(text) {
+  return String(text || "")
+    .toLowerCase()
+    .replace(/[^\w\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function mentionsRequiredConcept(text, requiredConcept) {
+  const normalizedText = normalizeText(text);
+  return normalizeText(requiredConcept)
+    .split(" ")
+    .filter(Boolean)
+    .some((token) => normalizedText.includes(token));
+}
+
+function usesAvoidedPhrase(text, avoidPhrases = []) {
+  const normalizedText = normalizeText(text);
+  return avoidPhrases.some((phrase) => normalizedText.includes(normalizeText(phrase)));
+}
+
+function enforceDemoVariation(text, { requiredConcept = "", avoidPhrases = [], role = "opener" } = {}) {
+  const trimmed = String(text || "").trim();
+  if (!trimmed) {
+    return trimmed;
+  }
+
+  const needsRewrite = usesAvoidedPhrase(trimmed, avoidPhrases);
+  const missingConcept = requiredConcept && !mentionsRequiredConcept(trimmed, requiredConcept);
+
+  if (!needsRewrite && !missingConcept) {
+    return trimmed;
+  }
+
+  if (role === "reply") {
+    return `That makes sense. I keep coming back to ${requiredConcept}, which is probably why this conversation caught my attention.`;
+  }
+
+  return `Your post caught me because it made me think about ${requiredConcept}. I am curious what that looks like for you in real life.`;
+}
+
+function analyzeConversationDynamics(messages = [], currentUser, candidate) {
+  const transcript = (messages || []).slice(-12);
+  if (!transcript.length) {
+    return {
+      scoreDelta: 0,
+      positiveSignals: [],
+      cautionSignals: []
+    };
+  }
+
+  const joined = transcript.map((message) => String(message.text || "")).join(" ").toLowerCase();
+  const myMessages = transcript.filter((message) => message.sender === "me");
+  const theirMessages = transcript.filter((message) => message.sender === "them");
+  const myText = myMessages.map((message) => String(message.text || "")).join(" ").toLowerCase();
+  const theirText = theirMessages.map((message) => String(message.text || "")).join(" ").toLowerCase();
+
+  const positiveSignals = [];
+  const cautionSignals = [];
+  let scoreDelta = 0;
+
+  const sharedTopicKeywords = [
+    "museum",
+    "book",
+    "books",
+    "bookstore",
+    "coffee",
+    "walk",
+    "design",
+    "project",
+    "build",
+    "gallery",
+    "conversation",
+    "writing"
+  ];
+  const sharedTopicCount = sharedTopicKeywords.filter((keyword) => myText.includes(keyword) && theirText.includes(keyword)).length;
+  if (sharedTopicCount >= 2) {
+    scoreDelta += Math.min(0.08, sharedTopicCount * 0.02);
+    positiveSignals.push("Conversation shows repeated overlap in what both people naturally engage with");
+  }
+
+  const questionCount = transcript.filter((message) => String(message.text || "").includes("?")).length;
+  if (questionCount >= 3) {
+    scoreDelta += 0.04;
+    positiveSignals.push("Both sides are sustaining curiosity instead of letting the thread flatten");
+  }
+
+  const affirmationKeywords = ["same", "exactly", "me too", "that makes sense", "agreed", "i am into that", "perfect"];
+  const affirmationCount = affirmationKeywords.filter((phrase) => joined.includes(phrase)).length;
+  if (affirmationCount >= 2) {
+    scoreDelta += 0.03;
+    positiveSignals.push("The exchange has clear signs of mutual affirmation and easy rapport");
+  }
+
+  const planKeywords = ["coffee", "dinner", "meet", "hang", "compare notes", "first meetup", "walk", "sometime"];
+  if (planKeywords.some((keyword) => joined.includes(keyword))) {
+    scoreDelta += 0.03;
+    positiveSignals.push("The thread is moving toward concrete shared plans");
+  }
+
+  const mismatchKeywords = ["hate", "probably where we differ", "we differ", "we split", "not the same wavelength", "opposite", "mismatch"];
+  const mismatchCount = mismatchKeywords.filter((phrase) => joined.includes(phrase)).length;
+  if (mismatchCount > 0) {
+    scoreDelta -= Math.min(0.12, mismatchCount * 0.04);
+    cautionSignals.push("The conversation directly names meaningful mismatch or incompatibility");
+  }
+
+  const rejectionKeywords = [
+    "i dont like you",
+    "i don't like you",
+    "not into you",
+    "not feeling this",
+    "this is not working",
+    "we should stop talking",
+    "i am not interested",
+    "i'm not interested",
+    "you are annoying",
+    "you seem mean"
+  ];
+  const rejectionCount = rejectionKeywords.filter((phrase) => myText.includes(phrase) || theirText.includes(phrase)).length;
+  if (rejectionCount > 0) {
+    scoreDelta = Math.min(scoreDelta, 0) - Math.min(0.42, rejectionCount * 0.28);
+    cautionSignals.push("A direct negative or rejecting message materially lowers the compatibility signal");
+  }
+
+  const pushyKeywords = ["come over", "send pics", "give me your number", "why are you ignoring", "answer me", "be honest right now"];
+  const pushyCount = pushyKeywords.filter((phrase) => myText.includes(phrase)).length;
+  if (pushyCount > 0) {
+    scoreDelta -= Math.min(0.18, pushyCount * 0.08);
+    cautionSignals.push("Jordan's messages are reading as pushier than this match is likely to enjoy");
+  }
+
+  const intensityKeywords = ["obsessed", "love you", "soulmate", "marry", "need you", "all day every day"];
+  const intensityCount = intensityKeywords.filter((phrase) => myText.includes(phrase)).length;
+  if (intensityCount > 0) {
+    scoreDelta -= Math.min(0.12, intensityCount * 0.06);
+    cautionSignals.push("The tone is getting more intense than the thread has earned");
+  }
+
+  const lowResponseSignal =
+    myMessages.length >= 3 &&
+    theirMessages.length > 0 &&
+    theirMessages.length / Math.max(myMessages.length, 1) < 0.5;
+  if (lowResponseSignal) {
+    scoreDelta -= 0.04;
+    cautionSignals.push("Reply cadence suggests the energy may be less mutual than the profile match looked");
+  }
+
+  const candidateAnswers = getQuestionnaireAnswers(candidate);
+  const candidateStyleTags = new Set(getTags(candidateAnswers.communication_style));
+  const candidateLifestyleTags = new Set(getTags(candidateAnswers.lifestyle));
+
+  if (
+    (candidateStyleTags.has("balanced_pace") || candidateStyleTags.has("steady") || candidateStyleTags.has("high_context")) &&
+    (myText.includes("u up") || myText.includes("wyd") || myText.includes("pull up"))
+  ) {
+    scoreDelta -= 0.08;
+    cautionSignals.push("The message style is clashing with the slower, more thoughtful pacing this match prefers");
+  }
+
+  if (
+    (candidateLifestyleTags.has("low_chaos") || candidateLifestyleTags.has("quiet_weekends")) &&
+    (myText.includes("club") || myText.includes("party all night") || myText.includes("crazy night"))
+  ) {
+    scoreDelta -= 0.06;
+    cautionSignals.push("Recent messages are leaning into plans this match usually does not prefer");
+  }
+
+  return {
+    scoreDelta: clamp(scoreDelta, -0.5, 0.18),
+    positiveSignals,
+    cautionSignals
+  };
+}
+
+function scoreCandidate(currentUser, candidate, post, messages = []) {
   const mySignals = collectUserSignals(currentUser).join(" ").toLowerCase();
   const candidateSignals = collectUserSignals(candidate).join(" ").toLowerCase();
   const postText = `${post.content} ${(post.tags || []).join(" ")}`.toLowerCase();
@@ -106,8 +281,16 @@ function scoreCandidate(currentUser, candidate, post) {
   const explicitConflictPenalty = questionnaireAlignment.explicitConflicts.length * 0.2;
   const missingQuestionnairePenalty =
     hasCompletedQuestionnaire(currentUser) && hasCompletedQuestionnaire(candidate) ? 0 : 0.08;
+  const conversationDynamics = analyzeConversationDynamics(messages, currentUser, candidate);
   const score = clamp(
-    0.45 + overlap * 0.08 + sharedWords * 0.07 + postAffinity + explicitMatchBoost - explicitConflictPenalty - missingQuestionnairePenalty,
+    0.45 +
+      overlap * 0.08 +
+      sharedWords * 0.07 +
+      postAffinity +
+      explicitMatchBoost -
+      explicitConflictPenalty -
+      missingQuestionnairePenalty +
+      conversationDynamics.scoreDelta,
     0.08,
     0.96
   );
@@ -136,8 +319,13 @@ function scoreCandidate(currentUser, candidate, post) {
               .join(", ")}.`
           : "Questionnaire overlap is limited, so inferred context carries more weight.",
       overlap ? `Shared interests overlap on ${overlap} visible tag signals.` : "Some baseline interest alignment detected.",
-      sharedWords ? `Topic files show ${sharedWords} stronger compatibility cues.` : "Compatibility mostly driven by post-level intent."
+      sharedWords ? `Topic files show ${sharedWords} stronger compatibility cues.` : "Compatibility mostly driven by post-level intent.",
+      ...conversationDynamics.positiveSignals,
+      ...conversationDynamics.cautionSignals
     ],
+    positiveSignals: conversationDynamics.positiveSignals,
+    cautionSignals: conversationDynamics.cautionSignals,
+    conversationScoreDelta: conversationDynamics.scoreDelta,
     questionnaireCompleted: hasCompletedQuestionnaire(currentUser) && hasCompletedQuestionnaire(candidate)
   };
 }
@@ -290,13 +478,23 @@ async function rewriteModelOutputToMessage(rawOutput) {
   return extractFinalReply(response);
 }
 
-async function generateDraftWithLlm({ currentUser, candidate, post, priorMessages }) {
+async function generateDraftWithLlm({
+  currentUser,
+  candidate,
+  post,
+  priorMessages,
+  variationHint = "",
+  demoNonce = "",
+  avoidPhrases = [],
+  requiredConcept = ""
+}) {
   const system = [
     `You are ${candidate.name}, a real person represented by an autonomous social agent.`,
     "Write one short outbound text message to Jordan.",
     "Sound natural, grounded, and human.",
     "Reference the post or thread naturally when useful.",
     "Do not mention questionnaires, topic files, compatibility scores, or being an AI.",
+    ...(avoidPhrases.length ? [`Do not use or closely paraphrase these exact phrases: ${avoidPhrases.join(" | ")}`] : []),
     "Keep it to 1-3 sentences.",
     "Output exactly one line in this format and nothing else: FINAL_REPLY: <message>"
   ].join(" ");
@@ -314,6 +512,10 @@ async function generateDraftWithLlm({ currentUser, candidate, post, priorMessage
     "Recent thread history:",
     formatConversation(priorMessages),
     "",
+    variationHint ? `Conversation variation hint: ${variationHint}` : "",
+    demoNonce ? `Run marker: ${demoNonce}` : "",
+    "",
+    requiredConcept ? `For this run, explicitly anchor the message in this concept: ${requiredConcept}` : "",
     "Write the next message you would send."
   ].join("\n");
 
@@ -595,7 +797,17 @@ function generateReplyFallback({ candidate, inboundText, priorMessages = [], pos
   return response;
 }
 
-async function generateReplyWithLlm({ currentUser, candidate, inboundText, priorMessages = [], post = null }) {
+async function generateReplyWithLlm({
+  currentUser,
+  candidate,
+  inboundText,
+  priorMessages = [],
+  post = null,
+  variationHint = "",
+  demoNonce = "",
+  avoidPhrases = [],
+  requiredConcept = ""
+}) {
   const system = [
     `You are ${candidate.name}, a real person represented by an autonomous social agent on DiamondHacks.`,
     "Reply as this person would in a DM with Jordan.",
@@ -604,6 +816,7 @@ async function generateReplyWithLlm({ currentUser, candidate, inboundText, prior
     "Use profile context only when it actually helps answer the message.",
     "Do not ignore invitations, suggestions, yes/no questions, or concrete plans.",
     "Do not mention questionnaires, topic files, compatibility scoring, or being an AI.",
+    ...(avoidPhrases.length ? [`Do not use or closely paraphrase these exact phrases: ${avoidPhrases.join(" | ")}`] : []),
     "Keep the reply to 1-4 sentences.",
     "Output exactly one line in this format and nothing else: FINAL_REPLY: <message>"
   ].join(" ");
@@ -623,6 +836,10 @@ async function generateReplyWithLlm({ currentUser, candidate, inboundText, prior
     "",
     `Jordan's latest message: ${inboundText}`,
     "",
+    variationHint ? `Conversation variation hint: ${variationHint}` : "",
+    demoNonce ? `Run marker: ${demoNonce}` : "",
+    "",
+    requiredConcept ? `For this run, keep the reply grounded in this concept when natural: ${requiredConcept}` : "",
     "Write your reply."
   ].join("\n");
 
@@ -645,8 +862,11 @@ async function generateReplyWithLlm({ currentUser, candidate, inboundText, prior
   return finalReply;
 }
 
-async function generateDraft(options) {
+async function generateDraft(options = {}) {
   if (!isQwenConfigured()) {
+    if (options.requireLlm) {
+      throw new Error("qwen_not_configured");
+    }
     return generateDraftFallback(options);
   }
 
@@ -655,21 +875,39 @@ async function generateDraft(options) {
     return {
       intent_tag: options.priorMessages?.length ? "build_rapport" : "intro",
       retrieved_topics: pickRelevantTopics(options.post, options.currentUser),
-      draft_text: draftText
+      draft_text: enforceDemoVariation(draftText, {
+        requiredConcept: options.requiredConcept,
+        avoidPhrases: options.avoidPhrases,
+        role: "opener"
+      })
     };
   } catch (error) {
+    if (options.requireLlm) {
+      throw error;
+    }
     return generateDraftFallback(options);
   }
 }
 
-async function generateReply(options) {
+async function generateReply(options = {}) {
   if (!isQwenConfigured()) {
+    if (options.requireLlm) {
+      throw new Error("qwen_not_configured");
+    }
     return generateReplyFallback(options);
   }
 
   try {
-    return await generateReplyWithLlm(options);
+    const replyText = await generateReplyWithLlm(options);
+    return enforceDemoVariation(replyText, {
+      requiredConcept: options.requiredConcept,
+      avoidPhrases: options.avoidPhrases,
+      role: "reply"
+    });
   } catch (error) {
+    if (options.requireLlm) {
+      throw error;
+    }
     return generateReplyFallback(options);
   }
 }
@@ -822,6 +1060,10 @@ function gatherConcerns(currentUser, candidate, evaluator) {
   ) {
     candidateConcerns.push("Jordan is lower-chaos and more selective about plans than this match may expect");
   }
+
+  (evaluator.cautionSignals || []).forEach((signal) => {
+    currentConcerns.push(signal);
+  });
 
   return {
     currentConcerns: [...new Set(currentConcerns)].slice(0, 3),

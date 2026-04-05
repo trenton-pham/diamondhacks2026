@@ -1,15 +1,26 @@
 import React from "react";
 import Card from "./Card";
+import { SIGNAL_THRESHOLDS } from "../utils/constants";
 
-export default function RightRailPanel({ activePage, recommendationCount = 3, recommendations = [], profile }) {
+export default function RightRailPanel({
+  activePage,
+  recommendationCount = 3,
+  recommendations = [],
+  profile,
+  setActivePage,
+  setActiveThreadId
+}) {
   const questionnaireComplete = Boolean(profile?.questionnaire?.completed);
+  const highSignalRecommendations = recommendations
+    .filter((recommendation) => recommendation.score >= SIGNAL_THRESHOLDS.PROMISING)
+    .sort((a, b) => b.score - a.score);
 
   return (
     <div className="space-y-4">
       {activePage === "posts" && (
-        <Card title="Connection Signals">
+        <Card title="High-Signal Matches">
           <p className="text-sm" style={{ color: "var(--text-soft)" }}>
-            {recommendationCount} policy-safe recommendation(s) available.
+            Ranked by compatibility score once the signal is promising or better.
           </p>
           {!questionnaireComplete && (
             <p className="mt-2 rounded-2xl px-3 py-2 text-xs" style={{ background: "rgba(255, 233, 205, 0.8)", color: "#a2633b" }}>
@@ -17,19 +28,42 @@ export default function RightRailPanel({ activePage, recommendationCount = 3, re
             </p>
           )}
           <div className="mt-3 space-y-2">
-            {recommendations.slice(0, 2).map((recommendation) => (
-              <div key={recommendation.id} className="rounded-[22px] border p-3" style={{ background: "rgba(255, 242, 237, 0.88)" }}>
-                <p className="text-sm font-semibold" style={{ color: "var(--text-main)" }}>
-                  {recommendation.name}
-                </p>
-                <p className="text-xs" style={{ color: "var(--text-soft)" }}>
-                  Score {(recommendation.score * 100).toFixed(0)}% - {recommendation.confidence}
-                </p>
-                <p className="mt-1 text-xs leading-5" style={{ color: "var(--text-soft)" }}>
-                  {recommendation.explanation?.explicit || recommendation.rationale}
-                </p>
-              </div>
-            ))}
+            {highSignalRecommendations.length ? (
+              highSignalRecommendations.map((recommendation) => (
+                <button
+                  key={recommendation.id}
+                  type="button"
+                  onClick={() => {
+                    setActiveThreadId?.(recommendation.threadId);
+                    setActivePage?.("messages");
+                  }}
+                  className="w-full rounded-[22px] border p-3 text-left transition hover:bg-white/50"
+                  style={{ background: "rgba(255, 242, 237, 0.88)" }}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <p className="text-sm font-semibold" style={{ color: "var(--text-main)" }}>
+                      {recommendation.name}
+                    </p>
+                    <span
+                      className="rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em]"
+                      style={{ background: "rgba(242, 116, 67, 0.14)", color: "var(--accent-deep)" }}
+                    >
+                      {(recommendation.score * 100).toFixed(0)}%
+                    </span>
+                  </div>
+                  <p className="mt-1 text-xs" style={{ color: "var(--text-soft)" }}>
+                    {recommendation.score >= SIGNAL_THRESHOLDS.HIGH ? "High signal" : "Promising signal"}
+                  </p>
+                  <p className="mt-1 text-xs leading-5" style={{ color: "var(--text-soft)" }}>
+                    {recommendation.explanation?.explicit || recommendation.rationale}
+                  </p>
+                </button>
+              ))
+            ) : (
+              <p className="rounded-[22px] border px-3 py-3 text-xs" style={{ background: "rgba(255, 242, 237, 0.88)", color: "var(--text-soft)" }}>
+                No promising matches yet. Once a thread clears the threshold, it will appear here.
+              </p>
+            )}
           </div>
         </Card>
       )}

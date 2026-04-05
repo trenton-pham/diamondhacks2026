@@ -7,6 +7,7 @@ import ProfilePage from "./pages/ProfilePage";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { useMessagesSession } from "./features/messages/useMessagesSession";
 import { fetchBootstrap, resetDemo } from "./services/api";
+import { applyConversationScore } from "./utils/conversationSignal";
 
 function mergeMessagesById(previous, incoming) {
   let changed = false;
@@ -70,9 +71,25 @@ export default function App() {
   const [activeThreadId, setActiveThreadId] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
+  const scoredRecommendations = useMemo(
+    () =>
+      recommendations.map((recommendation) => ({
+        ...recommendation,
+        score: applyConversationScore(recommendation.score, messages[recommendation.threadId] || [])
+      })),
+    [messages, recommendations]
+  );
+
   const currentSession = sessions[activeThreadId] || null;
   const currentEvents = eventsByThread[activeThreadId] || [];
-  const messagesSession = useMessagesSession(activePage, activeThreadId, currentSession, currentEvents);
+  const activeRecommendation = scoredRecommendations.find((item) => item.threadId === activeThreadId);
+  const messagesSession = useMessagesSession(
+    activePage,
+    activeThreadId,
+    currentSession,
+    currentEvents,
+    activeRecommendation?.score || 0
+  );
   const activePageRef = useRef(activePage);
   const activeThreadRef = useRef(activeThreadId);
   const socketStateRef = useRef(messagesSession.socketState);
@@ -149,7 +166,7 @@ export default function App() {
     };
   }, []);
 
-  const recommendationCount = useMemo(() => recommendations.length, [recommendations.length]);
+  const recommendationCount = useMemo(() => scoredRecommendations.length, [scoredRecommendations.length]);
 
   if (isLoading) {
     return (
@@ -196,6 +213,7 @@ export default function App() {
               threads={threads}
               messages={messages}
               session={messagesSession}
+              recommendations={scoredRecommendations}
               activeThreadId={activeThreadId}
               setActiveThreadId={setActiveThreadId}
               setMessages={setMessages}
@@ -214,8 +232,10 @@ export default function App() {
           <RightRail
             activePage={activePage}
             recommendationCount={recommendationCount}
-            recommendations={recommendations}
+            recommendations={scoredRecommendations}
             profile={profile}
+            setActivePage={setActivePage}
+            setActiveThreadId={setActiveThreadId}
           />
         </aside>
       </div>

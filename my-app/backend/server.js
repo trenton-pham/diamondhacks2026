@@ -110,25 +110,25 @@ function addSystemMessage(store, threadId, text) {
   return addMessage(store, threadId, "system", text);
 }
 
-function processDemoFlows(store) {
+async function processDemoFlows(store) {
   const flows = store.demoFlows || {};
   const now = Date.now();
   let changed = false;
   const currentUser = store.users[currentUserId];
 
-  Object.entries(flows).forEach(([threadId, flow]) => {
+  for (const [threadId, flow] of Object.entries(flows)) {
     const thread = store.threads.find((item) => item.id === threadId);
     const session = store.sessions[threadId];
     const candidate = store.users[thread?.counterpartId];
     const sourcePost = store.posts.find((post) => post.authorId === thread?.counterpartId);
     if (!thread || !session || !flow || flow.state === "completed") {
-      return;
+      continue;
     }
 
     if (!flow.armedAt) {
       flow.armedAt = new Date(now).toISOString();
       changed = true;
-      return;
+      continue;
     }
 
     const armedAtMs = new Date(flow.armedAt).getTime();
@@ -141,10 +141,156 @@ function processDemoFlows(store) {
     let threshold = flow.stepIndex > 0 ? flow.stepDelayMs || 2500 : flow.delayMs || 0;
 
     while (now - referenceMs >= threshold && flow.state !== "completed") {
-      const nextMessage = flow.script?.[flow.stepIndex];
-      if (!nextMessage) {
+      const scriptedMode = flow.mode !== "generated";
+      const nextMessage = scriptedMode ? flow.script?.[flow.stepIndex] : null;
+      const generatedTargetTurns = flow.targetTurns || 6;
+      const generatedSpeaker =
+        flow.stepIndex % 2 === 0
+          ? flow.openingSpeaker || "me"
+          : (flow.openingSpeaker || "me") === "me"
+            ? "them"
+            : "me";
+
+      if (!scriptedMode && flow.stepIndex >= generatedTargetTurns) {
         const evaluator =
-          currentUser && candidate && sourcePost ? scoreCandidate(currentUser, candidate, sourcePost) : null;
+          currentUser && candidate && sourcePost ? scoreCandidate(currentUser, candidate, sourcePost, getMessages(store, threadId)) : null;
+
+        if (evaluator && candidate) {
+          const recommendation = buildRecommendation(thread, candidate, evaluator, { status: "approved" });
+          thread.compatibilityScore = recommendation.score;
+          thread.confidence = recommendation.confidence;
+          thread.intentSummary = flow.summary || recommendation.rationale;
+          store.recommendations = [
+            recommendation,
+            ...store.recommendations.filter((item) => item.threadId !== thread.id)
+          ].sort((a, b) => b.score - a.score);
+        }
+
+        thread.status = "connected";
+        session.connectionStatus = "connected";
+        session.queueStatus = "normal";
+        pushEvent(store, threadId, {
+          stage: "summary_update",
+          status: "ok",
+          reason_code: "",
+          turn_index: session.usedMessages
+        });
+        flow.state = "completed";
+        changed = true;
+        break;
+      }
+
+      if (!nextMessage) {
+        if (!scriptedMode) {
+          pushEvent(store, threadId, {
+            stage: flow.stepIndex === 0 ? "texting_draft" : "send",
+            status: "ok",
+            reason_code: "",
+            turn_index: session.usedMessages
+          });
+
+          let generatedText = "";
+          if (generatedSpeaker === "me") {
+            try {
+              const drafted = await generateDraft({
+                currentUser,
+                candidate,
+                post: sourcePost,
+                priorMessages: getMessages(store, threadId),
+                variationHint: flow.variationHint || "",
+                demoNonce: flow.demoNonce || "",
+                avoidPhrases: flow.avoidPhrases || [],
+                requiredConcept: flow.requiredConcept || "",
+                requireLlm: true
+              });
+              generatedText = drafted.draft_text;
+            } catch (error) {
+              if (error.message === "qwen_not_configured") {
+                addSystemMessage(store, threadId, "Live demo generation is waiting for an LLM API key.");
+                thread.status = "paused";
+                thread.confidence = "degraded";
+                thread.intentSummary = "LLM-backed demo generation is unavailable until an API key is configured.";
+                session.connectionStatus = "paused";
+                session.queueStatus = "normal";
+                flow.state = "completed";
+                changed = true;
+                break;
+              }
+              throw error;
+            }
+          } else {
+            const priorMessages = getMessages(store, threadId);
+            const latestJordanMessage = [...priorMessages].reverse().find((message) => message.sender === "me");
+            if (!latestJordanMessage) {
+              break;
+            }
+            try {
+              generatedText = await generateReply({
+                currentUser,
+                candidate,
+                inboundText: latestJordanMessage.text,
+                priorMessages,
+                post: sourcePost,
+                variationHint: flow.variationHint || "",
+                demoNonce: flow.demoNonce || "",
+                avoidPhrases: flow.avoidPhrases || [],
+                requiredConcept: flow.requiredConcept || "",
+                requireLlm: true
+              });
+            } catch (error) {
+              if (error.message === "qwen_not_configured") {
+                addSystemMessage(store, threadId, "Live demo generation is waiting for an LLM API key.");
+                thread.status = "paused";
+                thread.confidence = "degraded";
+                thread.intentSummary = "LLM-backed demo generation is unavailable until an API key is configured.";
+                session.connectionStatus = "paused";
+                session.queueStatus = "normal";
+                flow.state = "completed";
+                changed = true;
+                break;
+              }
+              throw error;
+            }
+          }
+
+          if (!generatedText) {
+            break;
+          }
+
+          addMessage(store, threadId, generatedSpeaker, generatedText);
+          if (generatedSpeaker === "me") {
+            if (session.usedMessages >= MAX_AGENT_MESSAGES) {
+              pushEvent(store, threadId, {
+                stage: "send",
+                status: "warn",
+                reason_code: "message_cap_reached",
+                turn_index: session.usedMessages
+              });
+              thread.status = "connected";
+              session.connectionStatus = "connected";
+              session.queueStatus = "normal";
+              flow.state = "completed";
+              changed = true;
+              break;
+            }
+            session.usedMessages += 1;
+          }
+
+          thread.status = "queued";
+          thread.confidence = "pending";
+          thread.intentSummary = "Agents are actively exchanging messages and scoring the fit.";
+          session.connectionStatus = "paused";
+          session.queueStatus = "queued";
+          flow.stepIndex += 1;
+          referenceMs += threshold;
+          flow.lastStepAt = new Date(referenceMs).toISOString();
+          threshold = flow.stepDelayMs || 2500;
+          changed = true;
+          continue;
+        }
+
+        const evaluator =
+          currentUser && candidate && sourcePost ? scoreCandidate(currentUser, candidate, sourcePost, getMessages(store, threadId)) : null;
 
         if (evaluator && candidate) {
           const recommendation = buildRecommendation(thread, candidate, evaluator, { status: "approved" });
@@ -208,7 +354,7 @@ function processDemoFlows(store) {
       threshold = flow.stepDelayMs || 2500;
       changed = true;
     }
-  });
+  }
 
   if (changed) {
     saveStore(store);
@@ -269,7 +415,7 @@ function buildBootstrap(store) {
         return null;
       }
 
-      const evaluator = scoreCandidate(currentUser, candidate, sourcePost);
+      const evaluator = scoreCandidate(currentUser, candidate, sourcePost, messages[thread.id]);
       thread.compatibilityScore = Number(evaluator.score.toFixed(2));
       thread.confidence = evaluator.questionnaireCompleted ? "calibrated" : "degraded";
       thread.intentSummary = evaluator.reasons.join(" ");
@@ -314,7 +460,7 @@ async function handleRequest(req, res) {
 
   const url = new URL(req.url, `http://${req.headers.host}`);
   const store = getStore();
-  processDemoFlows(store);
+  await processDemoFlows(store);
 
   if (req.method === "GET" && url.pathname === "/api/health") {
     sendJson(res, 200, { ok: true });
@@ -575,7 +721,7 @@ async function handleRequest(req, res) {
         post: sourcePost
       })
     );
-    const evaluator = scoreCandidate(currentUser, candidate, sourcePost);
+    const evaluator = scoreCandidate(currentUser, candidate, sourcePost, getMessages(store, threadId));
     const recommendation = buildRecommendation(thread, candidate, evaluator, privacy);
     const threadSummary = buildThreadSummary({
       thread,

@@ -9,6 +9,11 @@ export const SESSION_LIMITS = {
   maxPrivacyRetries: 3
 };
 
+export const SIGNAL_THRESHOLDS = {
+  PROMISING: 0.66,
+  HIGH: 0.82
+};
+
 export const CONNECTION_STATES = {
   NOT_CONNECTED: "not_connected",
   CONNECTED: "connected",

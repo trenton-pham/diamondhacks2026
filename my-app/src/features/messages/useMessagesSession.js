@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createMessagesSocket } from "../../services/wsClient";
 import { normalizeEvent } from "../../utils/normalizers";
-import { CONNECTION_STATES, SESSION_LIMITS } from "../../utils/constants";
+import { CONNECTION_STATES, SESSION_LIMITS, SIGNAL_THRESHOLDS } from "../../utils/constants";
 
 const EVENT_WINDOW = 100;
 
@@ -28,7 +28,7 @@ function mergeEventsById(previousEvents, nextEvents) {
   return merged.slice(0, EVENT_WINDOW);
 }
 
-export function useMessagesSession(activePage, activeThreadId, sessionSnapshot, initialEvents = []) {
+export function useMessagesSession(activePage, activeThreadId, sessionSnapshot, initialEvents = [], signalScore = 0) {
   const [events, setEvents] = useState([]);
   const [usedMessages, setUsedMessages] = useState(0);
   const [turnRetryUsed, setTurnRetryUsed] = useState(0);
@@ -68,12 +68,16 @@ export function useMessagesSession(activePage, activeThreadId, sessionSnapshot, 
   }, [activePage, activeThreadId]);
 
   const canSend = useMemo(() => {
+    const hasEnoughSignal =
+      connectionStatus === CONNECTION_STATES.CONNECTED ||
+      (connectionStatus !== CONNECTION_STATES.NOT_CONNECTED && signalScore >= SIGNAL_THRESHOLDS.PROMISING);
+
     return (
-      connectionStatus === CONNECTION_STATES.CONNECTED &&
+      hasEnoughSignal &&
       usedMessages < SESSION_LIMITS.maxMessages &&
       turnRetryUsed < SESSION_LIMITS.maxPrivacyRetries
     );
-  }, [connectionStatus, usedMessages, turnRetryUsed]);
+  }, [connectionStatus, signalScore, usedMessages, turnRetryUsed]);
 
   function pushEvent(event) {
     setEvents((prev) => mergeEventsById(prev, [normalizeEvent(event, prev.length)]));

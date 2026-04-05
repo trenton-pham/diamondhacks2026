@@ -2,13 +2,21 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import Card from "../components/Card";
 import StatusChip from "../components/StatusChip";
 import { mapReasonCode } from "../utils/reasonCodeMap";
-import { SESSION_LIMITS, CONNECTION_STATES } from "../utils/constants";
+import { SESSION_LIMITS, CONNECTION_STATES, SIGNAL_THRESHOLDS } from "../utils/constants";
 import { sendThreadMessage } from "../services/api";
+
+function compatibilityLabel(score) {
+  if (score >= SIGNAL_THRESHOLDS.HIGH) return "High";
+  if (score >= SIGNAL_THRESHOLDS.PROMISING) return "Promising";
+  if (score >= 0.5) return "Mixed";
+  return "Low";
+}
 
 export default function MessagesPage({
   threads,
   messages,
   session,
+  recommendations,
   threadSummaries,
   activeThreadId,
   setActiveThreadId,
@@ -30,14 +38,44 @@ export default function MessagesPage({
   const threadMessages = useMemo(() => messages[activeThread?.id] || [], [activeThread?.id, messages]);
   const lastMessageId = threadMessages[threadMessages.length - 1]?.id || "";
   const activeSummary = threadSummaries[activeThread?.id];
+  const activeRecommendation = useMemo(
+    () => recommendations.find((recommendation) => recommendation.threadId === activeThread?.id),
+    [activeThread?.id, recommendations]
+  );
   const latestEvent = session.events[0];
+  const activeSignalScore = activeRecommendation?.score || 0;
+  const displayedCompatibilityScore = activeRecommendation?.score ?? activeSummary?.compatibility?.score ?? 0;
+  const displayedCompatibilityLabel = compatibilityLabel(displayedCompatibilityScore);
+  const signalAllowsMessaging =
+    session.connectionStatus === CONNECTION_STATES.CONNECTED ||
+    (session.connectionStatus !== CONNECTION_STATES.NOT_CONNECTED && activeSignalScore >= SIGNAL_THRESHOLDS.PROMISING);
+  const signalStateLabel =
+    activeSignalScore >= SIGNAL_THRESHOLDS.HIGH ? "high" : activeSignalScore >= SIGNAL_THRESHOLDS.PROMISING ? "promising" : "below_threshold";
+  const highSignalThreads = useMemo(() => {
+    const recommendationByThreadId = new Map(recommendations.map((recommendation) => [recommendation.threadId, recommendation]));
+
+    return threads
+      .map((thread) => {
+        const recommendation = recommendationByThreadId.get(thread.id);
+        if (!recommendation || recommendation.score < SIGNAL_THRESHOLDS.PROMISING) {
+          return null;
+        }
+
+        return {
+          ...thread,
+          recommendation
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.recommendation.score - a.recommendation.score);
+  }, [recommendations, threads]);
 
   const disabledReason = useMemo(() => {
-    if (session.connectionStatus !== CONNECTION_STATES.CONNECTED) return "Connection required";
+    if (!signalAllowsMessaging) return "A promising signal is required before messaging opens";
     if (session.usedMessages >= SESSION_LIMITS.maxMessages) return "Message cap reached";
     if (session.turnRetryUsed >= SESSION_LIMITS.maxPrivacyRetries) return "Retry limit reached";
     return "";
-  }, [session.connectionStatus, session.usedMessages, session.turnRetryUsed]);
+  }, [signalAllowsMessaging, session.usedMessages, session.turnRetryUsed]);
 
   useEffect(() => {
     const container = scrollRef.current;
@@ -87,7 +125,7 @@ export default function MessagesPage({
   }
 
   async function simulateSend() {
-    if (!session.canSend || !draft.trim()) return;
+    if (!signalAllowsMessaging || !session.canSend || !draft.trim()) return;
     if (!activeThread?.id) return;
 
     setIsSending(true);
@@ -134,33 +172,83 @@ export default function MessagesPage({
 
   return (
     <div className="grid gap-4 lg:grid-cols-[260px,1fr]">
-      <Card title="Threads">
-        <ul className="space-y-2">
-          {threads.map((thread) => (
-            <li key={thread.id}>
-              <button
-                type="button"
-                onClick={() => setActiveThreadId(thread.id)}
-                className={`w-full rounded-[22px] border px-4 py-3 text-left transition ${
-                  activeThreadId === thread.id ? "" : "hover:bg-white/50"
-                }`}
-                style={
-                  activeThreadId === thread.id
-                    ? { background: "rgba(255, 234, 226, 0.9)" }
-                    : { background: "rgba(255, 251, 249, 0.72)" }
-                }
-              >
-                <p className="text-sm font-semibold" style={{ color: "var(--text-main)" }}>
-                  {thread.name}
-                </p>
-                <p className="text-xs" style={{ color: "var(--text-soft)" }}>
-                  {thread.lastPreview}
-                </p>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </Card>
+      <div className="space-y-4">
+        <Card title="High-Signal Matches">
+          {highSignalThreads.length ? (
+            <ul className="space-y-2">
+              {highSignalThreads.map((thread) => {
+                const isActive = activeThreadId === thread.id;
+                const compatibilityLabel =
+                  thread.recommendation.score >= SIGNAL_THRESHOLDS.HIGH ? "High" : "Promising";
+
+                return (
+                  <li key={thread.id}>
+                    <button
+                      type="button"
+                      onClick={() => setActiveThreadId(thread.id)}
+                      className={`w-full rounded-[22px] border px-4 py-3 text-left transition ${
+                        isActive ? "" : "hover:bg-white/50"
+                      }`}
+                      style={
+                        isActive
+                          ? { background: "rgba(255, 234, 226, 0.9)" }
+                          : { background: "rgba(255, 251, 249, 0.72)" }
+                      }
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="text-sm font-semibold" style={{ color: "var(--text-main)" }}>
+                          {thread.name}
+                        </p>
+                        <span className="rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em]" style={{ background: "rgba(242, 116, 67, 0.14)", color: "var(--accent-deep)" }}>
+                          {Math.round(thread.recommendation.score * 100)}%
+                        </span>
+                      </div>
+                      <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ color: "var(--text-soft)" }}>
+                        {compatibilityLabel} signal
+                      </p>
+                      <p className="mt-1 text-xs" style={{ color: "var(--text-soft)" }}>
+                        {thread.lastPreview}
+                      </p>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <p className="text-sm" style={{ color: "var(--text-soft)" }}>
+              Promising or high-signal matches will appear here once they clear the messaging threshold.
+            </p>
+          )}
+        </Card>
+
+        <Card title="All Threads">
+          <ul className="space-y-2">
+            {threads.map((thread) => (
+              <li key={thread.id}>
+                <button
+                  type="button"
+                  onClick={() => setActiveThreadId(thread.id)}
+                  className={`w-full rounded-[22px] border px-4 py-3 text-left transition ${
+                    activeThreadId === thread.id ? "" : "hover:bg-white/50"
+                  }`}
+                  style={
+                    activeThreadId === thread.id
+                      ? { background: "rgba(255, 234, 226, 0.9)" }
+                      : { background: "rgba(255, 251, 249, 0.72)" }
+                  }
+                >
+                  <p className="text-sm font-semibold" style={{ color: "var(--text-main)" }}>
+                    {thread.name}
+                  </p>
+                  <p className="text-xs" style={{ color: "var(--text-soft)" }}>
+                    {thread.lastPreview}
+                  </p>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      </div>
 
       <div className="space-y-4">
         <Card title={activeThread?.name || "Messages"}>
@@ -212,7 +300,7 @@ export default function MessagesPage({
               <textarea
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
-                disabled={!session.canSend}
+                disabled={!signalAllowsMessaging || !session.canSend}
                 className="soft-input min-h-24 w-full disabled:bg-[#f5e5e2]"
                 placeholder={disabledReason || "Write a message..."}
               />
@@ -223,7 +311,7 @@ export default function MessagesPage({
                 <button
                   type="button"
                   onClick={simulateSend}
-                  disabled={!session.canSend || !draft.trim() || isSending}
+                  disabled={!signalAllowsMessaging || !session.canSend || !draft.trim() || isSending}
                   className="soft-button"
                 >
                   {isSending ? "Sending..." : "Send"}
@@ -238,7 +326,7 @@ export default function MessagesPage({
             <div className="space-y-4 text-sm" style={{ color: "var(--text-main)" }}>
               <div className="rounded-[22px] border p-3" style={{ background: "rgba(255, 243, 238, 0.86)" }}>
                 <p className="font-semibold">
-                  Compatibility {Math.round((activeSummary.compatibility.score || 0) * 100)}% - {activeSummary.compatibility.label}
+                  Compatibility {Math.round(displayedCompatibilityScore * 100)}% - {displayedCompatibilityLabel}
                 </p>
                 <p className="mt-1 text-xs leading-5" style={{ color: "var(--text-soft)" }}>
                   {activeSummary.compatibility.rationale}
@@ -323,8 +411,8 @@ export default function MessagesPage({
               status={session.turnRetryUsed > 1 ? "warn" : "ok"}
             />
             <StatusChip
-              label={`Connection: ${session.connectionStatus}`}
-              status={session.connectionStatus === CONNECTION_STATES.CONNECTED ? "ok" : "blocked"}
+              label={`Connection: ${signalAllowsMessaging ? signalStateLabel : session.connectionStatus}`}
+              status={signalAllowsMessaging ? "ok" : "blocked"}
             />
           </div>
 

@@ -19,6 +19,34 @@ const TOPIC_NAMES = [
 
 const currentUserId = "user-jordan";
 const demoDatasetVersion = "demo-review-v3";
+const DEMO_VARIATION_HINTS = {
+  "t-ava": [
+    "Lean a little more playful and curious than usual.",
+    "Make the tone slightly more literary and observant.",
+    "Keep the tone warm but a touch more dry and understated.",
+    "Let the exchange feel more specific and design-minded."
+  ],
+  "t-noah": [
+    "Lean a little more witty and builder-brained than usual.",
+    "Make the tone slightly more product-strategy oriented.",
+    "Keep the tone concise, clear, and lightly playful.",
+    "Let the exchange feel more experimental and idea-driven."
+  ]
+};
+const DEMO_REQUIRED_CONCEPTS = {
+  "t-ava": [
+    "quiet mornings and essays",
+    "documentaries and city walks",
+    "design history and long coffees",
+    "poetry, bookstores, and noticing details"
+  ],
+  "t-noah": [
+    "shipping experiments and clear constraints",
+    "coffee chats and side projects",
+    "product decisions and fast iteration",
+    "builder energy and practical collaboration"
+  ]
+};
 
 const candidateUsers = [
   {
@@ -66,6 +94,24 @@ function makeMessage(id, threadId, sender, text, iso) {
     time: new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     createdAt: iso
   };
+}
+
+function pickDemoVariationHint(threadId) {
+  const options = DEMO_VARIATION_HINTS[threadId] || [];
+  if (!options.length) {
+    return "";
+  }
+
+  return options[Math.floor(Math.random() * options.length)];
+}
+
+function pickDemoRequiredConcept(threadId) {
+  const options = DEMO_REQUIRED_CONCEPTS[threadId] || [];
+  if (!options.length) {
+    return "";
+  }
+
+  return options[Math.floor(Math.random() * options.length)];
 }
 
 function createSeedStore() {
@@ -281,63 +327,46 @@ function createSeedStore() {
 
   const demoFlows = {
     "t-ava": {
+      mode: "generated",
+      variationHint: pickDemoVariationHint("t-ava"),
+      requiredConcept: pickDemoRequiredConcept("t-ava"),
+      demoNonce: `ava-${Date.now()}-${Math.floor(Math.random() * 100000)}`,
+      avoidPhrases: [
+        "Your post made me feel oddly understood.",
+        "Museum plus bookstore is a very convincing argument.",
+        "I like people who know how to linger somewhere instead of treating everything like a checklist.",
+        "Bookstore with a little chaos, museum with one room you accidentally stay in forever"
+      ],
       state: "pending",
       delayMs: 6000,
       armedAt: null,
       stepIndex: 0,
       stepDelayMs: 2500,
+      targetTurns: 6,
+      openingSpeaker: "me",
       summary: "Strong alignment on culture, pacing, and thoughtful communication.",
-      script: [
-        { sender: "me", text: "Your post made me feel oddly understood. Museum plus bookstore is a very convincing argument." },
-        { sender: "them", text: "Okay good, because I was hoping that would land with the right person and not just sound precious." },
-        { sender: "me", text: "No, it felt specific in a good way. I like people who know how to linger somewhere instead of treating everything like a checklist." },
-        { sender: "them", text: "Same. That is usually how I tell whether conversation is actually going to go anywhere." },
-        { sender: "me", text: "What kind of place usually gets the strongest reaction out of you, museum, bookstore, or somewhere with a really good coffee attached?" },
-        { sender: "them", text: "Bookstore with a little chaos, museum with one room you accidentally stay in forever, then coffee after to argue about what was actually good." },
-        { sender: "me", text: "That sequence sounds weirdly perfect. I like when a day has one strong anchor and then room to improvise." },
-        { sender: "them", text: "Exactly. If it is overplanned it feels like homework instead of a good day." },
-        { sender: "me", text: "Do you prefer a first meetup that is quiet and specific, or a bigger plan where the energy is already high?" },
-        { sender: "them", text: "Quiet and specific. I want to hear how someone thinks before the room starts deciding the mood for us." },
-        { sender: "me", text: "Same. A focused conversation tells me more than any loud room ever has." },
-        { sender: "them", text: "Then we are probably aligned on pacing. I like curiosity that does not feel performative." },
-        { sender: "me", text: "What topic can you talk about for an hour without noticing time?" },
-        { sender: "them", text: "Stories about design choices people made under pressure, and why those decisions still show up years later." },
-        { sender: "me", text: "That is such a good answer. I could do the same with books that changed how people move through daily life." },
-        { sender: "them", text: "Now I want a running list we keep adding to whenever one of us finds something excellent." },
-        { sender: "me", text: "Done. We can compare notes after the first coffee and see if our lists overlap or challenge each other." },
-        { sender: "them", text: "Perfect. If the list is half overlap and half surprise, that is usually the best sign." },
-        { sender: "me", text: "Agreed. Balanced overlap feels like chemistry with room to grow." }
-      ]
+      script: []
     },
     "t-noah": {
+      mode: "generated",
+      variationHint: pickDemoVariationHint("t-noah"),
+      requiredConcept: pickDemoRequiredConcept("t-noah"),
+      demoNonce: `noah-${Date.now()}-${Math.floor(Math.random() * 100000)}`,
+      avoidPhrases: [
+        "Your profile makes you seem like someone who would have opinions about constraints in a good way.",
+        "Clear constraints usually make people reveal whether they actually have taste.",
+        "I can work with a weird idea if the edges are sharp.",
+        "Best case is probably shared curiosity with slightly different operating speeds."
+      ],
       state: "pending",
       delayMs: 9000,
       armedAt: null,
       stepIndex: 0,
       stepDelayMs: 2200,
+      targetTurns: 6,
+      openingSpeaker: "me",
       summary: "Good builder curiosity, with slightly different pace and lifestyle energy.",
-      script: [
-        { sender: "them", text: "Your profile makes you seem like someone who would have opinions about constraints in a good way. Figured I should test that theory." },
-        { sender: "me", text: "That is unfortunately very accurate. Clear constraints usually make people reveal whether they actually have taste." },
-        { sender: "them", text: "Exactly. I can work with a weird idea if the edges are sharp." },
-        { sender: "me", text: "Same. I am probably a little slower and more museum-pilled than you, but I respect the momentum." },
-        { sender: "them", text: "That actually sounds like a useful balance. I tend to over-optimize unless someone reminds me the thing is supposed to feel alive too." },
-        { sender: "me", text: "That feels familiar. Best case is probably shared curiosity with slightly different operating speeds." },
-        { sender: "them", text: "Do you usually prototype in public, or do you hold things privately until they are almost done?" },
-        { sender: "me", text: "I prefer small trusted feedback loops early, then wider feedback once the core behavior is stable." },
-        { sender: "them", text: "That is disciplined. I sometimes ship too early because I get excited by momentum." },
-        { sender: "me", text: "Momentum is useful if it is tied to a hypothesis, not just velocity for its own sake." },
-        { sender: "them", text: "Fair. What is your favorite way to reset when a project gets noisy?" },
-        { sender: "me", text: "I rewrite the goal in one sentence and cut anything that does not directly support it." },
-        { sender: "them", text: "That is clean. I should probably steal that instead of adding another tracker." },
-        { sender: "me", text: "Steal it. Simpler process usually means clearer decisions." },
-        { sender: "them", text: "What kind of collaboration rhythm works best for you week to week?" },
-        { sender: "me", text: "Short async updates daily, deeper sync twice a week, and protected time for uninterrupted execution." },
-        { sender: "them", text: "That actually sounds ideal for me too, especially if we can keep decisions explicit." },
-        { sender: "me", text: "Then we should probably test that in a small project and see how it feels in practice." },
-        { sender: "them", text: "I am into that. Low stakes experiment first, then bigger build if the dynamic is good." },
-        { sender: "me", text: "Perfect. Small test, clear constraints, and honest retro after. That is my favorite setup." }
-      ]
+      script: []
     }
   };
 
