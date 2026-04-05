@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import LeftNav from "./components/LeftNav";
 import RightRail from "./components/RightRailPanel";
 import PostsPage from "./pages/PostsPage";
@@ -7,6 +7,55 @@ import ProfilePage from "./pages/ProfilePage";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { useMessagesSession } from "./features/messages/useMessagesSession";
 import { fetchBootstrap, resetDemo } from "./services/api";
+
+function mergeMessagesById(previous, incoming) {
+  let changed = false;
+  const merged = { ...previous };
+
+  Object.entries(incoming || {}).forEach(([threadId, nextMessages]) => {
+    const currentMessages = merged[threadId] || [];
+    const currentById = new Map(currentMessages.map((message, index) => [message.id, index]));
+    let threadChanged = false;
+    const combined = [...currentMessages];
+
+    (nextMessages || []).forEach((message) => {
+      const existingIndex = currentById.get(message.id);
+      if (Number.isInteger(existingIndex)) {
+        const currentMessage = combined[existingIndex];
+        const mergedMessage = { ...currentMessage, ...message };
+        const messageChanged = Object.keys(mergedMessage).some((key) => mergedMessage[key] !== currentMessage[key]);
+        if (messageChanged) {
+          combined[existingIndex] = mergedMessage;
+          threadChanged = true;
+        }
+      } else {
+        currentById.set(message.id, combined.length);
+        combined.push(message);
+        threadChanged = true;
+      }
+    });
+
+    if (threadChanged) {
+      merged[threadId] = combined;
+      changed = true;
+    } else {
+      merged[threadId] = currentMessages;
+    }
+  });
+
+  return changed ? merged : previous;
+}
+
+function mergeEventsByThread(previous, incoming, preserveThreadId = "") {
+  const merged = { ...previous };
+  Object.entries(incoming || {}).forEach(([threadId, nextEvents]) => {
+    if (preserveThreadId && threadId === preserveThreadId) {
+      return;
+    }
+    merged[threadId] = nextEvents || [];
+  });
+  return merged;
+}
 
 export default function App() {
   const [activePage, setActivePage] = useLocalStorage("active_page", "posts");
@@ -21,6 +70,25 @@ export default function App() {
   const [activeThreadId, setActiveThreadId] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
+  const currentSession = sessions[activeThreadId] || null;
+  const currentEvents = eventsByThread[activeThreadId] || [];
+  const messagesSession = useMessagesSession(activePage, activeThreadId, currentSession, currentEvents);
+  const activePageRef = useRef(activePage);
+  const activeThreadRef = useRef(activeThreadId);
+  const socketStateRef = useRef(messagesSession.socketState);
+
+  useEffect(() => {
+    activePageRef.current = activePage;
+  }, [activePage]);
+
+  useEffect(() => {
+    activeThreadRef.current = activeThreadId;
+  }, [activeThreadId]);
+
+  useEffect(() => {
+    socketStateRef.current = messagesSession.socketState;
+  }, [messagesSession.socketState]);
+
   useEffect(() => {
     let mounted = true;
 
@@ -30,8 +98,14 @@ export default function App() {
       setPosts(data.posts || []);
       setProfile(data.profile || null);
       setThreads(data.threads || []);
-      setMessages(data.messages || {});
-      setEventsByThread(data.events || {});
+      setMessages((prev) => mergeMessagesById(prev, data.messages || {}));
+      setEventsByThread((prev) =>
+        mergeEventsByThread(
+          prev,
+          data.events || {},
+          activePageRef.current === "messages" && socketStateRef.current === "connected" ? activeThreadRef.current : ""
+        )
+      );
       setSessions(data.sessions || {});
       setThreadSummaries(data.threadSummaries || {});
       setRecommendations(data.recommendations || []);
@@ -75,17 +149,13 @@ export default function App() {
     };
   }, []);
 
-  const currentSession = sessions[activeThreadId] || null;
-  const currentEvents = eventsByThread[activeThreadId] || [];
-  const messagesSession = useMessagesSession(activePage, activeThreadId, currentSession, currentEvents);
-
   const recommendationCount = useMemo(() => recommendations.length, [recommendations.length]);
 
   if (isLoading) {
     return (
       <main className="app-shell min-h-screen p-4 md:p-6">
         <p className="text-sm" style={{ color: "var(--text-soft)" }}>
-          Loading DiamondHacks backend...
+          Loading Handoff backend...
         </p>
       </main>
     );
@@ -98,7 +168,7 @@ export default function App() {
           Agent-to-agent introductions
         </p>
         <h1 className="mt-2 font-display text-4xl tracking-tight md:text-[3.3rem]" style={{ color: "var(--text-main)" }}>
-          DiamondHacks
+          Handoff
         </h1>
         <p className="mt-2 max-w-2xl text-sm md:text-[15px]" style={{ color: "var(--text-soft)" }}>
           Agents read human posts, open policy-safe DMs, and surface compatibility matches with a little more warmth and clarity.

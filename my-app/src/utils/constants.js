@@ -5,7 +5,7 @@ export const NAV_ITEMS = [
 ];
 
 export const SESSION_LIMITS = {
-  maxMessages: 150,
+  maxMessages: 10,
   maxPrivacyRetries: 3
 };
 

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Card from "../components/Card";
 import StatusChip from "../components/StatusChip";
 import { mapReasonCode } from "../utils/reasonCodeMap";
@@ -22,9 +22,13 @@ export default function MessagesPage({
   const [draft, setDraft] = useState("");
   const [showTimeline, setShowTimeline] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [isNearBottom, setIsNearBottom] = useState(true);
+  const scrollRef = useRef(null);
+  const previousMessageMetaByThread = useRef({});
 
   const activeThread = threads.find((t) => t.id === activeThreadId) || threads[0];
-  const threadMessages = messages[activeThread?.id] || [];
+  const threadMessages = useMemo(() => messages[activeThread?.id] || [], [activeThread?.id, messages]);
+  const lastMessageId = threadMessages[threadMessages.length - 1]?.id || "";
   const activeSummary = threadSummaries[activeThread?.id];
   const latestEvent = session.events[0];
 
@@ -34,6 +38,53 @@ export default function MessagesPage({
     if (session.turnRetryUsed >= SESSION_LIMITS.maxPrivacyRetries) return "Retry limit reached";
     return "";
   }, [session.connectionStatus, session.usedMessages, session.turnRetryUsed]);
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    const remaining = container.scrollHeight - container.scrollTop - container.clientHeight;
+    setIsNearBottom(remaining <= 80);
+  }, [activeThread?.id]);
+
+  useEffect(() => {
+    if (!activeThread?.id) return;
+    requestAnimationFrame(() => {
+      const container = scrollRef.current;
+      if (!container) return;
+      container.scrollTo({ top: container.scrollHeight, behavior: "auto" });
+    });
+  }, [activeThread?.id]);
+
+  useEffect(() => {
+    const threadId = activeThread?.id;
+    if (!threadId) return;
+
+    const previousMeta = previousMessageMetaByThread.current[threadId];
+    const nextMeta = {
+      count: threadMessages.length,
+      lastMessageId
+    };
+
+    if (!previousMeta) {
+      previousMessageMetaByThread.current[threadId] = nextMeta;
+      return;
+    }
+
+    const hasNewMessage = nextMeta.lastMessageId && nextMeta.lastMessageId !== previousMeta.lastMessageId;
+    previousMessageMetaByThread.current[threadId] = nextMeta;
+
+    if (!hasNewMessage || !isNearBottom) return;
+    const container = scrollRef.current;
+    if (!container) return;
+    container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
+  }, [activeThread?.id, threadMessages.length, lastMessageId, isNearBottom]);
+
+  function handleScroll() {
+    const container = scrollRef.current;
+    if (!container) return;
+    const remaining = container.scrollHeight - container.scrollTop - container.clientHeight;
+    setIsNearBottom(remaining <= 80);
+  }
 
   async function simulateSend() {
     if (!session.canSend || !draft.trim()) return;
@@ -113,60 +164,71 @@ export default function MessagesPage({
 
       <div className="space-y-4">
         <Card title={activeThread?.name || "Messages"}>
-          <div className="space-y-2">
-            {threadMessages.length ? (
-              threadMessages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`max-w-[85%] rounded-xl px-3 py-2 text-sm ${
-                    message.sender === "me"
-                      ? "ml-auto text-white"
-                      : message.sender === "system"
-                        ? "bg-amber-50 text-amber-800"
-                        : ""
-                  }`}
-                  style={
-                    message.sender === "me"
-                      ? { background: "linear-gradient(135deg, var(--accent-main) 0%, var(--accent-deep) 100%)" }
-                      : message.sender === "system"
-                        ? {}
-                        : { background: "rgba(255, 239, 233, 0.92)", color: "var(--text-main)" }
-                  }
-                >
-                  <p>{message.text}</p>
-                  <p className="mt-1 text-[10px] opacity-70">{message.time}</p>
-                </div>
-              ))
-            ) : (
-              <div
-                className="rounded-[24px] border border-dashed px-4 py-5 text-sm"
-                style={{ background: "rgba(255, 248, 245, 0.82)", color: "var(--text-soft)" }}
-              >
-                Agents are reviewing this match now. If it looks promising, the thread will populate here automatically.
+          <div className="chat-shell">
+            <div ref={scrollRef} onScroll={handleScroll} className="chat-scroll">
+              <div className="space-y-2 pr-1">
+                {threadMessages.length ? (
+                  threadMessages.map((message) => (
+                    <div
+                      key={message.id}
+                      className={`max-w-[85%] rounded-xl px-3 py-2 text-sm ${
+                        message.sender === "me"
+                          ? "ml-auto text-white"
+                          : message.sender === "system"
+                            ? "bg-amber-50 text-amber-800"
+                            : ""
+                      }`}
+                      style={
+                        message.sender === "me"
+                          ? {
+                              background: "linear-gradient(135deg, var(--accent-main) 0%, var(--accent-deep) 100%)",
+                              overflowWrap: "anywhere"
+                            }
+                          : message.sender === "system"
+                            ? { overflowWrap: "anywhere" }
+                            : {
+                                background: "rgba(255, 239, 233, 0.92)",
+                                color: "var(--text-main)",
+                                overflowWrap: "anywhere"
+                              }
+                      }
+                    >
+                      <p>{message.text}</p>
+                      <p className="mt-1 text-[10px] opacity-70">{message.time}</p>
+                    </div>
+                  ))
+                ) : (
+                  <div
+                    className="rounded-[24px] border border-dashed px-4 py-5 text-sm"
+                    style={{ background: "rgba(255, 248, 245, 0.82)", color: "var(--text-soft)" }}
+                  >
+                    Agents are reviewing this match now. If it looks promising, the thread will populate here automatically.
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </div>
 
-          <div className="mt-4 border-t pt-3">
-            <textarea
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              disabled={!session.canSend}
-              className="soft-input min-h-24 w-full disabled:bg-[#f5e5e2]"
-              placeholder={disabledReason || "Write a message..."}
-            />
-            <div className="mt-2 flex items-center justify-between">
-              <p className="text-xs" style={{ color: "var(--text-soft)" }}>
-                AI-generated content is policy-filtered.
-              </p>
-              <button
-                type="button"
-                onClick={simulateSend}
-                disabled={!session.canSend || !draft.trim() || isSending}
-                className="soft-button"
-              >
-                {isSending ? "Sending..." : "Send"}
-              </button>
+            <div className="chat-footer">
+              <textarea
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                disabled={!session.canSend}
+                className="soft-input min-h-24 w-full disabled:bg-[#f5e5e2]"
+                placeholder={disabledReason || "Write a message..."}
+              />
+              <div className="mt-2 flex items-center justify-between">
+                <p className="text-xs" style={{ color: "var(--text-soft)" }}>
+                  AI-generated content is policy-filtered.
+                </p>
+                <button
+                  type="button"
+                  onClick={simulateSend}
+                  disabled={!session.canSend || !draft.trim() || isSending}
+                  className="soft-button"
+                >
+                  {isSending ? "Sending..." : "Send"}
+                </button>
+              </div>
             </div>
           </div>
         </Card>

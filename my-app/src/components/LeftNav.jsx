@@ -8,7 +8,7 @@ export default function LeftNav({ activePage, onSelect }) {
       style={{ background: "rgba(255, 249, 246, 0.92)" }}
     >
       <p className="px-2 text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: "var(--text-soft)" }}>
-        DiamondHacks
+        Handoff
       </p>
       <h2 className="px-2 pb-4 pt-1 font-display text-[1.55rem]" style={{ color: "var(--text-main)" }}>
         Match gently

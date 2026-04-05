@@ -94,3 +94,47 @@ body {
   background: rgba(255, 236, 229, 0.9);
   color: #8d5861;
 }
+
+.chat-shell {
+  display: flex;
+  min-height: 0;
+  max-height: 56vh;
+  flex-direction: column;
+}
+
+@media (min-width: 1024px) {
+  .chat-shell {
+    max-height: 68vh;
+  }
+}
+
+.chat-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 0.1rem;
+}
+
+.chat-footer {
+  position: sticky;
+  bottom: 0;
+  margin-top: 0.75rem;
+  border-top: 1px solid var(--border-soft);
+  padding-top: 0.75rem;
+  background: rgba(255, 252, 250, 0.92);
+}
+
+.chat-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 240, 234, 0.8);
+  border-radius: 999px;
+}
+
+.chat-scroll::-webkit-scrollbar-thumb {
+  background: rgba(185, 88, 97, 0.45);
+  border-radius: 999px;
+}

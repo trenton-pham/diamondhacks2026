@@ -1,7 +1,32 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createMessagesSocket } from "../../services/wsClient";
 import { normalizeEvent } from "../../utils/normalizers";
 import { CONNECTION_STATES, SESSION_LIMITS } from "../../utils/constants";
+
+const EVENT_WINDOW = 100;
+
+function mergeEventsById(previousEvents, nextEvents) {
+  if (!nextEvents?.length) {
+    return previousEvents;
+  }
+
+  const previousIds = new Set((previousEvents || []).map((event) => event.event_id));
+  const hasUnseenEvent = nextEvents.some((event) => !previousIds.has(event.event_id));
+  if (!hasUnseenEvent) {
+    return previousEvents;
+  }
+
+  const merged = [];
+  const seen = new Set();
+
+  [...(nextEvents || []), ...(previousEvents || [])].forEach((event) => {
+    if (seen.has(event.event_id)) return;
+    seen.add(event.event_id);
+    merged.push(event);
+  });
+
+  return merged.slice(0, EVENT_WINDOW);
+}
 
 export function useMessagesSession(activePage, activeThreadId, sessionSnapshot, initialEvents = []) {
   const [events, setEvents] = useState([]);
@@ -9,18 +34,30 @@ export function useMessagesSession(activePage, activeThreadId, sessionSnapshot, 
   const [turnRetryUsed, setTurnRetryUsed] = useState(0);
   const [connectionStatus, setConnectionStatus] = useState(CONNECTION_STATES.CONNECTED);
   const [socketState, setSocketState] = useState("disconnected");
+  const lastThreadIdRef = useRef("");
 
   useEffect(() => {
-    setEvents((initialEvents || []).map((event, index) => normalizeEvent(event, index)).slice(0, 20));
     setUsedMessages(sessionSnapshot?.usedMessages || 0);
     setTurnRetryUsed(sessionSnapshot?.turnRetryUsed || 0);
     setConnectionStatus(sessionSnapshot?.connectionStatus || CONNECTION_STATES.CONNECTED);
-  }, [activeThreadId, initialEvents, sessionSnapshot]);
+  }, [sessionSnapshot]);
+
+  useEffect(() => {
+    const normalized = (initialEvents || []).map((event, index) => normalizeEvent(event, index)).slice(0, EVENT_WINDOW);
+    const threadChanged = lastThreadIdRef.current !== activeThreadId;
+    lastThreadIdRef.current = activeThreadId || "";
+
+    setEvents((prev) => {
+      if (threadChanged) return normalized;
+      if (!normalized.length) return prev;
+      return mergeEventsById(prev, normalized);
+    });
+  }, [activeThreadId, initialEvents]);
 
   useEffect(() => {
     if (activePage !== "messages" || !activeThreadId) return undefined;
     const socket = createMessagesSocket(activeThreadId, (event) => {
-      setEvents((prev) => [normalizeEvent(event, prev.length), ...prev].slice(0, 20));
+      setEvents((prev) => mergeEventsById(prev, [normalizeEvent(event, prev.length)]));
     });
     socket.connect();
     setSocketState("connected");
@@ -39,7 +76,7 @@ export function useMessagesSession(activePage, activeThreadId, sessionSnapshot, 
   }, [connectionStatus, usedMessages, turnRetryUsed]);
 
   function pushEvent(event) {
-    setEvents((prev) => [normalizeEvent(event, prev.length), ...prev].slice(0, 20));
+    setEvents((prev) => mergeEventsById(prev, [normalizeEvent(event, prev.length)]));
   }
 
   function applyServerState(nextSession, nextEvents = []) {
@@ -50,7 +87,8 @@ export function useMessagesSession(activePage, activeThreadId, sessionSnapshot, 
     }
 
     if (nextEvents.length) {
-      setEvents(nextEvents.map((event, index) => normalizeEvent(event, index)).slice(0, 20));
+      const normalized = nextEvents.map((event, index) => normalizeEvent(event, index)).slice(0, EVENT_WINDOW);
+      setEvents((prev) => mergeEventsById(prev, normalized));
     }
   }
 
