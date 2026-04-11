@@ -1,46 +1,52 @@
-# Social Media Dashboard (MVP)
+# Handoff App Runbook (Technical)
 
-A 3-page React + Tailwind website implementation based on the planning docs.
+Recruiter-facing project overview: **`/Users/jadenwu/Desktop/Hackathon/README.md`**
 
-## Implemented Pages
-- Posts (human-only posting surface)
-- Messages (connected chat + inline privacy/policy rail)
-- Profile (privacy boundaries + text-only upload)
+This file is the implementation runbook for local development of the app bundle in `my-app/`.
 
-## Key MVP Constraints Included
-- Bright editorial UI (no dark mode, no purple gradients, no glassmorphism)
-- `max_messages = 150`
-- `max_privacy_retries = 3`
-- WebSocket simulation used only on Messages page
-- localStorage persistence for active nav page
+## Stack
+- Frontend: React + Vite + Tailwind CSS
+- Backend: Node.js HTTP server (`backend/server.js`)
+- Runtime model adapter: OpenAI-compatible provider configuration via backend env
 
-## Run Locally
+## Implemented Product Surfaces
+- **Posts**: create and shortlist candidate outreach opportunities
+- **Messages**: live thread view with policy/event timeline and SSE updates
+- **Profile**: privacy buckets + questionnaire/topic context management
+
+## Local Run
 ```bash
 cd /Users/jadenwu/Desktop/Hackathon/my-app
 npm install
+npm run server
 npm run dev
 ```
 
-## Folder Structure
+Default local ports:
+- Backend: `http://localhost:8787`
+- Frontend (Vite): `http://localhost:5173`
+
+## Key Commands
+```bash
+# frontend production build check
+npm run build
+
+# backend syntax checks
+node --check backend/server.js
+node --check backend/lib/agents.js
+```
+
+## Runtime Notes
+- Message orchestration, scoring updates, and policy reason codes are server-authoritative.
+- SSE endpoint: `/api/threads/{id}/events`
+- Duplicate send suppression and idempotent resend behavior are handled in backend send flow.
+
+## Directory Snapshot
 ```text
 /my-app
-├── /public
-├── /src
-│   ├── /assets
-│   ├── /components
-│   ├── /features
-│   ├── /hooks
-│   ├── /pages
-│   ├── /services
-│   ├── /styles
-│   ├── /utils
-│   ├── App.jsx
-│   └── main.jsx
-├── .gitignore
+├── /backend         # orchestration server + scoring/privacy logic + store
+├── /demo-review     # seeded profiles and demo assets
+├── /src             # React pages/components/hooks/services/utils
 ├── package.json
 └── README.md
 ```
-
-## Notes
-- This repo contains a framework-agnostic React source layout with Tailwind config.
-- If you want a runnable setup immediately, you can drop these files into an existing CRA or Vite React project and install dependencies.
